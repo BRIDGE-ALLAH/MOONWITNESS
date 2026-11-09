@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Moon, Sparkles, Send, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero, EcosystemBridgeGrid } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -220,6 +220,17 @@ export default function MoonWitnessPage() {
             ))}
           </div>
         </Card>
+      </section>
+
+      {/* CROSS-ECOSYSTEM BRIDGE */}
+      <section style={{ maxWidth: 1200, margin: "0 auto 80px", padding: "0 5vw" }}>
+        <SectionHeader
+          eyebrow="SOVEREIGN CONSTELLATION"
+          title="ECOSYSTEM SATELLITE NODES"
+          subtitle="Jelajahi node-node berdaulat lainnya di bawah naungan Empire of the Light."
+          badgeVariant="cyan"
+        />
+        <EcosystemBridgeGrid excludeDna="moonwitness" />
       </section>
     </div>
   );
