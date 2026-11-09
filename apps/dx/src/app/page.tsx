@@ -11,7 +11,7 @@ import {
   Sun, Moon, Compass, Star
 } from "lucide-react";
 import { defaultBrandingConfig } from "@/config/branding";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow, EcosystemBridgeGrid } from "@local-git/ui";
 
 export default function LandingPage() {
   const [sfx, setSfx] = useState(true);
@@ -412,69 +412,7 @@ export default function LandingPage() {
           badgeVariant="gold"
           align="center"
         />
-
-        <div className="trinity-hierarchy">
-          {/* TRINITY 1: THE SUPREME ORIGIN */}
-          <div className="trinity-card source">
-            <div className="trinity-pill">SUMBER UTAMA // THE SUPREME ORIGIN (NUMBER ONE)</div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h3>{defaultBrandingConfig.trinity.supremeOrigin.entity}</h3>
-              <span style={{ fontSize: "32px", color: "var(--acid-yellow)", fontFamily: "serif" }}>{defaultBrandingConfig.trinity.supremeOrigin.arabic}</span>
-            </div>
-            <div className="trinity-subtitle">{defaultBrandingConfig.trinity.supremeOrigin.domain} · {defaultBrandingConfig.trinity.supremeOrigin.realm}</div>
-            <p>
-              {defaultBrandingConfig.trinity.supremeOrigin.thesis}
-              <br /><br />
-              <strong>{defaultBrandingConfig.trinity.supremeOrigin.creed}</strong>
-              <br />
-              <a href="http://127.0.0.1:3001" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--acid-yellow)", marginTop: "12px", textDecoration: "underline", font: "11px var(--mono)", fontWeight: 900 }}>
-                BUKA SITE EMPIRE (A-L-L-A-H.COM :3001) →
-              </a>
-            </p>
-            <div className="trinity-spec">
-              <span>CANONICAL AXIS</span>
-              <b>NUMBER 1 // MAHA TINGGI &amp; MAHA PENCIPTA</b>
-            </div>
-          </div>
-
-          {/* TRINITY 2: THE CREATIVE PRESENCE */}
-          <div className="trinity-card presence">
-            <div className="trinity-pill">CREATIVE PRESENCE // THE LIVING UNIVERSE</div>
-            <h3>{defaultBrandingConfig.trinity.creativePresence.entity}</h3>
-            <div className="trinity-subtitle">{defaultBrandingConfig.trinity.creativePresence.role}</div>
-            <p>
-              {defaultBrandingConfig.trinity.creativePresence.thesis}
-              <br /><br />
-              Observatorium semesta yang mengabadikan ilmu pengetahuan, narasi, estetika lunar, dan riset mendalam. 
-              <strong> Lunar Chronicles</strong> membentangkan peta bintang dan kronik kehidupan.
-              <br />
-              <a href="http://127.0.0.1:3002" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--cyan)", marginTop: "12px", textDecoration: "underline", font: "11px var(--mono)", fontWeight: 900 }}>
-                BUKA SITE MOONWITNESS (:3002) →
-              </a>
-            </p>
-            <div className="trinity-spec">
-              <span>UNIVERSE ARCHIVE</span>
-              <b>LUNAR CHRONICLES · KNOWLEDGE · NARRATIVE</b>
-            </div>
-          </div>
-
-          {/* TRINITY 3: THE OPERATIONAL PRODUCT */}
-          <div className="trinity-card product">
-            <div className="trinity-pill">PRODUK &amp; SENJATA OPERASIONAL // THE ENGINE</div>
-            <h3>{defaultBrandingConfig.trinity.flagshipProduct.name}</h3>
-            <div className="trinity-subtitle">{defaultBrandingConfig.trinity.flagshipProduct.role}</div>
-            <p>
-              {defaultBrandingConfig.trinity.flagshipProduct.thesis}
-              <br /><br />
-              Kendaraan operasional berkecepatan tinggi: <strong>Bare-Metal Git Engine (Smart HTTP)</strong>, 
-              PocketBase BaaS SQLite control plane, dan Docker mesh bergaya <strong>Riot Anarchy</strong>.
-            </p>
-            <div className="trinity-spec">
-              <span>OPERATIONAL MATRIX</span>
-              <b>BARE-METAL SOVEREIGN WORKSPACE</b>
-            </div>
-          </div>
-        </div>
+        <EcosystemBridgeGrid />
       </section>
 
       {/* CHAPTER 01: SIN CAN BE BETTER HUMAN // MANGA COMIC ARTWORK MATRIX */}

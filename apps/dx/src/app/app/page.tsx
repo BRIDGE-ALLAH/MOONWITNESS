@@ -13,7 +13,7 @@ import type { RecordModel } from "pocketbase";
 import { pb, gitEngineUrl } from "@/lib/pocketbase";
 import { defaultBrandingConfig } from "@/config/branding";
 import {
-  Card, CardHeader, CardTitle, CardContent, Button, Badge, Input,
+  Card, CardHeader, CardTitle, CardContent, Button, Badge, Input, Textarea, Select,
   StatMetric, ModalDialog, StatusBanner, EmptyState, TerminalWindow
 } from "@local-git/ui";
 
@@ -501,12 +501,12 @@ export default function AppPage() {
         <form onSubmit={createRepo} className="form-stack">
           <label>REPOSITORY NAME<Input required maxLength={80} value={newRepoName} onChange={(e) => { setNewRepoName(e.target.value); setNewRepoSlug(slugify(e.target.value)); }} placeholder="e.g. moonships" /></label>
           <label>SLUG<Input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={newRepoSlug} onChange={(e) => setNewRepoSlug(e.target.value)} placeholder="moonships" /></label>
-          <label>DESCRIPTION <span className="optional">OPTIONAL</span><textarea maxLength={280} value={newRepoDescription} onChange={(e) => setNewRepoDescription(e.target.value)} placeholder="What are you building?" rows={3} /></label>
+          <label>DESCRIPTION <span className="optional">OPTIONAL</span><Textarea maxLength={280} value={newRepoDescription} onChange={(e) => setNewRepoDescription(e.target.value)} placeholder="What are you building?" rows={3} /></label>
           <label>VISIBILITY
-            <select value={visibility} onChange={(e) => setVisibility(e.target.value as "private" | "public")}>
+            <Select value={visibility} onChange={(e) => setVisibility(e.target.value as "private" | "public")}>
               <option value="private">Private — only you can access</option>
               <option value="public">Public — anyone can clone</option>
-            </select>
+            </Select>
           </label>
           <div className="modal-actions">
             <Button type="button" variant="secondary" onClick={() => setShowCreate(false)}>Cancel</Button>

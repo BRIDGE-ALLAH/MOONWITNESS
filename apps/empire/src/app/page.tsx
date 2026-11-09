@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRight, Compass, Orbit, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader, EcosystemBridgeGrid } from "@local-git/ui";
 
 export default function AllahOriginPage() {
   return (
@@ -74,49 +74,8 @@ export default function AllahOriginPage() {
       </section>
 
       {/* THE TRIPTYCH OF REALITY */}
-      <section className="trinity-triptych">
-        <Card variant="gold" style={{ display: "flex", flexDirection: "column" }}>
-          <Badge variant="gold" style={{ alignSelf: "flex-start", marginBottom: 12 }}>01 // SUMBER UTAMA (ORIGIN)</Badge>
-          <CardTitle style={{ fontSize: 22, marginBottom: 6 }}>A-L-L-A-H.COM</CardTitle>
-          <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 14 }}>EMPIRE OF THE LIGHT // IMPERIUM LUMEN</div>
-          <CardDescription style={{ flex: 1 }}>
-            Pusat tauhid, poros moral, dan sumber hakiki dari segala hukum fisika, logika komputasi, dan nurani.
-            Menegakkan kedaulatan hakiki dengan bersujud hanya kepada Sang Pencipta.
-          </CardDescription>
-          <CardFooter>
-            <span style={{ color: "var(--accent)", fontWeight: 800 }}>✓ POROS UTAMA BERDIRI TEGAK</span>
-          </CardFooter>
-        </Card>
-
-        <Card variant="cyan" style={{ display: "flex", flexDirection: "column" }}>
-          <Badge variant="cyan" style={{ alignSelf: "flex-start", marginBottom: 12 }}>02 // KEHADIRAN KREATIF (PRESENCE)</Badge>
-          <CardTitle style={{ fontSize: 22, marginBottom: 6 }}>MOONWITNESS</CardTitle>
-          <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 14 }}>LUNAR CHRONICLES // LIVING OBSERVATORY</div>
-          <CardDescription style={{ flex: 1 }}>
-            &ldquo;When the moon is high we share message and knowledge.&rdquo;
-            Mengamati keindahan ciptaan, menghitung fase astronomis, membagikan riset, dan merawat arsip pengetahuan suci.
-          </CardDescription>
-          <CardFooter>
-            <a href="http://127.0.0.1:3002" style={{ color: "var(--text)", textDecoration: "none", fontWeight: 800, display: "inline-flex", alignItems: "center", gap: 6 }}>
-              BUKA OBSERVATORIUM <ArrowUpRight size={14} />
-            </a>
-          </CardFooter>
-        </Card>
-
-        <Card variant="toxic" style={{ display: "flex", flexDirection: "column" }}>
-          <Badge variant="toxic" style={{ alignSelf: "flex-start", marginBottom: 12 }}>03 // PRODUK OPERASIONAL (ENGINE)</Badge>
-          <CardTitle style={{ fontSize: 22, marginBottom: 6 }}>DX</CardTitle>
-          <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 14 }}>STORY RIOT // CREATIVE CHAOS // DEV BUSINESS</div>
-          <CardDescription style={{ flex: 1 }}>
-            Instrumen fisik developer berkecepatan tinggi: Native Git Smart HTTP, BaaS PocketBase, Docker PaaS Hub,
-            dan Weapons Lab anti-slop. Senjata kemandirian teknologi.
-          </CardDescription>
-          <CardFooter>
-            <a href="http://127.0.0.1:3000" style={{ color: "var(--text)", textDecoration: "none", fontWeight: 800, display: "inline-flex", alignItems: "center", gap: 6 }}>
-              MASUK KE COCKPIT DX <ArrowUpRight size={14} />
-            </a>
-          </CardFooter>
-        </Card>
+      <section style={{ maxWidth: 1200, margin: "40px auto 80px", padding: "0 5vw" }}>
+        <EcosystemBridgeGrid />
       </section>
 
       {/* SACRED PRINCIPLES */}

@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useThemeSafe, type AppDnaId, DNA_PRESETS, SKINS } from "./theme-customizer";
 import { Badge, type BadgeProps } from "./badge";
-import { Card } from "./card";
+import { Card, CardTitle, CardDescription, CardFooter } from "./card";
 import { Button } from "./button";
 
 const ECOSYSTEM_NODES: Array<{
@@ -529,4 +529,151 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
     </div>
   );
 }
+
+// ─── 9. SHARED ECOSYSTEM BRIDGE GRID (4-NODE PORTAL CARDS) ───────────────────
+
+export function EcosystemBridgeGrid({ excludeDna }: { excludeDna?: AppDnaId }) {
+  const nodes = [
+    {
+      dna: "empire" as AppDnaId,
+      port: ":3001 // SUPREME ORIGIN",
+      title: "A-L-L-A-H.COM // EMPIRE",
+      subtitle: "EMPIRE OF THE LIGHT // IMPERIUM LUMEN",
+      desc: "Pusat tauhid, poros moral, dan sumber hakiki dari segala hukum fisika, logika komputasi, dan nurani.",
+      url: "http://127.0.0.1:3001",
+      cta: "OPEN EMPIRE (:3001) ↗",
+      variant: "gold" as const,
+      badge: "gold" as const,
+    },
+    {
+      dna: "moonwitness" as AppDnaId,
+      port: ":3002 // CREATIVE PRESENCE",
+      title: "MOONWITNESS",
+      subtitle: "LUNAR CHRONICLES // LIVING OBSERVATORY",
+      desc: "When the moon is high we share message and knowledge. Observatorium astronomis & arsip pengetahuan suci.",
+      url: "http://127.0.0.1:3002",
+      cta: "OPEN OBSERVATORY (:3002) ↗",
+      variant: "cyan" as const,
+      badge: "cyan" as const,
+    },
+    {
+      dna: "dx" as AppDnaId,
+      port: ":3000 // OPERATIONAL ENGINE",
+      title: "DX // STORY RIOT",
+      subtitle: "CREATIVE CHAOS // DEVELOPER BUSINESS",
+      desc: "Senjata bare-metal developer: Native Git Smart HTTP, BaaS PocketBase, Docker PaaS Hub, dan Weapons Lab.",
+      url: "http://127.0.0.1:3000",
+      cta: "OPEN DX COCKPIT (:3000) ↗",
+      variant: "toxic" as const,
+      badge: "toxic" as const,
+    },
+    {
+      dna: "eisp" as AppDnaId,
+      port: ":3003 // SOVEREIGN INFRA",
+      title: "E-ISP // SCALE PLATFORM",
+      subtitle: "EDGE SHIELD × COMPUTE × STORAGE MESH",
+      desc: "Fondasi tri-cloud mandiri: ingress gateway, Docker/Bun compute orchestration, dan distributed storage mesh.",
+      url: "http://127.0.0.1:3003",
+      cta: "OPEN E-ISP MESH (:3003) ↗",
+      variant: "neon" as const,
+      badge: "lime" as const,
+    },
+  ].filter((n) => n.dna !== excludeDna);
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "16px",
+      }}
+    >
+      {nodes.map((n) => (
+        <Card key={n.dna} variant={n.variant} style={{ display: "flex", flexDirection: "column" }}>
+          <Badge variant={n.badge} style={{ alignSelf: "flex-start", marginBottom: "10px" }}>
+            {n.port}
+          </Badge>
+          <CardTitle style={{ fontSize: "20px", marginBottom: "4px" }}>{n.title}</CardTitle>
+          <div
+            style={{
+              fontSize: "10px",
+              fontFamily: "var(--mono, monospace)",
+              color: "var(--muted)",
+              letterSpacing: "0.08em",
+              marginBottom: "12px",
+            }}
+          >
+            {n.subtitle}
+          </div>
+          <CardDescription style={{ flex: 1, marginBottom: "16px" }}>{n.desc}</CardDescription>
+          <CardFooter>
+            <a href={n.url} target="_blank" rel="noreferrer" style={{ textDecoration: "none", width: "100%" }}>
+              <Button variant={n.badge === "lime" ? "primary" : n.badge} size="sm" style={{ width: "100%" }}>
+                {n.cta}
+              </Button>
+            </a>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// ─── 10. SHARED FORM CONTROLS (TEXTAREA & SELECT) ────────────────────────────
+
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ style, ...props }, ref) => (
+    <textarea
+      ref={ref}
+      style={{
+        display: "flex",
+        width: "100%",
+        background: "var(--panel2, #050505)",
+        color: "var(--text, #ffffff)",
+        border: "2px solid var(--line2, #333)",
+        borderRadius: "var(--radius, 0px)",
+        padding: "10px 12px",
+        fontSize: "12px",
+        fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
+        outline: "none",
+        resize: "vertical",
+        ...style,
+      }}
+      {...props}
+    />
+  )
+);
+Textarea.displayName = "Textarea";
+
+export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {}
+
+export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+  ({ style, children, ...props }, ref) => (
+    <select
+      ref={ref}
+      style={{
+        display: "flex",
+        height: "40px",
+        width: "100%",
+        background: "var(--panel2, #050505)",
+        color: "var(--text, #ffffff)",
+        border: "2px solid var(--line2, #333)",
+        borderRadius: "var(--radius, 0px)",
+        padding: "0 12px",
+        fontSize: "12px",
+        fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
+        outline: "none",
+        cursor: "pointer",
+        ...style,
+      }}
+      {...props}
+    >
+      {children}
+    </select>
+  )
+);
+Select.displayName = "Select";
+
 

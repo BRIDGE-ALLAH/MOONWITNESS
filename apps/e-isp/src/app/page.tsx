@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow, EcosystemBridgeGrid } from "@local-git/ui";
 
 type InfraStatus = {
   containers: { running: number; total: number } | null;
@@ -164,33 +164,8 @@ export default function EISPPage() {
           subtitle="Direct zero-latency local links across the 4 sovereign nodes."
           badgeVariant="cyan"
         />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: 32 }}>
-          <Card variant="gold">
-            <Badge variant="gold" style={{ marginBottom: 8 }}>:3001 //</Badge>
-            <CardTitle style={{ marginBottom: 6 }}>A-L-L-A-H.COM // EMPIRE</CardTitle>
-            <CardDescription style={{ marginBottom: 14 }}>Supreme origin. Sacred light. Tawhid.</CardDescription>
-            <a href="http://localhost:3001" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="gold" size="sm">OPEN EMPIRE ↗</Button>
-            </a>
-          </Card>
-
-          <Card variant="cyan">
-            <Badge variant="cyan" style={{ marginBottom: 8 }}>:3002 //</Badge>
-            <CardTitle style={{ marginBottom: 6 }}>MOONWITNESS</CardTitle>
-            <CardDescription style={{ marginBottom: 14 }}>When the moon is high we share message and knowledge.</CardDescription>
-            <a href="http://localhost:3002" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="cyan" size="sm">OPEN OBSERVATORY ↗</Button>
-            </a>
-          </Card>
-
-          <Card variant="toxic">
-            <Badge variant="toxic" style={{ marginBottom: 8 }}>:3000 //</Badge>
-            <CardTitle style={{ marginBottom: 6 }}>DX // STORY RIOT</CardTitle>
-            <CardDescription style={{ marginBottom: 14 }}>Creative Chaos. Developer Business.</CardDescription>
-            <a href="http://localhost:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="toxic" size="sm">OPEN DX COCKPIT ↗</Button>
-            </a>
-          </Card>
+        <div style={{ marginBottom: 32 }}>
+          <EcosystemBridgeGrid excludeDna="eisp" />
         </div>
       </main>
     </div>
