@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardTitle, CardDescription, Badge, Button } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow } from "@local-git/ui";
 
 type InfraStatus = {
   containers: { running: number; total: number } | null;
@@ -74,30 +74,20 @@ export default function EISPPage() {
 
         {/* Live Status */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 32 }}>
-          <Card variant="default">
-            <div className="metric-label">CONTAINERS</div>
-            <div className="metric-value" style={{ color: "var(--accent)" }}>{fmtContainers()}</div>
-            <div className="metric-sub">running / total</div>
-          </Card>
-          <Card variant="default">
-            <div className="metric-label">GIT ENGINE</div>
-            <div className="metric-value" style={{ color: status.git === "online" ? "#00ff66" : "#ff0055" }}>
-              {status.git === "checking" ? "..." : status.git.toUpperCase()}
-            </div>
-            <div className="metric-sub">:3200</div>
-          </Card>
-          <Card variant="default">
-            <div className="metric-label">POCKETBASE</div>
-            <div className="metric-value" style={{ color: status.pocketbase === "online" ? "#00ff66" : "#ff0055" }}>
-              {status.pocketbase === "checking" ? "..." : status.pocketbase.toUpperCase()}
-            </div>
-            <div className="metric-sub">:8091</div>
-          </Card>
-          <Card variant="neon">
-            <div className="metric-label">MESH LAYER</div>
-            <div className="metric-value" style={{ color: "#00ff66" }}>ACTIVE</div>
-            <div className="metric-sub">tri-node fabric</div>
-          </Card>
+          <StatMetric label="CONTAINERS" value={fmtContainers()} sub="running / total" valueColor="var(--accent)" />
+          <StatMetric
+            label="GIT ENGINE"
+            value={status.git === "checking" ? "..." : status.git.toUpperCase()}
+            sub=":3200"
+            valueColor={status.git === "online" ? "#00ff66" : "#ff0055"}
+          />
+          <StatMetric
+            label="POCKETBASE"
+            value={status.pocketbase === "checking" ? "..." : status.pocketbase.toUpperCase()}
+            sub=":8091"
+            valueColor={status.pocketbase === "online" ? "#00ff66" : "#ff0055"}
+          />
+          <StatMetric label="MESH LAYER" value="ACTIVE" sub="tri-node fabric" variant="neon" valueColor="#00ff66" />
         </div>
 
         {/* Pillars */}
@@ -146,9 +136,9 @@ export default function EISPPage() {
         </div>
 
         {/* Topology */}
-        <Card variant="default" className="topology" id="topology" style={{ marginBottom: 32 }}>
-          <div className="topology-title" style={{ color: "var(--muted)" }}>// ARCHITECTURE TOPOLOGY</div>
-          <pre style={{ color: "var(--accent)" }}>{`  ┌─────────────────────────────────────────────────────────┐
+        <div id="topology" style={{ marginBottom: 32 }}>
+          <TerminalWindow title="E-ISP // ARCHITECTURE TOPOLOGY" variant="cyan">
+            <pre style={{ color: "var(--accent)", margin: 0, overflowX: "auto" }}>{`  ┌─────────────────────────────────────────────────────────┐
   │                    E-ISP MESH LAYER                     │
   │                                                         │
   │   ┌──────────────┐    ┌──────────────┐                  │
@@ -164,9 +154,16 @@ export default function EISPPage() {
   │                                                         │
   │   SERVING ──▶  empire:3001  moon:3002  dx:3000          │
   └─────────────────────────────────────────────────────────┘`}</pre>
-        </Card>
+          </TerminalWindow>
+        </div>
 
         {/* Bridge links */}
+        <SectionHeader
+          eyebrow="SOVEREIGN TRI-NODE ROUTING"
+          title="ECOSYSTEM MESH ENDPOINTS"
+          subtitle="Direct zero-latency local links across the 4 sovereign nodes."
+          badgeVariant="cyan"
+        />
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: 32 }}>
           <Card variant="gold">
             <Badge variant="gold" style={{ marginBottom: 8 }}>:3001 //</Badge>
@@ -196,12 +193,6 @@ export default function EISPPage() {
           </Card>
         </div>
       </main>
-
-      <footer style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
-        <span className="footer-id" style={{ color: "var(--accent)" }}>E-ISP</span>
-        <span>// EDGE-INFRA SCALE PLATFORM // SOVEREIGN MESH</span>
-        <span>✳ 2026</span>
-      </footer>
     </div>
   );
 }

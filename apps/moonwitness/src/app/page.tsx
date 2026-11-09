@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Moon, Sparkles, Send, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -146,37 +146,23 @@ export default function MoonWitnessPage() {
         </p>
 
         {/* LUNAR TELEMETRY PANEL */}
-        <Card variant="cyan" style={{ maxWidth: 900, margin: "0 auto 60px", textAlign: "left" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16 }}>
-            <div className="telemetry-item">
-              <span style={{ color: "var(--muted)" }}>CURRENT LUNAR PHASE</span>
-              <b style={{ color: "var(--accent)" }}>{moonData.phase}</b>
-            </div>
-            <div className="telemetry-item">
-              <span style={{ color: "var(--muted)" }}>SURFACE ILLUMINATION</span>
-              <b style={{ color: "var(--text)" }}>{moonData.illumination}</b>
-            </div>
-            <div className="telemetry-item">
-              <span style={{ color: "var(--muted)" }}>SYNODIC AGE</span>
-              <b style={{ color: "var(--text)" }}>{moonData.ageDays} DAYS</b>
-            </div>
-            <div className="telemetry-item">
-              <span style={{ color: "var(--muted)" }}>ESTIMATED FULL MOON</span>
-              <b style={{ color: "var(--text)" }}>{moonData.nextFullMoon}</b>
-            </div>
-          </div>
-        </Card>
+        <div style={{ maxWidth: 920, margin: "0 auto 60px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 14, textAlign: "left" }}>
+          <StatMetric label="CURRENT LUNAR PHASE" value={moonData.phase} variant="cyan" valueColor="var(--accent)" />
+          <StatMetric label="SURFACE ILLUMINATION" value={moonData.illumination} sub="albedo reflection" />
+          <StatMetric label="SYNODIC AGE" value={`${moonData.ageDays} DAYS`} sub="orbital cycle" />
+          <StatMetric label="ESTIMATED FULL MOON" value={moonData.nextFullMoon} sub="ephemeris lock" />
+        </div>
       </section>
 
       {/* KNOWLEDGE SCROLLS & ARTICLES */}
       <section className="archive-section">
-        <div className="archive-head" style={{ borderColor: "var(--line)" }}>
-          <div>
-            <h2 style={{ color: "var(--text)" }}>LUNAR CHRONICLES &amp; SACRED SCROLLS</h2>
-            <p style={{ color: "var(--muted)" }}>Arsip riset, kartografi kosmik, dan transmisi pengetahuan pilihan.</p>
-          </div>
-          <Badge variant="outline">/// TOTAL SCROLLS INDEXED: 03</Badge>
-        </div>
+        <SectionHeader
+          eyebrow="CELESTIAL REPOSITORY"
+          title="LUNAR CHRONICLES & SACRED SCROLLS"
+          subtitle="Arsip riset, kartografi kosmik, dan transmisi pengetahuan pilihan."
+          badgeVariant="cyan"
+          rightSlot={<Badge variant="outline">/// TOTAL SCROLLS INDEXED: 03</Badge>}
+        />
 
         <div className="knowledge-grid">
           <Card variant="default" style={{ display: "flex", flexDirection: "column" }}>
@@ -261,16 +247,6 @@ export default function MoonWitnessPage() {
           </div>
         </Card>
       </section>
-
-      {/* FOOTER */}
-      <footer className="lunar-footer" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
-        <div>
-          <b style={{ color: "var(--accent)" }}>MOONWITNESS</b> · WHEN THE MOON IS HIGH WE SHARE MESSAGE AND KNOWLEDGE · 2026
-        </div>
-        <div>
-          CELESTIAL ARCHIVE · SATELLITE CARTOGRAPHY · LIVING OBSERVATORY
-        </div>
-      </footer>
     </div>
   );
 }

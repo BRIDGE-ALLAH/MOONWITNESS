@@ -12,7 +12,7 @@ import {
 import type { RecordModel } from "pocketbase";
 import { pb, gitEngineUrl } from "@/lib/pocketbase";
 import { defaultBrandingConfig } from "@/config/branding";
-import { Card, CardHeader, CardTitle, CardContent, Button, Badge, Input } from "@local-git/ui";
+import { Card, CardHeader, CardTitle, CardContent, Button, Badge, Input, StatMetric } from "@local-git/ui";
 
 type Repo = {
   id: string;
@@ -342,26 +342,10 @@ export default function AppPage() {
           {activeTab === "repos" && (
             <>
               <div className="stat-grid">
-                <Card variant="default" className="p-4">
-                  <div className="stat-top"><span>REPOSITORIES</span><FolderGit2 size={17} /></div>
-                  <div className="stat-value">{repos.length.toString().padStart(2, "0")}</div>
-                  <div className="stat-foot"><span className="stat-mark">///</span> CONTROLLED BY YOU</div>
-                </Card>
-                <Card variant="default" className="p-4">
-                  <div className="stat-top"><span>PRIVATE REPOS</span><ShieldCheck size={17} /></div>
-                  <div className="stat-value">{repos.filter((r) => r.visibility === "private").length.toString().padStart(2, "0")}</div>
-                  <div className="stat-foot">ACCESS RESTRICTED</div>
-                </Card>
-                <Card variant="default" className="p-4">
-                  <div className="stat-top"><span>PUBLIC REPOS</span><ArrowUpRight size={17} /></div>
-                  <div className="stat-value">{repos.filter((r) => r.visibility === "public").length.toString().padStart(2, "0")}</div>
-                  <div className="stat-foot">OPEN TO CLONE</div>
-                </Card>
-                <Card variant="neon" className="p-4">
-                  <div className="stat-top"><span>GIT ENGINE</span><Activity size={17} /></div>
-                  <div className="stat-value word-value">READY<span>.</span></div>
-                  <div className="stat-foot"><span className="status-dot" /> HTTP SMART PROTOCOL</div>
-                </Card>
+                <StatMetric label="REPOSITORIES" value={repos.length.toString().padStart(2, "0")} sub="/// CONTROLLED BY YOU" icon={<FolderGit2 size={16} />} />
+                <StatMetric label="PRIVATE REPOS" value={repos.filter((r) => r.visibility === "private").length.toString().padStart(2, "0")} sub="ACCESS RESTRICTED" icon={<ShieldCheck size={16} />} />
+                <StatMetric label="PUBLIC REPOS" value={repos.filter((r) => r.visibility === "public").length.toString().padStart(2, "0")} sub="OPEN TO CLONE" icon={<ArrowUpRight size={16} />} />
+                <StatMetric label="GIT ENGINE" value="READY." sub="HTTP SMART PROTOCOL" variant="neon" valueColor="#00ff66" icon={<Activity size={16} />} />
               </div>
 
               <section className="section-block">
@@ -383,26 +367,10 @@ export default function AppPage() {
           {activeTab === "paas" && (
             <>
               <div className="stat-grid">
-                <Card variant="default" className="p-4">
-                  <div className="stat-top"><span>TOTAL CONTAINERS</span><Container size={17} /></div>
-                  <div className="stat-value">{containers.length.toString().padStart(2, "0")}</div>
-                  <div className="stat-foot">LOCAL DOCKER DAEMON</div>
-                </Card>
-                <Card variant="neon" className="p-4">
-                  <div className="stat-top"><span>RUNNING NODES</span><Activity size={17} /></div>
-                  <div className="stat-value" style={{ color: "var(--neon-lime)" }}>{runningCount.toString().padStart(2, "0")}</div>
-                  <div className="stat-foot">ACTIVE MICROSERVICES</div>
-                </Card>
-                <Card variant="toxic" className="p-4">
-                  <div className="stat-top"><span>STOPPED / IDLE</span><Square size={17} /></div>
-                  <div className="stat-value" style={{ color: "var(--acid-yellow)" }}>{(containers.length - runningCount).toString().padStart(2, "0")}</div>
-                  <div className="stat-foot">READY TO RESUME</div>
-                </Card>
-                <Card variant="gold" className="p-4">
-                  <div className="stat-top"><span>PAAS ENGINE</span><Server size={17} /></div>
-                  <div className="stat-value word-value" style={{ color: "var(--cyan)" }}>ONLINE<span>.</span></div>
-                  <div className="stat-foot"><span className="status-dot" /> DOCKER SUBPROCESS BRIDGE</div>
-                </Card>
+                <StatMetric label="TOTAL CONTAINERS" value={containers.length.toString().padStart(2, "0")} sub="LOCAL DOCKER DAEMON" icon={<Container size={16} />} />
+                <StatMetric label="RUNNING NODES" value={runningCount.toString().padStart(2, "0")} sub="ACTIVE MICROSERVICES" variant="neon" valueColor="#00ff66" icon={<Activity size={16} />} />
+                <StatMetric label="STOPPED / IDLE" value={(containers.length - runningCount).toString().padStart(2, "0")} sub="READY TO RESUME" variant="toxic" valueColor="#f4ff00" icon={<Square size={16} />} />
+                <StatMetric label="PAAS ENGINE" value="ONLINE." sub="DOCKER SUBPROCESS BRIDGE" variant="gold" valueColor="#00f0ff" icon={<Server size={16} />} />
               </div>
 
               <section className="section-block">

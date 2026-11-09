@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRight, Compass, Orbit, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader } from "@local-git/ui";
 
 export default function AllahOriginPage() {
   return (
@@ -121,10 +121,13 @@ export default function AllahOriginPage() {
 
       {/* SACRED PRINCIPLES */}
       <section className="principles-section">
-        <div className="section-head">
-          <h2 style={{ color: "var(--text)" }}>EMPAT PRINSIP KEDAULATAN TAWHID</h2>
-          <p style={{ color: "var(--muted)" }}>Landasan etis peradaban teknologi berdaulat di bawah Empire of the Light.</p>
-        </div>
+        <SectionHeader
+          eyebrow="FOUNDATIONAL AXIOMS"
+          title="EMPAT PRINSIP KEDAULATAN TAWHID"
+          subtitle="Landasan etis peradaban teknologi berdaulat di bawah Empire of the Light."
+          badgeVariant="gold"
+          align="center"
+        />
 
         <div className="principles-grid">
           <Card variant="default">
@@ -164,16 +167,6 @@ export default function AllahOriginPage() {
           </Card>
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer className="origin-footer" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
-        <div>
-          <b style={{ color: "var(--accent)" }}>A-L-L-A-H.COM</b> · EMPIRE OF THE LIGHT · IMPERIUM LUMEN
-        </div>
-        <div>
-          ALLAH NUMBER ONE // LĀ ILĀHA ILLALLĀH ✳ 2026
-        </div>
-      </footer>
     </div>
   );
 }

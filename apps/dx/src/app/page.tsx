@@ -11,7 +11,7 @@ import {
   Sun, Moon, Compass, Star
 } from "lucide-react";
 import { defaultBrandingConfig } from "@/config/branding";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow } from "@local-git/ui";
 
 export default function LandingPage() {
   const [sfx, setSfx] = useState(true);
@@ -388,23 +388,15 @@ export default function LandingPage() {
         </div>
 
         <div className="hero-art-box">
-          <div className="terminal-window">
-            <div className="term-head">
-              <span className="circle red" />
-              <span className="circle yellow" />
-              <span className="circle green" />
-              <span className="term-title">SOVEREIGN-KERNEL // ALLAH #1 &gt; MOONWITNESS &gt; DX</span>
-            </div>
-            <div className="term-body">
-              <p className="term-line"><span className="term-prompt">empire &gt;</span> probe-creed</p>
-              <p className="term-success">[☝️] SUPREME CREATOR: ALLAH // EMPIRE OF THE LIGHT [ABSOLUTE]</p>
-              <p className="term-log">[☾] CREATIVE WITNESS: MoonWitness Celestial Observatory [ONLINE]</p>
-              <p className="term-log">[⚡] HARDCORE WEAPON: DX Bare-Metal Engine [READY ON :3200]</p>
-              <p className="term-line"><span className="term-prompt">empire &gt;</span> ship --submission-to-creator=only</p>
-              <p className="term-success">✓ ZERO VENDOR SLAVERY. CODE SHIPPED IN PURITY &amp; VELOCITY.</p>
-              <p className="term-line blink"><span className="term-prompt">empire &gt;</span> <span className="cursor">█</span></p>
-            </div>
-          </div>
+          <TerminalWindow title="SOVEREIGN-KERNEL // ALLAH #1 > MOONWITNESS > DX" variant="toxic">
+            <p className="term-line"><span className="term-prompt">empire &gt;</span> probe-creed</p>
+            <p className="term-success">[☝️] SUPREME CREATOR: ALLAH // EMPIRE OF THE LIGHT [ABSOLUTE]</p>
+            <p className="term-log">[☾] CREATIVE WITNESS: MoonWitness Celestial Observatory [ONLINE]</p>
+            <p className="term-log">[⚡] HARDCORE WEAPON: DX Bare-Metal Engine [READY ON :3200]</p>
+            <p className="term-line"><span className="term-prompt">empire &gt;</span> ship --submission-to-creator=only</p>
+            <p className="term-success">✓ ZERO VENDOR SLAVERY. CODE SHIPPED IN PURITY &amp; VELOCITY.</p>
+            <p className="term-line blink"><span className="term-prompt">empire &gt;</span> <span className="cursor">█</span></p>
+          </TerminalWindow>
           <div className="floating-stamp">
             <span>ALLAH #1<br />EMPIRE OF LIGHT<br /><b>#SOVEREIGN</b></span>
           </div>
@@ -413,11 +405,13 @@ export default function LandingPage() {
 
       {/* THE UNIFIED TRINITY SECTION */}
       <section id="trinity" className="trinity-section">
-        <div className="section-header">
-          <span className="sec-tag">/// SACRED HIERARCHY &amp; UNIFIED ARCHITECTURE</span>
-          <h2>ALLAH NUMBER ONE // SATU KESATUAN UTUH</h2>
-          <p>Kombinasi low-profile ketauhidan mendalam dengan kebebasan developer tanpa belas kasihan korporat.</p>
-        </div>
+        <SectionHeader
+          eyebrow="/// SACRED HIERARCHY & UNIFIED ARCHITECTURE"
+          title="ALLAH NUMBER ONE // SATU KESATUAN UTUH"
+          subtitle="Kombinasi low-profile ketauhidan mendalam dengan kebebasan developer tanpa belas kasihan korporat."
+          badgeVariant="gold"
+          align="center"
+        />
 
         <div className="trinity-hierarchy">
           {/* TRINITY 1: THE SUPREME ORIGIN */}
@@ -560,11 +554,13 @@ export default function LandingPage() {
 
       {/* ANARCHY WEAPONS LAB (THE 4 ANTI-SLOP INNOVATIONS) */}
       <section id="lab" className="anarchy-lab-section">
-        <div className="section-header">
-          <span className="sec-tag">/// CLASSIFIED R&amp;D EXPERIMENTS</span>
-          <h2>ANARCHY WEAPONS LAB</h2>
-          <p>Empat terobosan anti-slop yang mendobrak pemerasan vendor dan mengembalikan kedaulatan developer.</p>
-        </div>
+        <SectionHeader
+          eyebrow="/// CLASSIFIED R&D EXPERIMENTS"
+          title="ANARCHY WEAPONS LAB"
+          subtitle="Empat terobosan anti-slop yang mendobrak pemerasan vendor dan mengembalikan kedaulatan developer."
+          badgeVariant="toxic"
+          align="center"
+        />
 
         <div className="lab-grid">
           {/* WEAPON 1: P2P MESH */}
@@ -716,66 +712,68 @@ export default function LandingPage() {
 
       {/* SUITE: BEYOND GIT */}
       <section id="suite" className="arsenal-section">
-        <div className="section-header">
-          <span className="sec-tag">/// DEVELOPER SUITE MATRIX</span>
-          <h2>ARSENAL FULL-STACK DEVELOPER</h2>
-          <p>Bukan cuma source control—seluruh kerajaan dev berada di bawah kendali mandiri Anda.</p>
-        </div>
+        <SectionHeader
+          eyebrow="/// DEVELOPER SUITE MATRIX"
+          title="ARSENAL FULL-STACK DEVELOPER"
+          subtitle="Bukan cuma source control—seluruh kerajaan dev berada di bawah kendali mandiri Anda."
+          badgeVariant="lime"
+          align="center"
+        />
 
         <div className="arsenal-grid">
-          <div className="arsenal-card">
+          <Card variant="neon" className="arsenal-card">
             <div className="card-top">
               <GitBranch size={28} className="icon-neon" />
-              <span className="card-num">01</span>
+              <Badge variant="lime">01</Badge>
             </div>
-            <h3>BARE-METAL GIT ENGINE</h3>
-            <p>Daemon Git Smart HTTP native berbasis subprocess `git-http-backend`. Bare repository disimpan langsung di disk lokal tanpa cloud mata-mata.</p>
-          </div>
+            <CardTitle style={{ marginBottom: 8 }}>BARE-METAL GIT ENGINE</CardTitle>
+            <CardDescription>Daemon Git Smart HTTP native berbasis subprocess `git-http-backend`. Bare repository disimpan langsung di disk lokal tanpa cloud mata-mata.</CardDescription>
+          </Card>
 
-          <div className="arsenal-card">
+          <Card variant="toxic" className="arsenal-card">
             <div className="card-top">
               <Database size={28} className="icon-toxic" />
-              <span className="card-num">02</span>
+              <Badge variant="toxic">02</Badge>
             </div>
-            <h3>INSTANT BACKEND-AS-A-SERVICE</h3>
-            <p>PocketBase Go + SQLite terintegrasi penuh dengan langganan data real-time, autentikasi handal, dan migrasi skema instan.</p>
-          </div>
+            <CardTitle style={{ marginBottom: 8 }}>INSTANT BACKEND-AS-A-SERVICE</CardTitle>
+            <CardDescription>PocketBase Go + SQLite terintegrasi penuh dengan langganan data real-time, autentikasi handal, dan migrasi skema instan.</CardDescription>
+          </Card>
 
-          <div className="arsenal-card">
+          <Card variant="gold" className="arsenal-card">
             <div className="card-top">
               <Box size={28} className="icon-yellow" />
-              <span className="card-num">03</span>
+              <Badge variant="gold">03</Badge>
             </div>
-            <h3>CONTAINERIZED ORCHESTRATION</h3>
-            <p>Infrastruktur Docker Compose siap pakai untuk menjalankan microservice, background queue, dan cache pendukung dalam satu perintah.</p>
-          </div>
+            <CardTitle style={{ marginBottom: 8 }}>CONTAINERIZED ORCHESTRATION</CardTitle>
+            <CardDescription>Infrastruktur Docker Compose siap pakai untuk menjalankan microservice, background queue, dan cache pendukung dalam satu perintah.</CardDescription>
+          </Card>
 
-          <div className="arsenal-card">
+          <Card variant="neon" className="arsenal-card">
             <div className="card-top">
               <CloudLightning size={28} className="icon-neon" />
-              <span className="card-num">04</span>
+              <Badge variant="lime">04</Badge>
             </div>
-            <h3>TURBO BUN EXECUTION</h3>
-            <p>Dibangun sepenuhnya di atas runtime Bun. Waktu instalasi kilat, test runner secepat kilat, dan monorepo scripting mulus.</p>
-          </div>
+            <CardTitle style={{ marginBottom: 8 }}>TURBO BUN EXECUTION</CardTitle>
+            <CardDescription>Dibangun sepenuhnya di atas runtime Bun. Waktu instalasi kilat, test runner secepat kilat, dan monorepo scripting mulus.</CardDescription>
+          </Card>
 
-          <div className="arsenal-card">
+          <Card variant="toxic" className="arsenal-card">
             <div className="card-top">
               <Lock size={28} className="icon-toxic" />
-              <span className="card-num">05</span>
+              <Badge variant="toxic">05</Badge>
             </div>
-            <h3>AIRGAPPED SECRETS &amp; PATs</h3>
-            <p>Hashing token berentropi tinggi dengan salt pepper. Kelola kredensial API dan token akses pribadi tanpa kebocoran ke SaaS pihak ketiga.</p>
-          </div>
+            <CardTitle style={{ marginBottom: 8 }}>AIRGAPPED SECRETS &amp; PATs</CardTitle>
+            <CardDescription>Hashing token berentropi tinggi dengan salt pepper. Kelola kredensial API dan token akses pribadi tanpa kebocoran ke SaaS pihak ketiga.</CardDescription>
+          </Card>
 
-          <div className="arsenal-card">
+          <Card variant="gold" className="arsenal-card">
             <div className="card-top">
               <Gauge size={28} className="icon-yellow" />
-              <span className="card-num">06</span>
+              <Badge variant="gold">06</Badge>
             </div>
-            <h3>NEOBRUTALIST DEV DASHBOARD</h3>
-            <p>Cockpit cyber-grunge ergonomis untuk menghilangkan beban kognitif. Inspeksi repo instan, telemetri sistem, dan navigasi kilat.</p>
-          </div>
+            <CardTitle style={{ marginBottom: 8 }}>NEOBRUTALIST DEV DASHBOARD</CardTitle>
+            <CardDescription>Cockpit cyber-grunge ergonomis untuk menghilangkan beban kognitif. Inspeksi repo instan, telemetri sistem, dan navigasi kilat.</CardDescription>
+          </Card>
         </div>
       </section>
 
@@ -825,16 +823,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer className="landing-footer">
-        <div className="footer-left">
-          <b>{defaultBrandingConfig.trinity.supremeOrigin.arabic} {defaultBrandingConfig.trinity.supremeOrigin.domain}</b> · <b>{defaultBrandingConfig.trinity.creativePresence.entity}</b> · <b>{defaultBrandingConfig.trinity.flagshipProduct.name}</b>
-        </div>
-        <div className="footer-right">
-          <span>{defaultBrandingConfig.labels.footerNotice}</span>
-        </div>
-      </footer>
     </div>
   );
 }

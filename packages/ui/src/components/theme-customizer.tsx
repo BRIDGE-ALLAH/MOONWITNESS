@@ -8,7 +8,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { EcosystemTopBar } from "./ecosystem-bar";
+import { EcosystemTopBar, EcosystemFooter } from "./ecosystem-bar";
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────────
 
@@ -468,6 +468,7 @@ export function EcosystemShell({
     <ThemeProvider defaultDna={dna}>
       <EcosystemTopBar currentDna={dna} />
       {children}
+      <EcosystemFooter currentDna={dna} />
       <ThemeCustomizer />
     </ThemeProvider>
   );
