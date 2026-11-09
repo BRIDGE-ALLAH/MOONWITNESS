@@ -8,8 +8,8 @@
         "concurrently": "^9.2.1",
       },
     },
-    "apps/web": {
-      "name": "@local-git/web",
+    "apps/dx": {
+      "name": "@local-git/dx",
       "version": "0.1.0",
       "dependencies": {
         "@local-git/contracts": "workspace:*",
@@ -26,6 +26,42 @@
         "dotenv-cli": "^8.0.0",
         "eslint": "^9.0.0",
         "eslint-config-next": "^16.0.0",
+        "typescript": "^5.9.0",
+      },
+    },
+    "apps/empire": {
+      "name": "@local-git/empire",
+      "version": "0.1.0",
+      "dependencies": {
+        "@local-git/contracts": "workspace:*",
+        "lucide-react": "^0.468.0",
+        "next": "^16.0.0",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+      },
+      "devDependencies": {
+        "@types/node": "^22.0.0",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
+        "dotenv-cli": "^8.0.0",
+        "typescript": "^5.9.0",
+      },
+    },
+    "apps/moonwitness": {
+      "name": "@local-git/moonwitness",
+      "version": "0.1.0",
+      "dependencies": {
+        "@local-git/contracts": "workspace:*",
+        "lucide-react": "^0.468.0",
+        "next": "^16.0.0",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+      },
+      "devDependencies": {
+        "@types/node": "^22.0.0",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
+        "dotenv-cli": "^8.0.0",
         "typescript": "^5.9.0",
       },
     },
@@ -181,9 +217,13 @@
 
     "@local-git/contracts": ["@local-git/contracts@workspace:packages/contracts"],
 
+    "@local-git/dx": ["@local-git/dx@workspace:apps/dx"],
+
+    "@local-git/empire": ["@local-git/empire@workspace:apps/empire"],
+
     "@local-git/engine": ["@local-git/engine@workspace:services/git-engine"],
 
-    "@local-git/web": ["@local-git/web@workspace:apps/web"],
+    "@local-git/moonwitness": ["@local-git/moonwitness@workspace:apps/moonwitness"],
 
     "@next/env": ["@next/env@16.4.5", "", {}, "sha512-JwSPwpdkZL5VMl2jA/q+JI8MZdweAL3xmw5/tb9y/TLtmS0YXZnmYDzSihwk8xTj1OL+WM53gTqaj96yuLp6Xw=="],
 

@@ -285,6 +285,8 @@ export default function LandingPage() {
           </div>
           <a href="#trinity" className="nav-anchor" onClick={playClickSfx}>TAWHID &amp; TRINITY</a>
           <a href="#philosophy" className="nav-anchor" style={{ color: "var(--toxic)" }} onClick={playClickSfx}>★ BETTER HUMAN</a>
+          <a href="http://127.0.0.1:3001" target="_blank" rel="noreferrer" className="nav-anchor" style={{ color: "var(--acid-yellow)" }}>EMPIRE (:3001)</a>
+          <a href="http://127.0.0.1:3002" target="_blank" rel="noreferrer" className="nav-anchor" style={{ color: "var(--cyan)" }}>MOONWITNESS (:3002)</a>
           <a href="#suite" className="nav-anchor" onClick={playClickSfx}>DEV SUITE</a>
           <a href="#lab" className="nav-anchor" onClick={playClickSfx}>WEAPONS LAB</a>
           <a href="#manifesto" className="nav-anchor" onClick={playClickSfx}>MANIFESTO</a>
@@ -390,6 +392,10 @@ export default function LandingPage() {
               {defaultBrandingConfig.trinity.supremeOrigin.thesis}
               <br /><br />
               <strong>{defaultBrandingConfig.trinity.supremeOrigin.creed}</strong>
+              <br />
+              <a href="http://127.0.0.1:3001" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--acid-yellow)", marginTop: "12px", textDecoration: "underline", font: "11px var(--mono)", fontWeight: 900 }}>
+                BUKA SITE EMPIRE (A-L-L-A-H.COM :3001) →
+              </a>
             </p>
             <div className="trinity-spec">
               <span>CANONICAL AXIS</span>
@@ -407,6 +413,10 @@ export default function LandingPage() {
               <br /><br />
               Observatorium semesta yang mengabadikan ilmu pengetahuan, narasi, estetika lunar, dan riset mendalam. 
               <strong> Lunar Chronicles</strong> membentangkan peta bintang dan kronik kehidupan.
+              <br />
+              <a href="http://127.0.0.1:3002" target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--cyan)", marginTop: "12px", textDecoration: "underline", font: "11px var(--mono)", fontWeight: 900 }}>
+                BUKA SITE MOONWITNESS (:3002) →
+              </a>
             </p>
             <div className="trinity-spec">
               <span>UNIVERSE ARCHIVE</span>

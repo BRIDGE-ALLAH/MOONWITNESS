@@ -116,7 +116,9 @@ Seluruh repositori historis (`EMPIRE-OF-LIGHT`, `MOONWITNESS`, `RIOTWORKS`, `roc
 ```
 Z:\repo\dx
 ├── apps/
-│   └── web/                   # Cockpit UI Next.js 16 (Landing + Dashboard /app)
+│   ├── empire/                # Site 1: A-L-L-A-H.COM // EMPIRE OF THE LIGHT (:3001)
+│   ├── moonwitness/           # Site 2: MOONWITNESS // "WHEN THE MOON IS HIGH WE SHARE MESSAGE AND KNOWLEDGE" (:3002)
+│   └── dx/                    # Site 3: DX // BUSINESS & CREATIVE DEVELOPER PLATFORM (:3000)
 ├── packages/
 │   └── contracts/             # Kontrak data & skema terpusat
 ├── services/

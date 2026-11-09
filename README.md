@@ -53,17 +53,25 @@
 ## 🛠️ INSTRUKSI CEPAT
 
 ```powershell
-# 1. Bangkitkan cluster infrastruktur lokal
+# 1. Bangkitkan cluster infrastruktur lokal (PocketBase BaaS + Git Engine)
 bun infra:up
 
-# 2. Jalankan Developer Cockpit & Git Engine
-bun run dev
+# 2. Jalankan seluruh ekosistem (DX, Empire, MoonWitness, Git Engine)
+bun run dev:all
+
+# Atau jalankan per-site:
+bun run dev:dx        # DX Platform (:3000)
+bun run dev:empire    # A-L-L-A-H.COM // Empire of the Light (:3001)
+bun run dev:moon      # MoonWitness Observatory (:3002)
 ```
 
-- 🎛️ **Cockpit Dashboard:** [http://127.0.0.1:3000/app](http://127.0.0.1:3000/app)
-- 🌌 **Portal Pendaratan:** [http://127.0.0.1:3000](http://127.0.0.1:3000)
-- ⚡ **Git Gateway:** `http://127.0.0.1:3200`
-- 💾 **PocketBase Command Deck:** [http://127.0.0.1:8091/_/](http://127.0.0.1:8091/_/)
+### 🌐 PORTAL 3 KESATUAN EKOSISTEM
+- ⚡ **DX Platform (Business & Creative):** [http://127.0.0.1:3000](http://127.0.0.1:3000)
+  - Cockpit Dashboard: [http://127.0.0.1:3000/app](http://127.0.0.1:3000/app)
+  - Native Git Gateway: `http://127.0.0.1:3200`
+- 👑 **Empire of the Light (A-L-L-A-H.COM Origin):** [http://127.0.0.1:3001](http://127.0.0.1:3001)
+- ☾ **MoonWitness (Living Knowledge & Message Archive):** [http://127.0.0.1:3002](http://127.0.0.1:3002)
+- 💾 **PocketBase BaaS Control Deck:** [http://127.0.0.1:8091/_/](http://127.0.0.1:8091/_/)
 
 ---
 
