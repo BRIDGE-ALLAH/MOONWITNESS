@@ -10,3 +10,4 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
     </ThemeProvider>
   );
 }
+
