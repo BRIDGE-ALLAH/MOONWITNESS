@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow, EcosystemBridgeGrid } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader } from "@local-git/ui";
 
 type InfraStatus = {
   containers: { running: number; total: number } | null;
@@ -38,26 +38,22 @@ export default function EISPPage() {
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--text)", minHeight: "100vh" }}>
-      <div className="strip" style={{ background: "var(--panel)", borderColor: "var(--line)" }}>
-        <span className="strip-id" style={{ color: "var(--accent)" }}>E-ISP</span>
-        <span className="strip-sep">//</span>
-        <span className="strip-label" style={{ color: "var(--muted)" }}>EDGE-INFRA SCALE PLATFORM</span>
-        <span className="strip-sep">//</span>
-        <span className="strip-label" style={{ color: "var(--muted)" }}>SOVEREIGN TRI-CLOUD FABRIC</span>
-        <span className="strip-status">
-          <Badge variant={status.git === "online" ? "lime" : "gold"}>
-            ✦ MESH {status.git === "online" ? "ONLINE" : status.git === "offline" ? "DEGRADED" : "..."}
-          </Badge>
-        </span>
-      </div>
-
-      <nav style={{ background: "var(--line)", borderColor: "var(--line)" }}>
-        <a href="#overview" className="active" style={{ background: "var(--panel2)", color: "var(--accent)" }}>OVERVIEW</a>
-        <a href="#edge" style={{ background: "var(--panel)", color: "var(--muted)" }}>EDGE SHIELD</a>
-        <a href="#compute" style={{ background: "var(--panel)", color: "var(--muted)" }}>COMPUTE</a>
-        <a href="#storage" style={{ background: "var(--panel)", color: "var(--muted)" }}>STORAGE</a>
-        <a href="#topology" style={{ background: "var(--panel)", color: "var(--muted)" }}>TOPOLOGY</a>
-      </nav>
+      <EcosystemSiteHeader
+        logoMark={<span>∴</span>}
+        title="E-ISP"
+        subtitle="EDGE-INFRA SCALE PLATFORM // SOVEREIGN TRI-CLOUD FABRIC"
+        rightSlot={
+          <>
+            <Badge variant={status.git === "online" ? "lime" : "gold"}>
+              ✦ MESH {status.git === "online" ? "ONLINE" : status.git === "offline" ? "DEGRADED" : "..."}
+            </Badge>
+            <a href="#edge" style={{ textDecoration: "none" }}><Button variant="secondary" size="sm">EDGE SHIELD</Button></a>
+            <a href="#compute" style={{ textDecoration: "none" }}><Button variant="secondary" size="sm">COMPUTE</Button></a>
+            <a href="#storage" style={{ textDecoration: "none" }}><Button variant="secondary" size="sm">STORAGE</Button></a>
+            <a href="#topology" style={{ textDecoration: "none" }}><Button variant="secondary" size="sm">TOPOLOGY</Button></a>
+          </>
+        }
+      />
 
       <main>
         <Card variant="cyan" className="hero" id="overview" style={{ marginBottom: 32 }}>

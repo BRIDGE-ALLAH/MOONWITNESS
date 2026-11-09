@@ -11,7 +11,7 @@ import {
   Sun, Moon, Compass, Star
 } from "lucide-react";
 import { defaultBrandingConfig } from "@/config/branding";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow, EcosystemBridgeGrid } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader } from "@local-git/ui";
 
 export default function LandingPage() {
   const [sfx, setSfx] = useState(true);
@@ -302,35 +302,25 @@ export default function LandingPage() {
       </div>
 
       {/* TOP NAV */}
-      <header className="landing-nav">
-        <div className="nav-brand">
-          <div className="sacred-seal">
-            <span>#1</span>
-            {defaultBrandingConfig.trinity.supremeOrigin.arabic}
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", marginLeft: "4px" }}>
-            <span className="brand-title">{defaultBrandingConfig.prefix}<em>{defaultBrandingConfig.suffix}</em></span>
-            <span style={{ fontSize: "9px", fontFamily: "var(--mono)", color: "var(--neon-lime)", fontWeight: 900 }}>A-L-L-A-H.COM // EMPIRE OF THE LIGHT</span>
-          </div>
-        </div>
-        <div className="nav-links">
-          <div className="sound-bar">
-            {sfx ? <Volume2 size={14} /> : <VolumeX size={14} />}
-            <span>CYBER_SFX: {sfx ? "ON" : "OFF"}</span>
-            <button className="sound-toggle" onClick={() => setSfx(!sfx)}>TOGGLE</button>
-          </div>
-          <a href="#trinity" className="nav-anchor" onClick={playClickSfx}>TAWHID &amp; TRINITY</a>
-          <a href="#philosophy" className="nav-anchor" style={{ color: "var(--toxic)" }} onClick={playClickSfx}>★ BETTER HUMAN</a>
-          <a href="http://127.0.0.1:3001" target="_blank" rel="noreferrer" className="nav-anchor" style={{ color: "var(--acid-yellow)" }}>EMPIRE (:3001)</a>
-          <a href="http://127.0.0.1:3002" target="_blank" rel="noreferrer" className="nav-anchor" style={{ color: "var(--cyan)" }}>MOONWITNESS (:3002)</a>
-          <a href="#suite" className="nav-anchor" onClick={playClickSfx}>DEV SUITE</a>
-          <a href="#lab" className="nav-anchor" onClick={playClickSfx}>WEAPONS LAB</a>
-          <a href="#manifesto" className="nav-anchor" onClick={playClickSfx}>MANIFESTO</a>
-          <Link href="/app" className="button primary riot-btn" onClick={playClickSfx}>
-            ENTER COCKPIT <ArrowUpRight size={18} />
-          </Link>
-        </div>
-      </header>
+      <EcosystemSiteHeader
+        logoMark={<span>#1</span>}
+        title={`${defaultBrandingConfig.prefix}${defaultBrandingConfig.suffix}`}
+        subtitle="STORY RIOT // CREATIVE CHAOS // DEVELOPER BUSINESS"
+        rightSlot={
+          <>
+            <Button variant="secondary" size="sm" onClick={() => setSfx(!sfx)}>
+              {sfx ? <Volume2 size={14} /> : <VolumeX size={14} />} SFX: {sfx ? "ON" : "OFF"}
+            </Button>
+            <a href="#trinity" style={{ textDecoration: "none" }} onClick={playClickSfx}><Button variant="ghost" size="sm">TRINITY</Button></a>
+            <a href="#philosophy" style={{ textDecoration: "none" }} onClick={playClickSfx}><Button variant="ghost" size="sm">★ BETTER HUMAN</Button></a>
+            <a href="#lab" style={{ textDecoration: "none" }} onClick={playClickSfx}><Button variant="ghost" size="sm">WEAPONS LAB</Button></a>
+            <a href="#suite" style={{ textDecoration: "none" }} onClick={playClickSfx}><Button variant="ghost" size="sm">DEV SUITE</Button></a>
+            <Link href="/app" style={{ textDecoration: "none" }} onClick={playClickSfx}>
+              <Button variant="primary" size="sm">ENTER COCKPIT <ArrowUpRight size={15} /></Button>
+            </Link>
+          </>
+        }
+      />
 
       {/* HERO SECTION */}
       <section className="hero-section">

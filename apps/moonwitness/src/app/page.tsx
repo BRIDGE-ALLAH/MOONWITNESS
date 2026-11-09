@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Moon, Sparkles, Send, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -94,39 +94,22 @@ export default function MoonWitnessPage() {
 
   return (
     <div className="lunar-root" style={{ background: "var(--bg)", color: "var(--text)" }}>
-      {/* STATUS STRIP */}
-      <div className="lunar-strip" style={{ background: "var(--panel)", borderColor: "var(--line)" }}>
-        <div className="lunar-phase-pill" style={{ color: "var(--accent)" }}>
-          <Moon size={13} />
-          <span>CELESTIAL OBSERVATORY // LUNAR PHASE: {moonData.phase.toUpperCase()} ({moonData.illumination})</span>
-        </div>
-        <Badge variant="cyan">ARCHIVE NODE ACTIVE // REAL-TIME EPHEMERIS SYNCED</Badge>
-      </div>
-
-      {/* TOP NAVIGATION */}
-      <header className="lunar-nav" style={{ background: "var(--panel)", borderColor: "var(--line)" }}>
-        <a href="/" className="brand-lunar" style={{ color: "var(--text)" }}>
-          <div className="lunar-crest" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>
-            <Moon size={20} />
-          </div>
-          <div className="brand-meta">
-            <b style={{ color: "var(--text)" }}>MOONWITNESS</b>
-            <span style={{ color: "var(--accent)" }}>THE LIVING OBSERVATORY &amp; ARCHIVE</span>
-          </div>
-        </a>
-
-        <div className="lunar-nav-links">
-          <a href="http://127.0.0.1:3001" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-            <Button variant="gold" size="sm"><Sparkles size={14} /> EMPIRE (:3001)</Button>
-          </a>
-          <a href="http://127.0.0.1:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-            <Button variant="toxic" size="sm"><Code2 size={14} /> DX (:3000)</Button>
-          </a>
-          <a href="http://127.0.0.1:3003" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-            <Button variant="secondary" size="sm"><Server size={14} /> E-ISP (:3003)</Button>
-          </a>
-        </div>
-      </header>
+      <EcosystemSiteHeader
+        logoMark={<Moon size={20} />}
+        title="MOONWITNESS"
+        subtitle="THE LIVING OBSERVATORY & ARCHIVE"
+        rightSlot={
+          <>
+            <Badge variant="cyan">PHASE: {moonData.phase.toUpperCase()} ({moonData.illumination})</Badge>
+            <a href="http://127.0.0.1:3001" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="gold" size="sm"><Sparkles size={14} /> EMPIRE (:3001)</Button>
+            </a>
+            <a href="http://127.0.0.1:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="toxic" size="sm"><Code2 size={14} /> DX (:3000)</Button>
+            </a>
+          </>
+        }
+      />
 
       {/* HERO SECTION */}
       <section className="lunar-hero">

@@ -1,41 +1,27 @@
 "use client";
 
 import { ArrowUpRight, Compass, Orbit, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader, EcosystemBridgeGrid } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader, EcosystemBridgeGrid, EcosystemSiteHeader } from "@local-git/ui";
 
 export default function AllahOriginPage() {
   return (
     <div className="origin-root" style={{ background: "var(--bg)", color: "var(--text)" }}>
-      {/* MONUMENTAL TAWHID STATUS STRIP */}
-      <div className="origin-strip" style={{ background: "var(--panel)", borderColor: "var(--line)" }}>
-        <div className="origin-badge" style={{ color: "var(--accent)" }}>
-          <span className="origin-seal" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>☝</span>
-          <span>A-L-L-A-H.COM // EMPIRE OF THE LIGHT // IMPERIUM LUMEN</span>
-        </div>
-        <Badge variant="gold">LĀ ILĀHA ILLALLĀH // THE ABSOLUTE SOVEREIGN CREATOR</Badge>
-      </div>
-
-      {/* NAVIGATION */}
-      <header className="origin-nav" style={{ borderColor: "var(--line)" }}>
-        <a href="/" className="brand-origin" style={{ color: "var(--text)" }}>
-          <span className="arabic-wordmark" style={{ color: "var(--accent)" }}>الله</span>
-          <div className="brand-meta">
-            <b style={{ color: "var(--text)" }}>A-L-L-A-H.COM</b>
-            <span style={{ color: "var(--muted)" }}>THE SUPREME ORIGIN</span>
-          </div>
-        </a>
-        <div className="origin-links">
-          <a href="http://127.0.0.1:3002" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-            <Button variant="cyan" size="sm"><Orbit size={14} /> MOONWITNESS (:3002)</Button>
-          </a>
-          <a href="http://127.0.0.1:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-            <Button variant="toxic" size="sm"><Code2 size={14} /> DX (:3000)</Button>
-          </a>
-          <a href="http://127.0.0.1:3003" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-            <Button variant="secondary" size="sm"><Server size={14} /> E-ISP (:3003)</Button>
-          </a>
-        </div>
-      </header>
+      <EcosystemSiteHeader
+        logoMark={<span style={{ fontFamily: "serif", fontSize: 22 }}>الله</span>}
+        title="A-L-L-A-H.COM"
+        subtitle="EMPIRE OF THE LIGHT // THE SUPREME ORIGIN"
+        rightSlot={
+          <>
+            <Badge variant="gold">LĀ ILĀHA ILLALLĀH // SOVEREIGN CREATOR</Badge>
+            <a href="http://127.0.0.1:3002" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="cyan" size="sm"><Orbit size={14} /> MOONWITNESS (:3002)</Button>
+            </a>
+            <a href="http://127.0.0.1:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="toxic" size="sm"><Code2 size={14} /> DX (:3000)</Button>
+            </a>
+          </>
+        }
+      />
 
       {/* HERO SECTION */}
       <section className="origin-hero">

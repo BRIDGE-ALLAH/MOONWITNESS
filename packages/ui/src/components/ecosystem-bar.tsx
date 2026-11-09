@@ -676,4 +676,93 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 );
 Select.displayName = "Select";
 
+// ─── 11. SHARED ECOSYSTEM SITE HEADER ─────────────────────────────────────────
+
+export interface EcosystemSiteHeaderProps {
+  logoMark: React.ReactNode;
+  title: string;
+  subtitle: string;
+  rightSlot?: React.ReactNode;
+}
+
+export function EcosystemSiteHeader({
+  logoMark,
+  title,
+  subtitle,
+  rightSlot,
+}: EcosystemSiteHeaderProps) {
+  return (
+    <header
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "16px",
+        padding: "18px 5vw",
+        background: "var(--panel)",
+        borderBottom: "1.5px solid var(--line)",
+      }}
+    >
+      <a
+        href="/"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "14px",
+          textDecoration: "none",
+          color: "var(--text)",
+        }}
+      >
+        <div
+          style={{
+            width: "42px",
+            height: "42px",
+            border: "2px solid var(--accent)",
+            borderRadius: "var(--radius, 0px)",
+            background: "var(--panel2)",
+            color: "var(--accent)",
+            display: "grid",
+            placeItems: "center",
+            fontWeight: 900,
+            fontSize: "20px",
+          }}
+        >
+          {logoMark}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <b
+            style={{
+              fontFamily: "var(--mono, 'JetBrains Mono', monospace)",
+              fontWeight: 900,
+              fontSize: "16px",
+              letterSpacing: "0.14em",
+              color: "var(--text)",
+            }}
+          >
+            {title}
+          </b>
+          <span
+            style={{
+              fontFamily: "var(--mono, 'JetBrains Mono', monospace)",
+              fontSize: "10px",
+              letterSpacing: "0.18em",
+              color: "var(--accent)",
+              textTransform: "uppercase",
+            }}
+          >
+            {subtitle}
+          </span>
+        </div>
+      </a>
+      {rightSlot && (
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          {rightSlot}
+        </div>
+      )}
+    </header>
+  );
+}
+
+
 
