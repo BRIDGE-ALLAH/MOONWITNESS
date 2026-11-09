@@ -30,6 +30,25 @@
         "typescript": "^5.9.0",
       },
     },
+    "apps/e-isp": {
+      "name": "@local-git/e-isp",
+      "version": "0.1.0",
+      "dependencies": {
+        "@local-git/contracts": "workspace:*",
+        "@local-git/ui": "workspace:*",
+        "lucide-react": "^0.468.0",
+        "next": "^16.0.0",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+      },
+      "devDependencies": {
+        "@types/node": "^22.0.0",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
+        "dotenv-cli": "^8.0.0",
+        "typescript": "^5.9.0",
+      },
+    },
     "apps/empire": {
       "name": "@local-git/empire",
       "version": "0.1.0",
@@ -238,6 +257,8 @@
     "@local-git/contracts": ["@local-git/contracts@workspace:packages/contracts"],
 
     "@local-git/dx": ["@local-git/dx@workspace:apps/dx"],
+
+    "@local-git/e-isp": ["@local-git/e-isp@workspace:apps/e-isp"],
 
     "@local-git/empire": ["@local-git/empire@workspace:apps/empire"],
 
