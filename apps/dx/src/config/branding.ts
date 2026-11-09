@@ -98,7 +98,7 @@ export const defaultBrandingConfig: AppBrandingConfig = {
     },
     flagshipProduct: {
       name: "DX",
-      role: "Developer eXperience Engine",
+      role: "Story Riot // Creative Chaos // Developer Business",
       engine: "Bare-Metal Git + PocketBase BaaS + Microservices Mesh",
       thesis: "The physical tool of work. Clean, ruthless, self-reliant, and free from extractive monopolies. Building with excellence as devotion.",
     },
@@ -160,7 +160,7 @@ export const defaultBrandingConfig: AppBrandingConfig = {
     visualStyle: "MANGA ACTION SPEEDLINES × XEROX COMIC PANELS × ROCKSOUL GRUNGE",
     chapter: "CHAPTER 01: THE AWAKENING OF THE SOVEREIGN OPERATOR",
   },
-  name: "DX // MOONWITNESS",
+  name: "DX // STORY RIOT",
   prefix: "DX⚡",
   suffix: "MOONWITNESS",
   badge: "ALLAH_NUMBER_ONE",

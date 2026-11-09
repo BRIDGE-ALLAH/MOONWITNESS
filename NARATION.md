@@ -136,7 +136,7 @@ Perpaduan estetika yang belum pernah ada sebelumnya:
 Seluruh entitas memiliki yurisdiksi ketat yang terdokumentasi penuh di [DNA_SPEC.md](docs/DNA_SPEC.md):
 - **A-L-L-A-H.COM (Empire):** Sumber mutlak, Tauhid murni, monumental, hitam-emas sakral. *Dilarang jualan atau transaksional.*
 - **MoonWitness:** Observatorium hidup, riset astronomis, naskah hikmah ("When the moon is high we share message and knowledge"), kobalt-sian kosmik. *Dilarang melayani eksekusi git harian.*
-- **DX Platform:** Mesin kerja developer, bisnis & operasional git bare-metal, PlayStation arcade HUD, manga action lines ("Sin Can Be Better Human"), toxic-acid-neon. *Dilarang mengklaim otoritas moral tertinggi.*
+- **DX:** Story Riot, Creative Chaos, Developer Engine, & Sovereign Business (:3000) — Bare-Metal Git, PlayStation HUD, Manga lines, doktrin "Sin Can Be Better Human", toxic-acid-neon. *Dilarang mengklaim otoritas moral tertinggi.*
 - **E-ISP:** Edge-Infra Scale Platform — fabric cloud fondasi (Edge + Compute + Storage Mesh) di balik layar yang menopang ketiganya.
 
 ---

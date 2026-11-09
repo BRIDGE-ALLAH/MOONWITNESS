@@ -60,18 +60,18 @@ Dokumen ini menetapkan garis batas, identitas visual, tone of voice, dan peran f
 
 ---
 
-## 3. ⚡ DX (DEVELOPER eXPERIENCE) (SITE 03 - PORT :3000)
+## 3. ⚡ DX (SITE 03 - PORT :3000)
 
 | Parameter | Spesifikasi DNA |
 |---|---|
-| **Eksistensi** | **The Hardcore Product, Business Engine, & Sovereign Weapon**. |
+| **Eksistensi** | **DX** (Bukan sekadar platform — ini adalah *Riot Story, Creative Chaos, Developer Engine, & Sovereign Business*). |
 | **Motto Filosofis**| *"SIN CAN BE BETTER HUMAN" & "FERAL SOVEREIGN CODE"* |
 | **Domain & Hub** | `dx.local` / `apps/dx` |
-| **Peran Utama** | Instrumen kerja teknis developer: Bare-Metal Git Smart HTTP (`:3200`), BaaS SQLite PocketBase (`:8091`), Docker PaaS Hub, Anarchy Weapons Lab, dan Terminal Cockpit. |
+| **Peran Utama** | Wadah pertempuran developer dan bisnis kreatif berkecepatan tinggi: Story Riot, Creative Chaos, Bare-Metal Git Smart HTTP (`:3200`), BaaS SQLite PocketBase (`:8091`), Docker PaaS Hub, dan Anarchy Weapons Lab. |
 | **Palet Visual** | **Raw Void (`#000000`), Toxic Pink (`#ff0055`), Acid Hazard Yellow (`#f4ff00`), Electric Lime (`#00ff66`), PlayStation Cyan (`#00f0ff`)**. |
 | **Estetika DNA** | **PlayStation Cinematic Retro-Arcade HUD × Grunge Riot Chaos × Manga Action Speedlines & Comic Full Artwork**. |
-| **Tone of Voice** | Feral, mekanikal, tanpa ampun terhadap bloatware, transparan, berorientasi hasil, berani, bertaubat lewat karya nyata. |
-| **Batas Terlarang (No Clash)** | **DILARANG** mengklaim dirinya sebagai tuhan atau pusat kebenaran moral. DX mengakui ALLAH sebagai #1 dan MoonWitness sebagai penuntun hikmah; DX murni alat kerja baja yang tajam dan amanah. |
+| **Tone of Voice** | Story riot, kreatif liar, mekanikal tajam, anti-korporat slop, bertaubat lewat baris kode dan karya nyata. |
+| **Batas Terlarang (No Clash)** | **DILARANG** mengklaim dirinya sebagai otoritas moral tertinggi. DX tunduk pada ALLAH (#1) dan bersahabat dengan kearifan MoonWitness; DX murni kendaraan bisnis, cerita riot, dan kreativitas developer. |
 
 ---
 
@@ -101,3 +101,4 @@ Dokumen ini menetapkan garis batas, identitas visual, tone of voice, dan peran f
 ```
 
 *Status Dokumen: KANONIKAL & DILOCK ✳ 2026*
+

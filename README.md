@@ -33,7 +33,7 @@
 |---|---|---|
 | **SUMBER UTAMA** | **ALLAH** (`A-L-L-A-H.COM`) | **Empire of the Light (Imperium Lumen)**. Fondasi spiritual, etis, dan kebenaran mutlak. Menolak tirani dan ilusi korporat modern. |
 | **CREATIVE PRESENCE** | **MoonWitness** | **Living Universe & Lunar Chronicles**. Observatorium kosmik, kurasi ilmu pengetahuan, riset mendalam, dan estetika naratif semesta. |
-| **PRODUK & SENJATA** | **DX Platform** | **Developer eXperience Warzone**. Mesin bare-metal Git Smart HTTP, PocketBase SQLite BaaS, container mesh, dan cockpit berkecepatan tinggi. |
+| **PRODUK & SENJATA** | **DX** | **Developer eXperience Warzone**. Mesin bare-metal Git Smart HTTP, PocketBase SQLite BaaS, container mesh, dan cockpit berkecepatan tinggi. |
 
 ---
 
@@ -60,13 +60,13 @@ bun infra:up
 bun run dev:all
 
 # Atau jalankan per-site:
-bun run dev:dx        # DX Platform (:3000)
+bun run dev:dx        # DX (:3000)
 bun run dev:empire    # A-L-L-A-H.COM // Empire of the Light (:3001)
 bun run dev:moon      # MoonWitness Observatory (:3002)
 ```
 
 ### 🌐 PORTAL 3 KESATUAN EKOSISTEM
-- ⚡ **DX Platform (Business & Creative):** [http://127.0.0.1:3000](http://127.0.0.1:3000)
+- ⚡ **DX (Story Riot � Creative Chaos � Developer Business):** [http://127.0.0.1:3000](http://127.0.0.1:3000)
   - Cockpit Dashboard: [http://127.0.0.1:3000/app](http://127.0.0.1:3000/app)
   - Native Git Gateway: `http://127.0.0.1:3200`
 - 👑 **Empire of the Light (A-L-L-A-H.COM Origin):** [http://127.0.0.1:3001](http://127.0.0.1:3001)
@@ -86,4 +86,4 @@ git clone http://127.0.0.1:3200/git/<username>/<repo-slug>.git
 
 ---
 
-*A-L-L-A-H.COM · EMPIRE OF THE LIGHT · MOONWITNESS · DX PLATFORM ✳ 2026*
+*A-L-L-A-H.COM · EMPIRE OF THE LIGHT · MOONWITNESS · DX ✳ 2026*
