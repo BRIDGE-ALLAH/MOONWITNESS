@@ -107,6 +107,9 @@ export default function MoonWitnessPage() {
             <a href="http://127.0.0.1:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
               <Button variant="toxic" size="sm"><Code2 size={14} /> DX (:3000)</Button>
             </a>
+            <a href="http://127.0.0.1:3003" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="primary" size="sm"><Server size={14} /> E-ISP (:3003)</Button>
+            </a>
           </>
         }
       />
