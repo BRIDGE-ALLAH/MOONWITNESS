@@ -17,7 +17,7 @@
     "dev:git": "bun --filter @local-git/engine dev",
     "build": "bun --filter @local-git/dx build",
     "build:all": "bun --filter @local-git/dx build && bun --filter @local-git/empire build && bun --filter @local-git/moonwitness build",
-    "check": "bun --filter @local-git/dx check && bun --filter @local-git/empire check && bun --filter @local-git/moonwitness check && bun --filter @local-git/engine check",
+    "check": "bun --filter @local-git/ui check && bun --filter @local-git/dx check && bun --filter @local-git/empire check && bun --filter @local-git/moonwitness check && bun --filter @local-git/engine check",
     "test": "bun --filter @local-git/engine test",
     "infra:up": "docker compose up -d --build pocketbase git-engine",
     "infra:down": "docker compose down",
