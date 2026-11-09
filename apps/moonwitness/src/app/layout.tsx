@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClientShell } from "./client-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,9 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
-      <body>{children}</body>
+    <html lang="id" suppressHydrationWarning>
+      <body>
+        <ClientShell>{children}</ClientShell>
+      </body>
     </html>
   );
 }
-
