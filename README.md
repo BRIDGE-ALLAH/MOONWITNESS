@@ -71,6 +71,7 @@ bun run dev:moon      # MoonWitness Observatory (:3002)
   - Native Git Gateway: `http://127.0.0.1:3200`
 - 👑 **Empire of the Light (A-L-L-A-H.COM Origin):** [http://127.0.0.1:3001](http://127.0.0.1:3001)
 - ☾ **MoonWitness (Living Knowledge & Message Archive):** [http://127.0.0.1:3002](http://127.0.0.1:3002)
+- 🌐 **E-ISP (Edge-Infra Scale Platform):** Sovereign Cloud Fabric (Edge + Compute + Storage Mesh)
 - 💾 **PocketBase BaaS Control Deck:** [http://127.0.0.1:8091/_/](http://127.0.0.1:8091/_/)
 
 ---

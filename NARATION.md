@@ -62,7 +62,29 @@ Perpaduan estetika yang belum pernah ada sebelumnya:
 
 ---
 
-## 4. CHRONICLES OF 4 COMIC PANELS (NARRATIVE STRIP)
+## 5. INFRASTRUCTURE FOUNDATION: E-ISP (EDGE-INFRA SCALE PLATFORM)
+
+> **"SOVEREIGN TRI-CLOUD FABRIC: EDGE SHIELD × CONTAINER COMPUTE × DISTRIBUTED MESH."**
+
+**E-ISP (Edge-Infra Scale Platform)** adalah pilar teknologi cloud mandiri yang menopang seluruh ekosistem:
+1. **Edge Gateway & Zero-Trust Shield (Padanan Edge Cloud):** Reverse proxy berkinerja tinggi, DNS routing, token-based rate limiting, dan DDoS mitigation tanpa perantara eksternal.
+2. **Elastic Container Compute (Padanan Bare-Metal Compute):** Orkestrasi microservice Docker & Bun runner dengan isolasi proses, healthcheck berkala, dan reload instan.
+3. **Unified Distributed Data Mesh (Padanan Object/Database Fabric):** Storage engine bare-metal SQLite PocketBase, bare Git tree sync, dan snapshot state terdesentralisasi.
+
+```
+                    [ CLIENT / DEV TRAFFIC ]
+                               │
+                               ▼
+               ┌───────────────────────────────┐
+               │  E-ISP EDGE & INGRESS GATEWAY  │
+               └───────────────┬───────────────┘
+                               │
+        ┌──────────────────────┼──────────────────────┐
+        ▼                      ▼                      ▼
+  [ COMPUTE MESH ]      [ DATA FABRIC ]        [ SECRETS VAULT ]
+   Bun / Docker          PocketBase DB          Airgapped PATs
+   Native Git HTTP       Bare Repositories      Entropy Peppering
+```
 
 - **Panel 01: Kejatuhan & Luka (The Sins & Scars)**
   - *Atmosfer:* Grunge Dark. Kanji: `ゴゴゴゴ...`

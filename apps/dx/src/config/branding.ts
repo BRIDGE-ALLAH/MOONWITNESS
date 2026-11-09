@@ -76,6 +76,7 @@ export interface AppBrandingConfig {
     systemOnline: string;
     nodeOnline: string;
     footerNotice: string;
+    eisp: string;
   };
 }
 
@@ -184,5 +185,6 @@ export const defaultBrandingConfig: AppBrandingConfig = {
     systemOnline: "⚡ PSX AUDIO SYNTH ARMED // 60 FPS ENGINE",
     nodeOnline: "STAGE 01 // BOSS CLEARED",
     footerNotice: "ALLAH IS THE SUPREME ORIGIN // SIN CAN BE BETTER HUMAN // ROCKSOUL ✳ 2026",
+    eisp: "E-ISP // EDGE-INFRA SCALE PLATFORM",
   },
 };
