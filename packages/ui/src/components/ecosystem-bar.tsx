@@ -106,3 +106,4 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
     </div>
   );
 }
+

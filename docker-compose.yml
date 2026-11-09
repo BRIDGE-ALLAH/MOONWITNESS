@@ -39,7 +39,7 @@ services:
       TOKEN_PEPPER: ${TOKEN_PEPPER:-replace-this-before-use}
       GIT_DATA_DIR: ${GIT_DATA_DIR:-/data/git}
       PUBLIC_GIT_BASE_URL: ${PUBLIC_GIT_BASE_URL:-http://127.0.0.1:3200}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001,http://localhost:3002,http://127.0.0.1:3002,http://localhost:3003,http://127.0.0.1:3003}
     ports:
       - "127.0.0.1:${GIT_ENGINE_PORT:-3200}:3200"
     volumes:

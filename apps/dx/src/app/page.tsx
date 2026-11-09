@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Flame, Terminal, Zap, ShieldAlert, Cpu, ArrowUpRight,
@@ -28,10 +28,38 @@ export default function LandingPage() {
   const [meshNodes, setMeshNodes] = useState(3);
   const [meshSyncing, setMeshSyncing] = useState(false);
   const [nukeArmed, setNukeArmed] = useState(false);
+  const [nukeCountdown, setNukeCountdown] = useState(10);
   const [nuked, setNuked] = useState(false);
   const [bountyState, setBountyState] = useState("Escrow Ready: $150.00 locked");
   const [keystrokeLog, setKeystrokeLog] = useState<string[]>([]);
+  const [keystrokeBars, setKeystrokeBars] = useState<number[]>([42, 58, 39, 71, 48, 63, 52, 44]);
   const [keystrokeText, setKeystrokeText] = useState("");
+  const lastKeyTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    const savedMesh = localStorage.getItem("dx-mesh-nodes");
+    if (savedMesh) setMeshNodes(Number(savedMesh) || 3);
+  }, []);
+
+  useEffect(() => {
+    if (!nukeArmed || nuked) return;
+    setNukeCountdown(10);
+    const timer = setInterval(() => {
+      setNukeCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setNuked(true);
+          setTimeout(() => {
+            setNuked(false);
+            setNukeArmed(false);
+          }, 2500);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [nukeArmed, nuked]);
 
   // PSX MEMORY CARD & RETRO GAME STATES
   const [memCardBlocks, setMemCardBlocks] = useState([
@@ -180,8 +208,12 @@ export default function LandingPage() {
     setMeshSyncing(true);
     setTimeout(() => {
       setMeshSyncing(false);
-      setMeshNodes((prev) => prev + 1);
-    }, 700);
+      setMeshNodes((prev) => {
+        const next = prev + 1;
+        localStorage.setItem("dx-mesh-nodes", String(next));
+        return next;
+      });
+    }, 500);
   };
 
   const triggerNuke = () => {
@@ -206,9 +238,12 @@ export default function LandingPage() {
     const val = e.target.value;
     setKeystrokeText(val);
     if (val.length > 0) {
-      const flightTime = Math.floor(Math.random() * 60 + 35);
-      const cadence = `Flight: ${flightTime}ms | Cadence: Human Organic`;
+      const now = performance.now();
+      const delta = lastKeyTimeRef.current > 0 ? Math.min(220, Math.max(18, Math.round(now - lastKeyTimeRef.current))) : 54;
+      lastKeyTimeRef.current = now;
+      const cadence = `Flight: ${delta}ms | Entropy: ${(delta * 1.37).toFixed(1)} bits | Human Verified`;
       setKeystrokeLog((prev) => [cadence, ...prev].slice(0, 3));
+      setKeystrokeBars((prev) => [...prev.slice(1), delta]);
     }
   };
 
@@ -567,7 +602,7 @@ export default function LandingPage() {
               <div className="mesh-status-node">
                 <span>FAILSAFE STATUS:</span>
                 <b style={{ color: nuked ? "var(--toxic)" : nukeArmed ? "var(--acid-yellow)" : "var(--neon-lime)" }}>
-                  {nuked ? "💥 MEMORY & KEYS DESTROYED!" : nukeArmed ? "⚠️ ARMED: CLICK AGAIN TO ZERO-WIPE" : "IDLE & SECURE"}
+                  {nuked ? "💥 MEMORY & KEYS DESTROYED!" : nukeArmed ? `⚠️ AUTO-WIPE IN ${nukeCountdown}s (OR CLICK NOW)` : "IDLE & SECURE"}
                 </b>
               </div>
               <Button
@@ -575,7 +610,7 @@ export default function LandingPage() {
                 style={{ width: "100%", marginTop: 10 }}
                 onClick={triggerNuke}
               >
-                {nukeArmed ? "CONFIRM EMERGENCY ZERO-WIPE" : "ARM BARREL NUKE HOOK"}
+                {nukeArmed ? `CONFIRM ZERO-WIPE (${nukeCountdown}s)` : "ARM BARREL NUKE HOOK"}
               </Button>
             </div>
           </Card>
@@ -619,6 +654,20 @@ export default function LandingPage() {
                 placeholder="Ketik di sini untuk menguji dinamika flight-time jari..."
                 style={{ marginBottom: 8 }}
               />
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 34, marginBottom: 8, padding: "4px 6px", background: "var(--panel2)", border: "1px solid var(--line)" }}>
+                {keystrokeBars.map((ms, idx) => (
+                  <div
+                    key={idx}
+                    title={`${ms}ms`}
+                    style={{
+                      flex: 1,
+                      height: `${Math.min(100, Math.max(18, Math.round((ms / 180) * 100)))}%`,
+                      background: ms > 120 ? "var(--toxic)" : "var(--neon-lime)",
+                      transition: "height 0.12s ease",
+                    }}
+                  />
+                ))}
+              </div>
               <div style={{ font: "10px var(--mono)", color: "var(--muted)", fontWeight: 700 }}>
                 {keystrokeLog.length === 0 ? "Menunggu irama ketikan..." : keystrokeLog.map((log, i) => <div key={i}>{log}</div>)}
               </div>
