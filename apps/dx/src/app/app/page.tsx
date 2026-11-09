@@ -7,11 +7,12 @@ import {
   CircleDot, Copy, FolderGit2, GitBranch, GitCommitHorizontal, HardDrive,
   KeyRound, LogOut, Plus, RefreshCw, Search, Server, ShieldCheck,
   TerminalSquare, X, ArrowLeft, Skull, Flame, Play, Square, RotateCw,
-  Container, FileText
+  Container, FileText, Cpu, Zap, Radio
 } from "lucide-react";
 import type { RecordModel } from "pocketbase";
 import { pb, gitEngineUrl } from "@/lib/pocketbase";
 import { defaultBrandingConfig } from "@/config/branding";
+import { Card, CardHeader, CardTitle, CardContent, Button, Badge, Input } from "@local-git/ui";
 
 type Repo = {
   id: string;
@@ -149,6 +150,9 @@ export default function AppPage() {
   const filteredContainers = useMemo(() => containers.filter((c) =>
     `${c.names} ${c.image} ${c.status}`.toLowerCase().includes(query.toLowerCase())), [containers, query]);
 
+  const runningCount = useMemo(() => containers.filter((c) => c.state === "running").length, [containers]);
+  const containerHealthPct = containers.length > 0 ? Math.round((runningCount / containers.length) * 100) : 100;
+
   async function submitAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setBusy(true); setError("");
     try {
@@ -215,26 +219,28 @@ export default function AppPage() {
             <Link href="/" style={{ color: "var(--acid-yellow)", textDecoration: "none", fontSize: "12px", display: "block", marginBottom: "16px" }}>← LANDING PAGE</Link>
             <div className="wordmark">{defaultBrandingConfig.prefix}<span>{defaultBrandingConfig.suffix}</span><i>{defaultBrandingConfig.badge}</i></div>
           </div>
-          <div className="auth-card">
+          <Card variant="grunge" className="auth-card">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div className="eyebrow muted">{authMode === "login" ? "MEMBER ACCESS" : "NEW OPERATOR"} / 00{authMode === "login" ? "1" : "2"}</div>
+              <Badge variant="outline">{authMode === "login" ? "MEMBER ACCESS" : "NEW OPERATOR"} / 00{authMode === "login" ? "1" : "2"}</Badge>
               <Link href="/" style={{ color: "var(--neon-lime)", fontSize: "11px", fontWeight: 900, textDecoration: "none" }}>← EXIT</Link>
             </div>
-            <h2>{authMode === "login" ? "Sign in." : "Create your account."}</h2>
+            <h2 className="mt-4">{authMode === "login" ? "Sign in." : "Create your account."}</h2>
             <p className="subcopy">{authMode === "login" ? defaultBrandingConfig.subcopy.login : defaultBrandingConfig.subcopy.signup}</p>
             <form onSubmit={submitAuth} className="form-stack">
               {authMode === "signup" && <>
-                <label>DISPLAY NAME<input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" autoComplete="name" /></label>
-                <label>USERNAME<input required minLength={3} pattern="[a-zA-Z0-9_-]+" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="e.g. rocksoul" autoComplete="username" /></label>
+                <label>DISPLAY NAME<Input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" autoComplete="name" /></label>
+                <label>USERNAME<Input required minLength={3} pattern="[a-zA-Z0-9_-]+" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="e.g. rocksoul" autoComplete="username" /></label>
               </>}
-              <label>EMAIL ADDRESS<input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@local.dev" autoComplete="email" /></label>
-              <label>PASSWORD<input required type="password" minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 10 characters" autoComplete={authMode === "login" ? "current-password" : "new-password"} /></label>
-              <button className="button primary wide" disabled={busy}>{busy ? <RefreshCw className="spin" size={16} /> : <ArrowUpRight size={16} />}{authMode === "login" ? "Enter HQ" : "Create account"}</button>
+              <label>EMAIL ADDRESS<Input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@local.dev" autoComplete="email" /></label>
+              <label>PASSWORD<Input required type="password" minLength={10} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 10 characters" autoComplete={authMode === "login" ? "current-password" : "new-password"} /></label>
+              <Button variant="toxic" size="lg" className="w-full mt-2" disabled={busy}>
+                {busy ? <RefreshCw className="spin" size={16} /> : <ArrowUpRight size={16} />}{authMode === "login" ? "Enter HQ" : "Create account"}
+              </Button>
             </form>
             <div className="switch-auth">{authMode === "login" ? "New to this server?" : "Already have an account?"}<button onClick={() => { setAuthMode(authMode === "login" ? "signup" : "login"); setError(""); }}>{authMode === "login" ? "Create account" : "Sign in"}</button></div>
             {error && <div className="alert error"><X size={15} />{error}</div>}
             <div className="local-note"><ShieldCheck size={15} /> Authentication handled by your PocketBase instance.</div>
-          </div>
+          </Card>
         </section>
       </main>
     );
@@ -244,6 +250,37 @@ export default function AppPage() {
     <main className="app-shell">
       <aside className="sidebar">
         <div className="brand-lockup"><div className="brand-mark">{defaultBrandingConfig.shortName}<span>+</span></div><div className="wordmark">{defaultBrandingConfig.prefix}<span>{defaultBrandingConfig.suffix}</span><i>{defaultBrandingConfig.badge}</i><small>{defaultBrandingConfig.subtitle}</small></div></div>
+        
+        {/* GAME HUD OPERATOR STATUS */}
+        <div className="p-3 mx-2 my-3 border border-[#222] bg-[#050505] font-mono text-[10px]">
+          <div className="flex items-center justify-between mb-1.5 text-gray-400">
+            <span>OPERATOR LVL 99</span>
+            <Badge variant="lime" className="text-[9px] px-1.5 py-0">RANK S</Badge>
+          </div>
+          <div className="text-[11px] font-bold text-white mb-2">{user.name || user.username}</div>
+          
+          <div className="space-y-1.5">
+            <div>
+              <div className="flex justify-between text-[9px] text-gray-500 mb-0.5">
+                <span>HP // ENGINE</span>
+                <span className="text-[#00ff66]">100%</span>
+              </div>
+              <div className="w-full h-1.5 bg-[#111] border border-[#222]">
+                <div className="h-full bg-[#00ff66] w-full" />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-[9px] text-gray-500 mb-0.5">
+                <span>MP // CONTAINERS</span>
+                <span className="text-[#00f0ff]">{containerHealthPct}%</span>
+              </div>
+              <div className="w-full h-1.5 bg-[#111] border border-[#222]">
+                <div className="h-full bg-[#00f0ff]" style={{ width: `${containerHealthPct}%` }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="side-label">WORKSPACE</div>
         <button className={`nav-item ${activeTab === "repos" ? "active" : ""}`} onClick={() => setActiveTab("repos")}>
           <FolderGit2 size={17} /> Repositories <span className="nav-count">{repos.length.toString().padStart(2, "0")}</span>
@@ -268,13 +305,15 @@ export default function AppPage() {
             <span>WORKSPACE</span><b>/</b> {activeTab === "repos" ? "REPOSITORIES" : "DOCKER PAAS CLUSTER"}
           </div>
           <div className="top-actions">
-            <span className="top-online" style={{ color: "var(--acid-yellow)", borderColor: "var(--acid-yellow)" }}>
+            <Badge variant="gold">
               {defaultBrandingConfig.trinity.supremeOrigin.arabic} ALLAH #1
-            </span>
-            <span className="top-online" style={{ color: "var(--toxic)", borderColor: "var(--toxic)" }}>
+            </Badge>
+            <Badge variant="toxic">
               SIN CAN BE BETTER HUMAN
-            </span>
-            <span className="top-online"><i /> {defaultBrandingConfig.labels.nodeOnline}</span>
+            </Badge>
+            <Badge variant="lime">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-black mr-1" /> {defaultBrandingConfig.labels.nodeOnline}
+            </Badge>
             <button className="icon-button" title="Refresh" onClick={activeTab === "repos" ? loadRepos : loadContainers}>
               <RefreshCw size={16} className={loading ? "spin" : ""} />
             </button>
@@ -290,9 +329,9 @@ export default function AppPage() {
               <p>{defaultBrandingConfig.tagline} — <strong style={{ color: "var(--acid-yellow)" }}>{defaultBrandingConfig.philosophy.coreMotto}</strong></p>
             </div>
             {activeTab === "repos" ? (
-              <button className="button primary" onClick={() => setShowCreate(true)}><Plus size={17} /> New repository</button>
+              <Button variant="primary" onClick={() => setShowCreate(true)}><Plus size={17} /> New repository</Button>
             ) : (
-              <button className="button primary" onClick={loadContainers}><RefreshCw size={17} /> Rescan Containers</button>
+              <Button variant="primary" onClick={loadContainers}><RefreshCw size={17} /> Rescan Containers</Button>
             )}
           </div>
 
@@ -303,10 +342,26 @@ export default function AppPage() {
           {activeTab === "repos" && (
             <>
               <div className="stat-grid">
-                <div className="stat-card"><div className="stat-top"><span>REPOSITORIES</span><FolderGit2 size={17} /></div><div className="stat-value">{repos.length.toString().padStart(2, "0")}</div><div className="stat-foot"><span className="stat-mark">///</span> CONTROLLED BY YOU</div></div>
-                <div className="stat-card"><div className="stat-top"><span>PRIVATE REPOS</span><ShieldCheck size={17} /></div><div className="stat-value">{repos.filter((r) => r.visibility === "private").length.toString().padStart(2, "0")}</div><div className="stat-foot">ACCESS RESTRICTED</div></div>
-                <div className="stat-card"><div className="stat-top"><span>PUBLIC REPOS</span><ArrowUpRight size={17} /></div><div className="stat-value">{repos.filter((r) => r.visibility === "public").length.toString().padStart(2, "0")}</div><div className="stat-foot">OPEN TO CLONE</div></div>
-                <div className="stat-card accent-stat"><div className="stat-top"><span>GIT ENGINE</span><Activity size={17} /></div><div className="stat-value word-value">READY<span>.</span></div><div className="stat-foot"><span className="status-dot" /> HTTP SMART PROTOCOL</div></div>
+                <Card variant="default" className="p-4">
+                  <div className="stat-top"><span>REPOSITORIES</span><FolderGit2 size={17} /></div>
+                  <div className="stat-value">{repos.length.toString().padStart(2, "0")}</div>
+                  <div className="stat-foot"><span className="stat-mark">///</span> CONTROLLED BY YOU</div>
+                </Card>
+                <Card variant="default" className="p-4">
+                  <div className="stat-top"><span>PRIVATE REPOS</span><ShieldCheck size={17} /></div>
+                  <div className="stat-value">{repos.filter((r) => r.visibility === "private").length.toString().padStart(2, "0")}</div>
+                  <div className="stat-foot">ACCESS RESTRICTED</div>
+                </Card>
+                <Card variant="default" className="p-4">
+                  <div className="stat-top"><span>PUBLIC REPOS</span><ArrowUpRight size={17} /></div>
+                  <div className="stat-value">{repos.filter((r) => r.visibility === "public").length.toString().padStart(2, "0")}</div>
+                  <div className="stat-foot">OPEN TO CLONE</div>
+                </Card>
+                <Card variant="neon" className="p-4">
+                  <div className="stat-top"><span>GIT ENGINE</span><Activity size={17} /></div>
+                  <div className="stat-value word-value">READY<span>.</span></div>
+                  <div className="stat-foot"><span className="status-dot" /> HTTP SMART PROTOCOL</div>
+                </Card>
               </div>
 
               <section className="section-block">
@@ -316,8 +371,8 @@ export default function AppPage() {
                 </div>
                 <div className="repo-table">
                   <div className="repo-table-head"><span>REPOSITORY</span><span>VISIBILITY</span><span>DEFAULT BRANCH</span><span>CREATED</span><span /></div>
-                  {loading ? <div className="empty-state"><RefreshCw className="spin" size={20} /><span>SYNCING REPOSITORIES...</span></div> : filteredRepos.length === 0 ? <div className="empty-state"><FolderGit2 size={24} /><b>{query ? "NO MATCHES FOUND" : "NOTHING HERE. YET."}</b><span>{query ? "Try another search term." : "Create your first repository and push your first commit."}</span>{!query && <button className="button secondary" onClick={() => setShowCreate(true)}><Plus size={15} /> Create repository</button>}</div> : filteredRepos.map((repo) => (
-                    <div className="repo-row" key={repo.id}><div className="repo-name"><div className="repo-icon"><GitBranch size={17} /></div><div><b>{repo.name}</b><small>{repo.path}</small>{repo.description && <p>{repo.description}</p>}</div></div><div><span className={`visibility ${repo.visibility}`}>{repo.visibility === "private" ? <ShieldCheck size={13} /> : <ArrowUpRight size={13} />}{repo.visibility.toUpperCase()}</span></div><div className="branch-cell"><GitBranch size={13} />{repo.default_branch || "main"}</div><div className="date-cell">{new Date(repo.created).toLocaleDateString()}</div><div className="row-action"><button className="icon-button" title="Copy clone URL" onClick={() => copyText(`${gitEngineUrl}/git/${repo.path}.git`)}><Copy size={15} /></button></div></div>
+                  {loading ? <div className="empty-state"><RefreshCw className="spin" size={20} /><span>SYNCING REPOSITORIES...</span></div> : filteredRepos.length === 0 ? <div className="empty-state"><FolderGit2 size={24} /><b>{query ? "NO MATCHES FOUND" : "NOTHING HERE. YET."}</b><span>{query ? "Try another search term." : "Create your first repository and push your first commit."}</span>{!query && <Button variant="secondary" onClick={() => setShowCreate(true)}><Plus size={15} /> Create repository</Button>}</div> : filteredRepos.map((repo) => (
+                    <div className="repo-row" key={repo.id}><div className="repo-name"><div className="repo-icon"><GitBranch size={17} /></div><div><b>{repo.name}</b><small>{repo.path}</small>{repo.description && <p>{repo.description}</p>}</div></div><div><Badge variant={repo.visibility === "private" ? "default" : "cyan"}>{repo.visibility === "private" ? <ShieldCheck size={12} /> : <ArrowUpRight size={12} />}{repo.visibility.toUpperCase()}</Badge></div><div className="branch-cell"><GitBranch size={13} />{repo.default_branch || "main"}</div><div className="date-cell">{new Date(repo.created).toLocaleDateString()}</div><div className="row-action"><button className="icon-button" title="Copy clone URL" onClick={() => copyText(`${gitEngineUrl}/git/${repo.path}.git`)}><Copy size={15} /></button></div></div>
                   ))}
                 </div>
               </section>
@@ -328,10 +383,26 @@ export default function AppPage() {
           {activeTab === "paas" && (
             <>
               <div className="stat-grid">
-                <div className="stat-card"><div className="stat-top"><span>TOTAL CONTAINERS</span><Container size={17} /></div><div className="stat-value">{containers.length.toString().padStart(2, "0")}</div><div className="stat-foot">LOCAL DOCKER DAEMON</div></div>
-                <div className="stat-card"><div className="stat-top"><span>RUNNING NODES</span><Activity size={17} /></div><div className="stat-value" style={{ color: "var(--neon-lime)" }}>{containers.filter((c) => c.state === "running").length.toString().padStart(2, "0")}</div><div className="stat-foot">ACTIVE MICROSERVICES</div></div>
-                <div className="stat-card"><div className="stat-top"><span>STOPPED / IDLE</span><Square size={17} /></div><div className="stat-value" style={{ color: "var(--acid-yellow)" }}>{containers.filter((c) => c.state !== "running").length.toString().padStart(2, "0")}</div><div className="stat-foot">READY TO RESUME</div></div>
-                <div className="stat-card accent-stat"><div className="stat-top"><span>PAAS ENGINE</span><Server size={17} /></div><div className="stat-value word-value" style={{ color: "var(--cyan)" }}>ONLINE<span>.</span></div><div className="stat-foot"><span className="status-dot" /> DOCKER SUBPROCESS BRIDGE</div></div>
+                <Card variant="default" className="p-4">
+                  <div className="stat-top"><span>TOTAL CONTAINERS</span><Container size={17} /></div>
+                  <div className="stat-value">{containers.length.toString().padStart(2, "0")}</div>
+                  <div className="stat-foot">LOCAL DOCKER DAEMON</div>
+                </Card>
+                <Card variant="neon" className="p-4">
+                  <div className="stat-top"><span>RUNNING NODES</span><Activity size={17} /></div>
+                  <div className="stat-value" style={{ color: "var(--neon-lime)" }}>{runningCount.toString().padStart(2, "0")}</div>
+                  <div className="stat-foot">ACTIVE MICROSERVICES</div>
+                </Card>
+                <Card variant="toxic" className="p-4">
+                  <div className="stat-top"><span>STOPPED / IDLE</span><Square size={17} /></div>
+                  <div className="stat-value" style={{ color: "var(--acid-yellow)" }}>{(containers.length - runningCount).toString().padStart(2, "0")}</div>
+                  <div className="stat-foot">READY TO RESUME</div>
+                </Card>
+                <Card variant="gold" className="p-4">
+                  <div className="stat-top"><span>PAAS ENGINE</span><Server size={17} /></div>
+                  <div className="stat-value word-value" style={{ color: "var(--cyan)" }}>ONLINE<span>.</span></div>
+                  <div className="stat-foot"><span className="status-dot" /> DOCKER SUBPROCESS BRIDGE</div>
+                </Card>
               </div>
 
               <section className="section-block">
@@ -365,9 +436,9 @@ export default function AppPage() {
                           </div>
                         </div>
                         <div>
-                          <span className="visibility" style={{ borderColor: c.state === "running" ? "var(--neon-lime)" : "#666", color: c.state === "running" ? "var(--neon-lime)" : "#aaa", background: c.state === "running" ? "#002009" : "#111" }}>
+                          <Badge variant={c.state === "running" ? "lime" : "default"}>
                             {c.state.toUpperCase()}
-                          </span>
+                          </Badge>
                         </div>
                         <div className="branch-cell" style={{ fontSize: "11px", color: "#aaa" }}>
                           {c.status}
@@ -401,8 +472,23 @@ export default function AppPage() {
           )}
 
           <section className="bottom-grid">
-            <div className="info-panel"><div className="panel-title"><TerminalSquare size={17} /> QUICK START <span>///</span></div><p>Clone your repository and start shipping.</p><div className="code-line"><code>git clone http://127.0.0.1:3200/git/{user.username}/your-repo.git</code><button onClick={() => copyText(`git clone ${gitEngineUrl}/git/${user.username}/your-repo.git`)} title="Copy command"><Copy size={14} /></button></div><small>Use your personal access token when Git asks for a password.</small></div>
-            <div className="info-panel system-panel"><div className="panel-title"><Server size={17} /> NODE STATUS <span>LIVE</span></div><div className="node-line"><span>CONTROL PLANE</span><b><i /> POCKETBASE</b></div><div className="node-line"><span>DATA PLANE</span><b><i /> NATIVE GIT</b></div><div className="node-line"><span>CONTAINER PAAS</span><b><i /> DOCKER ENGINE READY</b></div></div>
+            <Card variant="default" className="p-5">
+              <div className="panel-title"><TerminalSquare size={17} /> QUICK START <span>///</span></div>
+              <p className="text-gray-400 text-xs mb-3">Clone your repository and start shipping.</p>
+              <div className="code-line">
+                <code>git clone http://127.0.0.1:3200/git/{user.username}/your-repo.git</code>
+                <button onClick={() => copyText(`git clone ${gitEngineUrl}/git/${user.username}/your-repo.git`)} title="Copy command"><Copy size={14} /></button>
+              </div>
+              <small className="text-gray-500 text-[10px] block mt-2">Use your personal access token when Git asks for a password.</small>
+            </Card>
+            <Card variant="grunge" className="p-5">
+              <div className="panel-title"><Server size={17} /> NODE STATUS <span>LIVE</span></div>
+              <div className="space-y-2 mt-3 font-mono text-xs">
+                <div className="flex justify-between border-b border-[#222] pb-1.5"><span className="text-gray-400">CONTROL PLANE</span><Badge variant="cyan">POCKETBASE :8091</Badge></div>
+                <div className="flex justify-between border-b border-[#222] pb-1.5"><span className="text-gray-400">DATA PLANE</span><Badge variant="lime">NATIVE GIT :3200</Badge></div>
+                <div className="flex justify-between"><span className="text-gray-400">CONTAINER PAAS</span><Badge variant="toxic">DOCKER READY</Badge></div>
+              </div>
+            </Card>
           </section>
           <footer className="page-footer"><span>{defaultBrandingConfig.name.toUpperCase()} / BUILD {defaultBrandingConfig.version}</span><span>{defaultBrandingConfig.labels.footerNotice}</span></footer>
         </div>
@@ -425,15 +511,71 @@ export default function AppPage() {
               </pre>
             </div>
             <div className="modal-actions">
-              <button className="button primary" onClick={() => setContainerLogs(null)}>Close</button>
+              <Button variant="primary" onClick={() => setContainerLogs(null)}>Close</Button>
             </div>
           </div>
         </div>
       )}
 
-      {showCreate && <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowCreate(false); }}><div className="modal-card"><div className="modal-head"><div><div className="eyebrow muted">REPOSITORY / CREATE</div><h2>New repository.</h2></div><button className="icon-button" onClick={() => setShowCreate(false)}><X size={18} /></button></div><form onSubmit={createRepo} className="form-stack"><label>REPOSITORY NAME<input required maxLength={80} value={newRepoName} onChange={(e) => { setNewRepoName(e.target.value); setNewRepoSlug(slugify(e.target.value)); }} placeholder="e.g. moonships" /></label><label>SLUG<input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={newRepoSlug} onChange={(e) => setNewRepoSlug(e.target.value)} placeholder="moonships" /></label><label>DESCRIPTION <span className="optional">OPTIONAL</span><textarea maxLength={280} value={newRepoDescription} onChange={(e) => setNewRepoDescription(e.target.value)} placeholder="What are you building?" rows={3} /></label><label>VISIBILITY<select value={visibility} onChange={(e) => setVisibility(e.target.value as "private" | "public")}><option value="private">Private — only you can access</option><option value="public">Public — anyone can clone</option></select></label><div className="modal-actions"><button type="button" className="button secondary" onClick={() => setShowCreate(false)}>Cancel</button><button className="button primary" disabled={busy}>{busy ? "CREATING..." : <><Plus size={16} /> Create repository</>}</button></div></form></div></div>}
+      {showCreate && (
+        <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowCreate(false); }}>
+          <div className="modal-card">
+            <div className="modal-head">
+              <div><div className="eyebrow muted">REPOSITORY / CREATE</div><h2>New repository.</h2></div>
+              <button className="icon-button" onClick={() => setShowCreate(false)}><X size={18} /></button>
+            </div>
+            <form onSubmit={createRepo} className="form-stack">
+              <label>REPOSITORY NAME<Input required maxLength={80} value={newRepoName} onChange={(e) => { setNewRepoName(e.target.value); setNewRepoSlug(slugify(e.target.value)); }} placeholder="e.g. moonships" /></label>
+              <label>SLUG<Input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={newRepoSlug} onChange={(e) => setNewRepoSlug(e.target.value)} placeholder="moonships" /></label>
+              <label>DESCRIPTION <span className="optional">OPTIONAL</span><textarea maxLength={280} value={newRepoDescription} onChange={(e) => setNewRepoDescription(e.target.value)} placeholder="What are you building?" rows={3} /></label>
+              <label>VISIBILITY
+                <select value={visibility} onChange={(e) => setVisibility(e.target.value as "private" | "public")}>
+                  <option value="private">Private — only you can access</option>
+                  <option value="public">Public — anyone can clone</option>
+                </select>
+              </label>
+              <div className="modal-actions">
+                <Button type="button" variant="secondary" onClick={() => setShowCreate(false)}>Cancel</Button>
+                <Button variant="primary" disabled={busy}>{busy ? "CREATING..." : <><Plus size={16} /> Create repository</>}</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
-      {showToken && <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) { setShowToken(false); setCreatedToken(null); } }}><div className="modal-card"><div className="modal-head"><div><div className="eyebrow muted">SECURITY / CREDENTIALS</div><h2>Personal access token.</h2></div><button className="icon-button" onClick={() => { setShowToken(false); setCreatedToken(null); }}><X size={18} /></button></div>{createdToken ? <div className="token-created"><div className="token-success"><Check size={16} /> TOKEN CREATED — COPY NOW</div><p>This secret cannot be displayed again. Store it in your password manager.</p><div className="token-value"><code>{createdToken.token}</code><button className="button secondary" onClick={() => copyText(createdToken.token)}>{copied ? <Check size={15} /> : <Copy size={15} />}{copied ? "Copied" : "Copy"}</button></div><div className="token-meta">PREFIX <b>{createdToken.token_prefix}</b> · NAME <b>{createdToken.name}</b></div><button className="button primary wide" onClick={() => { setShowToken(false); setCreatedToken(null); }}>Done</button></div> : <form onSubmit={createAccessToken} className="form-stack"><p className="subcopy">Use this token as the password when Git prompts for HTTP credentials.</p><label>TOKEN NAME<input required maxLength={80} value={tokenName} onChange={(e) => setTokenName(e.target.value)} /></label><div className="scope-box"><span>PERMISSIONS</span><label className="check-row"><input type="checkbox" checked={tokenScopes.includes("repo:read")} onChange={(e) => setTokenScopes((s) => e.target.checked ? [...s, "repo:read"] : s.filter((v) => v !== "repo:read"))} /> Read / clone repositories</label><label className="check-row"><input type="checkbox" checked={tokenScopes.includes("repo:write")} onChange={(e) => setTokenScopes((s) => e.target.checked ? [...s, "repo:write"] : s.filter((v) => v !== "repo:write"))} /> Push / write repositories</label></div><div className="modal-actions"><button type="button" className="button secondary" onClick={() => setShowToken(false)}>Cancel</button><button className="button primary" disabled={busy || tokenScopes.length === 0}>{busy ? "GENERATING..." : <><KeyRound size={16} /> Generate token</>}</button></div></form>}</div></div>}
+      {showToken && (
+        <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) { setShowToken(false); setCreatedToken(null); } }}>
+          <div className="modal-card">
+            <div className="modal-head">
+              <div><div className="eyebrow muted">SECURITY / CREDENTIALS</div><h2>Personal access token.</h2></div>
+              <button className="icon-button" onClick={() => { setShowToken(false); setCreatedToken(null); }}><X size={18} /></button>
+            </div>
+            {createdToken ? (
+              <div className="token-created">
+                <div className="token-success"><Check size={16} /> TOKEN CREATED — COPY NOW</div>
+                <p>This secret cannot be displayed again. Store it in your password manager.</p>
+                <div className="token-value"><code>{createdToken.token}</code><Button variant="secondary" onClick={() => copyText(createdToken.token)}>{copied ? <Check size={15} /> : <Copy size={15} />}{copied ? "Copied" : "Copy"}</Button></div>
+                <div className="token-meta">PREFIX <b>{createdToken.token_prefix}</b> · NAME <b>{createdToken.name}</b></div>
+                <Button variant="primary" className="w-full mt-3" onClick={() => { setShowToken(false); setCreatedToken(null); }}>Done</Button>
+              </div>
+            ) : (
+              <form onSubmit={createAccessToken} className="form-stack">
+                <p className="subcopy">Use this token as the password when Git prompts for HTTP credentials.</p>
+                <label>TOKEN NAME<Input required maxLength={80} value={tokenName} onChange={(e) => setTokenName(e.target.value)} /></label>
+                <div className="scope-box">
+                  <span>PERMISSIONS</span>
+                  <label className="check-row"><input type="checkbox" checked={tokenScopes.includes("repo:read")} onChange={(e) => setTokenScopes((s) => e.target.checked ? [...s, "repo:read"] : s.filter((v) => v !== "repo:read"))} /> Read / clone repositories</label>
+                  <label className="check-row"><input type="checkbox" checked={tokenScopes.includes("repo:write")} onChange={(e) => setTokenScopes((s) => e.target.checked ? [...s, "repo:write"] : s.filter((v) => v !== "repo:write"))} /> Push / write repositories</label>
+                </div>
+                <div className="modal-actions">
+                  <Button type="button" variant="secondary" onClick={() => setShowToken(false)}>Cancel</Button>
+                  <Button variant="primary" disabled={busy || tokenScopes.length === 0}>{busy ? "GENERATING..." : <><KeyRound size={16} /> Generate token</>}</Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
       <div className="copy-toast" data-show={copied}><Check size={14} /> COPIED TO CLIPBOARD</div>
     </main>
   );
