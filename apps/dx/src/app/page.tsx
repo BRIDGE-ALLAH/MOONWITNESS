@@ -374,6 +374,10 @@ export default function LandingPage() {
               <b style={{ display: "block", fontSize: 13 }}>INFRA MESH</b>
               <span style={{ fontSize: 10, color: "var(--muted)" }}>E-ISP (:3003)</span>
             </Card>
+            <Card variant="gold" style={{ padding: 14 }}>
+              <b style={{ display: "block", fontSize: 13 }}>ROOT ID</b>
+              <span style={{ fontSize: 10, color: "var(--muted)" }}>RID (:3004)</span>
+            </Card>
           </div>
         </div>
 

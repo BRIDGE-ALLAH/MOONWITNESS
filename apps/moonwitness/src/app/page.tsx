@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Moon, Sparkles, Send, Code2, Server } from "lucide-react";
+import { Moon, Sparkles, Send, Code2, Server, Disc3 } from "lucide-react";
 import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero, EcosystemBridgeGrid } from "@local-git/ui";
 
 interface Transmission {
@@ -109,6 +109,9 @@ export default function MoonWitnessPage() {
             </a>
             <a href="http://127.0.0.1:3003" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
               <Button variant="primary" size="sm"><Server size={14} /> E-ISP (:3003)</Button>
+            </a>
+            <a href="http://127.0.0.1:3004" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="secondary" size="sm"><Disc3 size={14} /> RID (:3004)</Button>
             </a>
           </>
         }

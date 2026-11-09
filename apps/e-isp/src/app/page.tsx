@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Disc3 } from "lucide-react";
 import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader, EcosystemHero } from "@local-git/ui";
 
 type InfraStatus = {
@@ -51,6 +52,9 @@ export default function EISPPage() {
             <a href="#compute" style={{ textDecoration: "none" }}><Button variant="secondary" size="sm">COMPUTE</Button></a>
             <a href="#storage" style={{ textDecoration: "none" }}><Button variant="secondary" size="sm">STORAGE</Button></a>
             <a href="#topology" style={{ textDecoration: "none" }}><Button variant="secondary" size="sm">TOPOLOGY</Button></a>
+            <a href="http://127.0.0.1:3004" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="ghost" size="sm"><Disc3 size={14} /> RID (:3004)</Button>
+            </a>
           </>
         }
       />
