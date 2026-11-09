@@ -46,6 +46,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       borderRadius: "var(--radius, 0px)",
       boxShadow: variant === "ghost" ? "none" : "3px 3px 0 rgba(0,0,0,0.28)",
       transition: "transform 0.1s, opacity 0.15s",
+      maxWidth: "100%",
+      whiteSpace: "normal",
+      textAlign: "center",
+      wordBreak: "break-word",
       ...sizes[size],
       ...style,
     };

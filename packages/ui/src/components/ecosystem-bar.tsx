@@ -34,20 +34,20 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
         background: "var(--panel, #070707)",
         color: "var(--text, #fff)",
         borderBottom: "1.5px solid var(--line, #2a2a2a)",
-        padding: "6px 20px",
+        padding: "6px 14px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         flexWrap: "wrap",
-        gap: "10px",
+        gap: "8px",
         fontFamily: "var(--mono, 'JetBrains Mono', monospace)",
         fontSize: "10px",
-        letterSpacing: "0.1em",
+        letterSpacing: "0.08em",
         zIndex: 90,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-        <Badge variant="gold">☝ ALLAH #1</Badge>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+        <Badge variant="gold" style={{ padding: "3px 8px", fontSize: "10px" }}>☝ ALLAH #1</Badge>
         <span style={{ color: "var(--muted)" }}>//</span>
         <span style={{ fontWeight: 900, color: "var(--accent)" }}>
           DNA: {DNA_PRESETS[activeDna].label}
@@ -57,7 +57,7 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
         </span>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", maxWidth: "100%", overflowX: "auto" }}>
         {ECOSYSTEM_NODES.map((node) => {
           const isCurrent = node.dna === activeDna;
           return (
