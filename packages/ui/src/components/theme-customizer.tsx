@@ -9,6 +9,8 @@ import React, {
   useCallback,
 } from "react";
 import { EcosystemTopBar, EcosystemFooter } from "./ecosystem-bar";
+import { AuthProvider } from "./auth-context";
+import { EcosystemLoginModal } from "./ecosystem-login-modal";
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────────
 
@@ -465,12 +467,15 @@ export function EcosystemShell({
   children: React.ReactNode;
 }) {
   return (
-    <ThemeProvider defaultDna={dna}>
-      <EcosystemTopBar currentDna={dna} />
-      {children}
-      <EcosystemFooter currentDna={dna} />
-      <ThemeCustomizer />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider defaultDna={dna}>
+        <EcosystemTopBar currentDna={dna} />
+        {children}
+        <EcosystemFooter currentDna={dna} />
+        <ThemeCustomizer />
+        <EcosystemLoginModal appName={DNA_PRESETS[dna]?.label} />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

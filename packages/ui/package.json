@@ -18,6 +18,7 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
+    "pocketbase": "^0.28.2",
     "tailwind-merge": "^3.0.2"
   },
   "peerDependencies": {
@@ -31,4 +32,3 @@
     "typescript": "^5.9.0"
   }
 }
-

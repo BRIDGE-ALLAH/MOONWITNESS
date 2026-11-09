@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useThemeSafe, type AppDnaId, DNA_PRESETS, SKINS } from "./theme-customizer";
+import { useAuthSafe } from "./auth-context";
 import { Badge, type BadgeProps } from "./badge";
 import { Card, CardTitle, CardDescription, CardFooter } from "./card";
 import { Button } from "./button";
@@ -24,6 +25,7 @@ const ECOSYSTEM_NODES: Array<{
 
 export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
   const ctx = useThemeSafe();
+  const auth = useAuthSafe();
   const activeDna = currentDna || ctx?.theme.dna || "dx";
   const mode = ctx?.theme.mode || "dark";
   const skinId = ctx?.theme.skin || "grunge";
@@ -83,6 +85,63 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
             </a>
           );
         })}
+
+        {auth && (
+          auth.isAuthenticated ? (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", marginLeft: "4px" }}>
+              <span
+                style={{
+                  padding: "3px 8px",
+                  background: "var(--panel2)",
+                  border: "1.5px solid var(--accent)",
+                  color: "var(--accent)",
+                  borderRadius: "var(--radius, 0px)",
+                  fontWeight: 900,
+                  fontSize: "9px",
+                }}
+                title={`Operator: ${auth.user?.email || auth.user?.username}`}
+              >
+                ⚡ {auth.user?.name || auth.user?.username || auth.user?.email?.split("@")[0] || "OPERATOR"}
+              </span>
+              <button
+                onClick={auth.logout}
+                title="Disconnect Operator Session"
+                style={{
+                  padding: "3px 7px",
+                  background: "transparent",
+                  border: "1.5px solid var(--line2)",
+                  color: "var(--muted)",
+                  fontFamily: "inherit",
+                  fontSize: "9px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  borderRadius: "var(--radius, 0px)",
+                }}
+              >
+                LOGOUT
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={auth.openLoginModal}
+              title="Sign into Sovereign Mesh"
+              style={{
+                padding: "3px 9px",
+                background: "var(--accent)",
+                border: "1.5px solid var(--text)",
+                color: "#000",
+                fontFamily: "inherit",
+                fontSize: "10px",
+                fontWeight: 900,
+                cursor: "pointer",
+                borderRadius: "var(--radius, 0px)",
+                marginLeft: "4px",
+              }}
+            >
+              LOGIN ↗
+            </button>
+          )
+        )}
 
         {ctx && (
           <button
