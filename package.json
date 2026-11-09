@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "concurrently -k -n DX,GIT -c blue,green \"bun run dev:dx\" \"bun run dev:git\"",
     "dev:all": "concurrently -k -n DX,EMPIRE,MOON,EISP,GIT -c blue,yellow,cyan,magenta,green \"bun run dev:dx\" \"bun run dev:empire\" \"bun run dev:moon\" \"bun run dev:eisp\" \"bun run dev:git\"",
+    "dev-all": "bun run dev:all",
     "dev:dx": "bun --filter @local-git/dx dev",
     "dev:empire": "bun --filter @local-git/empire dev",
     "dev:moon": "bun --filter @local-git/moonwitness dev",
