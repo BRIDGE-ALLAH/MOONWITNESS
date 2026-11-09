@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Moon, Sparkles, Send, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -112,30 +112,21 @@ export default function MoonWitnessPage() {
       />
 
       {/* HERO SECTION */}
-      <section className="lunar-hero">
-        <Badge variant="cyan" style={{ marginBottom: 24, padding: "6px 18px", fontSize: 11 }}>
-          ★ WHEN THE MOON IS HIGH WE SHARE MESSAGE AND KNOWLEDGE ★
-        </Badge>
-
-        <h1 style={{ color: "var(--text)" }}>
-          THE CELESTIAL WITNESS.<br />
-          <span style={{ color: "var(--accent)" }}>PRESERVING SACRED KNOWLEDGE.</span>
-        </h1>
-
-        <p style={{ color: "var(--muted)" }}>
-          MoonWitness adalah observatorium hidup dan penjaga arsip ilmu pengetahuan semesta.
-          Ketika malam tiba dan rembulan meninggi, kami mengumpulkan hikmah, sains astronomis,
-          dan refleksi hakiki untuk dibagikan kepada umat manusia secara bebas tanpa sensor korporat.
-        </p>
-
-        {/* LUNAR TELEMETRY PANEL */}
-        <div style={{ maxWidth: 920, margin: "0 auto 60px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 14, textAlign: "left" }}>
-          <StatMetric label="CURRENT LUNAR PHASE" value={moonData.phase} variant="cyan" valueColor="var(--accent)" />
-          <StatMetric label="SURFACE ILLUMINATION" value={moonData.illumination} sub="albedo reflection" />
-          <StatMetric label="SYNODIC AGE" value={`${moonData.ageDays} DAYS`} sub="orbital cycle" />
-          <StatMetric label="ESTIMATED FULL MOON" value={moonData.nextFullMoon} sub="ephemeris lock" />
-        </div>
-      </section>
+      <EcosystemHero
+        eyebrow="★ WHEN THE MOON IS HIGH WE SHARE MESSAGE AND KNOWLEDGE ★"
+        badgeVariant="cyan"
+        title="THE CELESTIAL WITNESS."
+        highlight="PRESERVING SACRED KNOWLEDGE."
+        description="MoonWitness adalah observatorium hidup dan penjaga arsip ilmu pengetahuan semesta. Ketika malam tiba dan rembulan meninggi, kami mengumpulkan hikmah, sains astronomis, dan refleksi hakiki untuk dibagikan kepada umat manusia secara bebas tanpa sensor korporat."
+        bottomSlot={
+          <div style={{ maxWidth: 920, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 14, textAlign: "left" }}>
+            <StatMetric label="CURRENT LUNAR PHASE" value={moonData.phase} variant="cyan" valueColor="var(--accent)" />
+            <StatMetric label="SURFACE ILLUMINATION" value={moonData.illumination} sub="albedo reflection" />
+            <StatMetric label="SYNODIC AGE" value={`${moonData.ageDays} DAYS`} sub="orbital cycle" />
+            <StatMetric label="ESTIMATED FULL MOON" value={moonData.nextFullMoon} sub="ephemeris lock" />
+          </div>
+        }
+      />
 
       {/* KNOWLEDGE SCROLLS & ARTICLES */}
       <section className="archive-section">

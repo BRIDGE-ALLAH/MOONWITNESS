@@ -764,5 +764,115 @@ export function EcosystemSiteHeader({
   );
 }
 
+// ─── 12. SHARED ECOSYSTEM HERO BANNER ─────────────────────────────────────────
+
+export interface EcosystemHeroProps {
+  eyebrow: string;
+  badgeVariant?: BadgeProps["variant"];
+  monumentalSymbol?: React.ReactNode;
+  title: React.ReactNode;
+  highlight?: string;
+  description: React.ReactNode;
+  actions?: React.ReactNode;
+  bottomSlot?: React.ReactNode;
+  align?: "center" | "left";
+}
+
+export function EcosystemHero({
+  eyebrow,
+  badgeVariant = "outline",
+  monumentalSymbol,
+  title,
+  highlight,
+  description,
+  actions,
+  bottomSlot,
+  align = "center",
+}: EcosystemHeroProps) {
+  return (
+    <section
+      style={{
+        padding: "72px 5vw 60px",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        textAlign: align,
+        position: "relative",
+      }}
+    >
+      <div style={{ marginBottom: "22px" }}>
+        <Badge variant={badgeVariant} style={{ padding: "6px 16px", fontSize: "11px" }}>
+          {eyebrow}
+        </Badge>
+      </div>
+
+      {monumentalSymbol && (
+        <div
+          style={{
+            fontFamily: "serif",
+            fontSize: "clamp(64px, 12vw, 140px)",
+            color: "var(--accent)",
+            lineHeight: 0.95,
+            marginBottom: "18px",
+            filter: "drop-shadow(0 0 28px var(--accent-dim))",
+            userSelect: "none",
+          }}
+        >
+          {monumentalSymbol}
+        </div>
+      )}
+
+      <h1
+        style={{
+          fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
+          fontWeight: 900,
+          fontSize: "clamp(30px, 5vw, 56px)",
+          lineHeight: 1.08,
+          letterSpacing: "-0.02em",
+          textTransform: "uppercase",
+          color: "var(--text)",
+          margin: "0 0 20px",
+        }}
+      >
+        {title}
+        {highlight && (
+          <>
+            <br />
+            <span style={{ color: "var(--accent)" }}>{highlight}</span>
+          </>
+        )}
+      </h1>
+
+      <p
+        style={{
+          fontSize: "clamp(14px, 1.8vw, 17px)",
+          lineHeight: 1.75,
+          color: "var(--muted)",
+          maxWidth: "820px",
+          margin: align === "center" ? "0 auto 32px" : "0 0 32px",
+        }}
+      >
+        {description}
+      </p>
+
+      {actions && (
+        <div
+          style={{
+            display: "flex",
+            gap: "12px",
+            justifyContent: align === "center" ? "center" : "flex-start",
+            flexWrap: "wrap",
+            marginBottom: bottomSlot ? "42px" : 0,
+          }}
+        >
+          {actions}
+        </div>
+      )}
+
+      {bottomSlot && <div>{bottomSlot}</div>}
+    </section>
+  );
+}
+
+
 
 

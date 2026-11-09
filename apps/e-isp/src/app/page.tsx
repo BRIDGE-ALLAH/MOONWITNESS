@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, Badge, Button, StatMetric, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader, EcosystemHero } from "@local-git/ui";
 
 type InfraStatus = {
   containers: { running: number; total: number } | null;
@@ -56,17 +56,16 @@ export default function EISPPage() {
       />
 
       <main>
-        <Card variant="cyan" className="hero" id="overview" style={{ marginBottom: 32 }}>
-          <Badge variant="cyan" style={{ marginBottom: 14 }}>∴ SOVEREIGN INFRASTRUCTURE LAYER</Badge>
-          <h1 style={{ color: "var(--text)" }}>
-            EDGE-INFRA<br />
-            <span style={{ color: "var(--accent)" }}>SCALE PLATFORM</span>
-          </h1>
-          <div className="hero-sub" style={{ color: "var(--muted)" }}>
-            Tri-cloud sovereign mesh. No vendor dependency. No external lock-in.<br />
-            Edge Shield × Bare-Metal Compute × Distributed Storage — owned end-to-end.
-          </div>
-        </Card>
+        <div id="overview">
+          <EcosystemHero
+            eyebrow="∴ SOVEREIGN INFRASTRUCTURE LAYER"
+            badgeVariant="cyan"
+            title="EDGE-INFRA"
+            highlight="SCALE PLATFORM"
+            description="Tri-cloud sovereign mesh. No vendor dependency. No external lock-in. Edge Shield × Bare-Metal Compute × Distributed Storage — owned end-to-end."
+            align="left"
+          />
+        </div>
 
         {/* Live Status */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 32 }}>

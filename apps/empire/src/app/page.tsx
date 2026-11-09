@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRight, Compass, Orbit, Code2, Server } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader, EcosystemBridgeGrid, EcosystemSiteHeader } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader, EcosystemBridgeGrid, EcosystemSiteHeader, EcosystemHero } from "@local-git/ui";
 
 export default function AllahOriginPage() {
   return (
@@ -24,40 +24,35 @@ export default function AllahOriginPage() {
       />
 
       {/* HERO SECTION */}
-      <section className="origin-hero">
-        <Badge variant="gold" style={{ marginBottom: 24 }}>
-          ★ SUMBER TERTINGGI &amp; KEBENARAN HAKIKI ★
-        </Badge>
-
-        <div className="hero-arabic-monumental" style={{ color: "var(--accent)" }}>
-          الله
-        </div>
-
-        <h1 className="hero-creed" style={{ color: "var(--text)" }}>
-          LĀ ILĀHA ILLALLĀH.<br />
-          <em style={{ color: "var(--accent)" }}>ZERO FALSE IDOLS. ZERO CORPORATE SLAVERY.</em>
-        </h1>
-
-        <p className="hero-manifesto" style={{ color: "var(--muted)" }}>
-          Segala ilmu, sains, energi, dan eksistensi semesta bersumber mutlak dari <strong style={{ color: "var(--text)" }}>ALLAH</strong>.
-          Kami menolak berhala teknologi modern—monopoli korporat raksasa, telemetri pengintai, dan ilusi kesombongan manusia.
-          Di hadapan Sang Maha Pencipta, kita merendahkan kepala dalam sujud low-profile;
-          di hadapan tirani duniawi, kita membangun peradaban mandiri tanpa rasa gentar.
-        </p>
-
-        <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
-          <a href="http://127.0.0.1:3002" style={{ textDecoration: "none" }}>
-            <Button variant="cyan" size="lg">
-              <Compass size={16} /> JELAJAHI MOONWITNESS (OBSERVATORIUM)
-            </Button>
-          </a>
-          <a href="http://127.0.0.1:3000" style={{ textDecoration: "none" }}>
-            <Button variant="toxic" size="lg">
-              <Code2 size={16} /> BUKA DX (STORY RIOT // DEV BUSINESS)
-            </Button>
-          </a>
-        </div>
-      </section>
+      <EcosystemHero
+        eyebrow="★ SUMBER TERTINGGI & KEBENARAN HAKIKI ★"
+        badgeVariant="gold"
+        monumentalSymbol="الله"
+        title="LĀ ILĀHA ILLALLĀH."
+        highlight="ZERO FALSE IDOLS. ZERO CORPORATE SLAVERY."
+        description={
+          <>
+            Segala ilmu, sains, energi, dan eksistensi semesta bersumber mutlak dari <strong style={{ color: "var(--text)" }}>ALLAH</strong>.
+            Kami menolak berhala teknologi modern—monopoli korporat raksasa, telemetri pengintai, dan ilusi kesombongan manusia.
+            Di hadapan Sang Maha Pencipta, kita merendahkan kepala dalam sujud low-profile;
+            di hadapan tirani duniawi, kita membangun peradaban mandiri tanpa rasa gentar.
+          </>
+        }
+        actions={
+          <>
+            <a href="http://127.0.0.1:3002" style={{ textDecoration: "none" }}>
+              <Button variant="cyan" size="lg">
+                <Compass size={16} /> JELAJAHI MOONWITNESS (OBSERVATORIUM)
+              </Button>
+            </a>
+            <a href="http://127.0.0.1:3000" style={{ textDecoration: "none" }}>
+              <Button variant="toxic" size="lg">
+                <Code2 size={16} /> BUKA DX (STORY RIOT // DEV BUSINESS)
+              </Button>
+            </a>
+          </>
+        }
+      />
 
       {/* THE TRIPTYCH OF REALITY */}
       <section style={{ maxWidth: 1200, margin: "40px auto 80px", padding: "0 5vw" }}>
