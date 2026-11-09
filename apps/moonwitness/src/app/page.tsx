@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Moon, Sparkles, Send, Code2, Server, Disc3 } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero, EcosystemBridgeGrid } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero, EcosystemBridgeGrid, useAuthSafe } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -13,6 +13,7 @@ interface Transmission {
 }
 
 export default function MoonWitnessPage() {
+  const auth = useAuthSafe();
   const [moonData, setMoonData] = useState({
     phase: "Waxing Gibbous",
     illumination: "87%",
@@ -49,6 +50,18 @@ export default function MoonWitnessPage() {
   ]);
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem("moonwitness-transmissions");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setTransmissions(parsed);
+        }
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
     const now = new Date();
     const cycle = 29.53058867;
     const baseDate = new Date("2000-01-06T18:14:00Z");
@@ -81,14 +94,21 @@ export default function MoonWitnessPage() {
   const dispatchKnowledge = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
+    const authorTag = auth?.user?.name || auth?.user?.username || (authorName.trim() ? authorName.trim() : "anonymous-witness");
     const newTx: Transmission = {
       id: `mw-${Date.now().toString().slice(-4)}`,
-      author: authorName.trim() ? `@${authorName.trim()}` : "@anonymous-witness",
+      author: authorTag.startsWith("@") ? authorTag : `@${authorTag}`,
       text: message.trim(),
       timestamp: new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC",
       coordinates: `RA 05h ${(Math.random() * 50).toFixed(0).padStart(2, "0")}m / Dec +${(Math.random() * 20).toFixed(0)}°`,
     };
-    setTransmissions((prev) => [newTx, ...prev]);
+    setTransmissions((prev) => {
+      const updated = [newTx, ...prev];
+      try {
+        localStorage.setItem("moonwitness-transmissions", JSON.stringify(updated.slice(0, 30)));
+      } catch {}
+      return updated;
+    });
     setMessage("");
   };
 
