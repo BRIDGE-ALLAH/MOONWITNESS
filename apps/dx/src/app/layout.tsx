@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { defaultBrandingConfig } from "@/config/branding";
-import { ClientShell } from "./client-shell";
+import { EcosystemShell } from "@local-git/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: `${defaultBrandingConfig.name} – Private Git, your infrastructure`,
+  title: `${defaultBrandingConfig.name} – Story Riot // Creative Chaos // Developer Business`,
   description: defaultBrandingConfig.description,
 };
 
@@ -12,7 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ClientShell>{children}</ClientShell>
+        <EcosystemShell dna="dx">{children}</EcosystemShell>
       </body>
     </html>
   );

@@ -11,106 +11,198 @@ import React, {
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────────
 
-export type SkinId = "grunge" | "phantom" | "neon" | "acid" | "void" | "steel";
+export type AppDnaId = "dx" | "empire" | "moonwitness" | "eisp";
+export type ModeId = "dark" | "light";
+export type SkinId = "grunge" | "sacred" | "celestial" | "steel" | "phantom" | "acid";
 export type AccentId = "toxic" | "lime" | "cyan" | "gold" | "purple" | "orange";
 export type RadiusId = "none" | "sm" | "md";
-export type FontId = "mono" | "sans";
+export type FontId = "mono" | "sans" | "serif";
 
 export interface ThemeConfig {
+  dna: AppDnaId;
+  mode: ModeId;
   skin: SkinId;
   accent: AccentId;
   radius: RadiusId;
   font: FontId;
 }
 
-// ─── DATA ──────────────────────────────────────────────────────────────────────
+// ─── DNA PRESETS (Each ecosystem site has its own default DNA) ─────────────────
+
+export const DNA_PRESETS: Record<
+  AppDnaId,
+  { label: string; subtitle: string; defaultSkin: SkinId; defaultAccent: AccentId; defaultFont: FontId }
+> = {
+  dx: {
+    label: "DX // STORY RIOT",
+    subtitle: "Creative Chaos · Developer Business",
+    defaultSkin: "grunge",
+    defaultAccent: "toxic",
+    defaultFont: "mono",
+  },
+  empire: {
+    label: "EMPIRE // A-L-L-A-H.COM",
+    subtitle: "Supreme Origin · Tawhid · Sacred Gold",
+    defaultSkin: "sacred",
+    defaultAccent: "gold",
+    defaultFont: "serif",
+  },
+  moonwitness: {
+    label: "MOONWITNESS",
+    subtitle: "Living Observatory · Celestial Archive",
+    defaultSkin: "celestial",
+    defaultAccent: "cyan",
+    defaultFont: "mono",
+  },
+  eisp: {
+    label: "E-ISP // SOVEREIGN MESH",
+    subtitle: "Edge Shield · Compute · Storage Fabric",
+    defaultSkin: "steel",
+    defaultAccent: "cyan",
+    defaultFont: "mono",
+  },
+};
+
+// ─── SKINS (Dual Palette: Dark + Light) ────────────────────────────────────────
+
+export interface SkinPalette {
+  bg: string;
+  panel: string;
+  panel2: string;
+  line: string;
+  line2: string;
+  text: string;
+  muted: string;
+}
 
 export const SKINS: Record<
   SkinId,
-  { label: string; bg: string; panel: string; vars: Record<string, string> }
+  { label: string; dark: SkinPalette; light: SkinPalette }
 > = {
   grunge: {
     label: "GRUNGE",
-    bg: "#000000",
-    panel: "#0d0d0d",
-    vars: {
-      "--bg": "#000000",
-      "--panel": "#070707",
-      "--panel2": "#111111",
-      "--line": "#2a2a2a",
-      "--line2": "#444444",
-      "--text": "#ffffff",
-      "--muted": "#a3a3a3",
+    dark: {
+      bg: "#000000",
+      panel: "#070707",
+      panel2: "#111111",
+      line: "#2a2a2a",
+      line2: "#444444",
+      text: "#ffffff",
+      muted: "#a3a3a3",
+    },
+    light: {
+      bg: "#f4f3ef",
+      panel: "#ffffff",
+      panel2: "#eae8e1",
+      line: "#111111",
+      line2: "#333333",
+      text: "#050505",
+      muted: "#555555",
     },
   },
-  phantom: {
-    label: "PHANTOM",
-    bg: "#0a0a12",
-    panel: "#0f0f1a",
-    vars: {
-      "--bg": "#0a0a12",
-      "--panel": "#0f0f1a",
-      "--panel2": "#16162a",
-      "--line": "#2a2a40",
-      "--line2": "#3a3a55",
-      "--text": "#e8e8ff",
-      "--muted": "#8888aa",
+  sacred: {
+    label: "SACRED",
+    dark: {
+      bg: "#030302",
+      panel: "#0a0905",
+      panel2: "#141109",
+      line: "#2e2612",
+      line2: "#4d3f1d",
+      text: "#f9f6f0",
+      muted: "#a89f89",
+    },
+    light: {
+      bg: "#fcfaf5",
+      panel: "#ffffff",
+      panel2: "#f3efe4",
+      line: "#c5a059",
+      line2: "#8c6d2f",
+      text: "#17140a",
+      muted: "#6b5e40",
     },
   },
-  neon: {
-    label: "NEON",
-    bg: "#010f0f",
-    panel: "#021818",
-    vars: {
-      "--bg": "#010f0f",
-      "--panel": "#021818",
-      "--panel2": "#032222",
-      "--line": "#003333",
-      "--line2": "#005555",
-      "--text": "#ccffff",
-      "--muted": "#66aaaa",
+  celestial: {
+    label: "CELESTIAL",
+    dark: {
+      bg: "#030712",
+      panel: "#0b1329",
+      panel2: "#111e3f",
+      line: "#1e293b",
+      line2: "#334155",
+      text: "#f8fafc",
+      muted: "#94a3b8",
     },
-  },
-  acid: {
-    label: "ACID",
-    bg: "#080800",
-    panel: "#111100",
-    vars: {
-      "--bg": "#080800",
-      "--panel": "#111100",
-      "--panel2": "#1a1900",
-      "--line": "#2a2a00",
-      "--line2": "#3a3a00",
-      "--text": "#ffffcc",
-      "--muted": "#aaaa66",
-    },
-  },
-  void: {
-    label: "VOID",
-    bg: "#050505",
-    panel: "#0a0a0a",
-    vars: {
-      "--bg": "#050505",
-      "--panel": "#0a0a0a",
-      "--panel2": "#111111",
-      "--line": "#1a1a1a",
-      "--line2": "#222222",
-      "--text": "#cccccc",
-      "--muted": "#666666",
+    light: {
+      bg: "#f0f7ff",
+      panel: "#ffffff",
+      panel2: "#e0effe",
+      line: "#93c5fd",
+      line2: "#3b82f6",
+      text: "#09152b",
+      muted: "#475569",
     },
   },
   steel: {
     label: "STEEL",
-    bg: "#030308",
-    panel: "#08080f",
-    vars: {
-      "--bg": "#030308",
-      "--panel": "#08080f",
-      "--panel2": "#0d0d18",
-      "--line": "#1a1a30",
-      "--line2": "#252545",
-      "--text": "#d0d0ff",
-      "--muted": "#7070aa",
+    dark: {
+      bg: "#030305",
+      panel: "#0a0a0f",
+      panel2: "#12121c",
+      line: "#1f1f2e",
+      line2: "#32324a",
+      text: "#e2e4f0",
+      muted: "#7c809b",
+    },
+    light: {
+      bg: "#eef0f5",
+      panel: "#ffffff",
+      panel2: "#e1e4ed",
+      line: "#9ca3b8",
+      line2: "#4b5563",
+      text: "#0b0d14",
+      muted: "#525866",
+    },
+  },
+  phantom: {
+    label: "PHANTOM",
+    dark: {
+      bg: "#090612",
+      panel: "#110b22",
+      panel2: "#1b1136",
+      line: "#2e1d59",
+      line2: "#492e8c",
+      text: "#f2ebff",
+      muted: "#9b87c2",
+    },
+    light: {
+      bg: "#f7f4ff",
+      panel: "#ffffff",
+      panel2: "#ede6ff",
+      line: "#b399ff",
+      line2: "#7c4dff",
+      text: "#150a2b",
+      muted: "#5e4b82",
+    },
+  },
+  acid: {
+    label: "ACID",
+    dark: {
+      bg: "#070800",
+      panel: "#101200",
+      panel2: "#191c00",
+      line: "#2d3300",
+      line2: "#485200",
+      text: "#f9ffcc",
+      muted: "#9da668",
+    },
+    light: {
+      bg: "#f9fbe8",
+      panel: "#ffffff",
+      panel2: "#eff5c9",
+      line: "#8a9900",
+      line2: "#4d5700",
+      text: "#121400",
+      muted: "#596128",
     },
   },
 };
@@ -124,17 +216,17 @@ export const ACCENTS: Record<
     color: "#ff0055",
     vars: {
       "--accent": "#ff0055",
-      "--accent-dim": "rgba(255,0,85,0.12)",
-      "--accent-border": "rgba(255,0,85,0.35)",
+      "--accent-dim": "rgba(255,0,85,0.14)",
+      "--accent-border": "rgba(255,0,85,0.45)",
     },
   },
   lime: {
     label: "LIME",
-    color: "#c8ff00",
+    color: "#00ff66",
     vars: {
-      "--accent": "#c8ff00",
-      "--accent-dim": "rgba(200,255,0,0.12)",
-      "--accent-border": "rgba(200,255,0,0.35)",
+      "--accent": "#00ff66",
+      "--accent-dim": "rgba(0,255,102,0.14)",
+      "--accent-border": "rgba(0,255,102,0.45)",
     },
   },
   cyan: {
@@ -142,17 +234,17 @@ export const ACCENTS: Record<
     color: "#00f0ff",
     vars: {
       "--accent": "#00f0ff",
-      "--accent-dim": "rgba(0,240,255,0.12)",
-      "--accent-border": "rgba(0,240,255,0.35)",
+      "--accent-dim": "rgba(0,240,255,0.14)",
+      "--accent-border": "rgba(0,240,255,0.45)",
     },
   },
   gold: {
     label: "GOLD",
-    color: "#c9a84c",
+    color: "#d4af37",
     vars: {
-      "--accent": "#c9a84c",
-      "--accent-dim": "rgba(201,168,76,0.12)",
-      "--accent-border": "rgba(201,168,76,0.35)",
+      "--accent": "#d4af37",
+      "--accent-dim": "rgba(212,175,55,0.14)",
+      "--accent-border": "rgba(212,175,55,0.45)",
     },
   },
   purple: {
@@ -160,8 +252,8 @@ export const ACCENTS: Record<
     color: "#bf00ff",
     vars: {
       "--accent": "#bf00ff",
-      "--accent-dim": "rgba(191,0,255,0.12)",
-      "--accent-border": "rgba(191,0,255,0.35)",
+      "--accent-dim": "rgba(191,0,255,0.14)",
+      "--accent-border": "rgba(191,0,255,0.45)",
     },
   },
   orange: {
@@ -169,32 +261,100 @@ export const ACCENTS: Record<
     color: "#ff5500",
     vars: {
       "--accent": "#ff5500",
-      "--accent-dim": "rgba(255,85,0,0.12)",
-      "--accent-border": "rgba(255,85,0,0.35)",
+      "--accent-dim": "rgba(255,85,0,0.14)",
+      "--accent-border": "rgba(255,85,0,0.45)",
     },
   },
 };
 
 export const RADII: Record<RadiusId, { label: string; value: string; preview: string }> = {
-  none:  { label: "SHARP",  value: "0px",  preview: "□" },
-  sm:    { label: "SOFT",   value: "4px",  preview: "▢" },
-  md:    { label: "ROUND",  value: "8px",  preview: "◻" },
+  none: { label: "SHARP", value: "0px", preview: "□" },
+  sm:   { label: "SOFT",  value: "4px", preview: "▢" },
+  md:   { label: "ROUND", value: "8px", preview: "◻" },
 };
 
 export const FONTS: Record<FontId, { label: string; stack: string; sample: string }> = {
-  mono: { label: "MONO", stack: "'JetBrains Mono', 'Courier New', monospace", sample: "0xDX" },
-  sans: { label: "SANS", stack: "system-ui, -apple-system, sans-serif", sample: "0xDX" },
+  mono:  { label: "MONO",  stack: "'JetBrains Mono', 'Courier New', monospace", sample: "0xDX" },
+  sans:  { label: "SANS",  stack: "system-ui, -apple-system, sans-serif",       sample: "AaBb" },
+  serif: { label: "SERIF", stack: "'Times New Roman', Georgia, serif",          sample: "ΩΣ" },
 };
 
-// ─── DEFAULTS ──────────────────────────────────────────────────────────────────
+// ─── HELPERS & STORAGE ─────────────────────────────────────────────────────────
 
-const DEFAULT_THEME: ThemeConfig = { skin: "grunge", accent: "toxic", radius: "none", font: "mono" };
-const STORAGE_KEY = "dx-theme-v1";
+export function getDefaultThemeForDna(dna: AppDnaId = "dx"): ThemeConfig {
+  const preset = DNA_PRESETS[dna];
+  return {
+    dna,
+    mode: "dark",
+    skin: preset.defaultSkin,
+    accent: preset.defaultAccent,
+    radius: "none",
+    font: preset.defaultFont,
+  };
+}
+
+export const STORAGE_KEY = "dx-ecosystem-theme-v2";
+
+function applyThemeToDOM(cfg: ThemeConfig) {
+  const root = document.documentElement;
+  const skinObj = SKINS[cfg.skin] || SKINS.grunge;
+  const palette = cfg.mode === "light" ? skinObj.light : skinObj.dark;
+  const accentObj = ACCENTS[cfg.accent] || ACCENTS.toxic;
+  const radiusObj = RADII[cfg.radius] || RADII.none;
+  const fontObj = FONTS[cfg.font] || FONTS.mono;
+
+  // Core unified variables + aliases used across all 4 apps
+  const vars: Record<string, string> = {
+    "--bg": palette.bg,
+    "--panel": palette.panel,
+    "--panel2": palette.panel2,
+    "--surface": palette.panel,
+    "--surface2": palette.panel2,
+    "--surface-alt": palette.panel2,
+    "--line": palette.line,
+    "--line2": palette.line2,
+    "--border": palette.line,
+    "--text": palette.text,
+    "--text-main": palette.text,
+    "--muted": palette.muted,
+    "--text-dim": palette.muted,
+    "--text-muted": palette.muted,
+    "--silver-dim": palette.muted,
+    "--radius": radiusObj.value,
+    "--font-body": fontObj.stack,
+    "--mono": FONTS.mono.stack,
+    ...accentObj.vars,
+  };
+
+  for (const [k, v] of Object.entries(vars)) {
+    root.style.setProperty(k, v);
+  }
+
+  root.dataset.dna = cfg.dna;
+  root.dataset.mode = cfg.mode;
+  root.dataset.skin = cfg.skin;
+  root.dataset.accent = cfg.accent;
+  root.style.colorScheme = cfg.mode;
+}
+
+function loadStored(defaultDna: AppDnaId): ThemeConfig {
+  const fallback = getDefaultThemeForDna(defaultDna);
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(`${STORAGE_KEY}:${defaultDna}`) || localStorage.getItem(STORAGE_KEY);
+    return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 // ─── CONTEXT ───────────────────────────────────────────────────────────────────
 
 interface ThemeCtx {
   theme: ThemeConfig;
+  setDna: (d: AppDnaId) => void;
+  setMode: (m: ModeId) => void;
+  toggleMode: () => void;
   setSkin: (s: SkinId) => void;
   setAccent: (a: AccentId) => void;
   setRadius: (r: RadiusId) => void;
@@ -210,70 +370,108 @@ export function useTheme() {
   return ctx;
 }
 
-function useThemeSafe() {
+export function useThemeSafe() {
   return useContext(ThemeContext);
 }
 
-function applyTheme(cfg: ThemeConfig) {
-  const root = document.documentElement;
-  for (const [k, v] of Object.entries(SKINS[cfg.skin].vars)) root.style.setProperty(k, v);
-  for (const [k, v] of Object.entries(ACCENTS[cfg.accent].vars)) root.style.setProperty(k, v);
-  root.style.setProperty("--radius", RADII[cfg.radius].value);
-  root.style.setProperty("--font-body", FONTS[cfg.font].stack);
-  root.dataset.skin = cfg.skin;
-  root.dataset.accent = cfg.accent;
-}
+// ─── PROVIDER & CENTRALIZED SHELL ──────────────────────────────────────────────
 
-function loadStored(): ThemeConfig {
-  if (typeof window === "undefined") return DEFAULT_THEME;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? { ...DEFAULT_THEME, ...JSON.parse(raw) } : DEFAULT_THEME;
-  } catch { return DEFAULT_THEME; }
-}
-
-// ─── PROVIDER ──────────────────────────────────────────────────────────────────
-
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<ThemeConfig>(DEFAULT_THEME);
+export function ThemeProvider({
+  defaultDna = "dx",
+  children,
+}: {
+  defaultDna?: AppDnaId;
+  children: React.ReactNode;
+}) {
+  const [theme, setTheme] = useState<ThemeConfig>(() => getDefaultThemeForDna(defaultDna));
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = loadStored();
+    const stored = loadStored(defaultDna);
     setTheme(stored);
-    applyTheme(stored);
+    applyThemeToDOM(stored);
     setMounted(true);
-  }, []);
+  }, [defaultDna]);
 
-  const update = useCallback((patch: Partial<ThemeConfig>) => {
+  const update = useCallback(
+    (patch: Partial<ThemeConfig>) => {
+      setTheme((prev) => {
+        const next = { ...prev, ...patch };
+        applyThemeToDOM(next);
+        localStorage.setItem(`${STORAGE_KEY}:${defaultDna}`, JSON.stringify(next));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        return next;
+      });
+    },
+    [defaultDna]
+  );
+
+  const setDna = useCallback(
+    (dna: AppDnaId) => {
+      const preset = DNA_PRESETS[dna];
+      update({
+        dna,
+        skin: preset.defaultSkin,
+        accent: preset.defaultAccent,
+        font: preset.defaultFont,
+      });
+    },
+    [update]
+  );
+
+  const setMode    = useCallback((mode: ModeId)     => update({ mode }), [update]);
+  const toggleMode = useCallback(() => {
     setTheme((prev) => {
-      const next = { ...prev, ...patch };
-      applyTheme(next);
+      const next: ThemeConfig = { ...prev, mode: prev.mode === "dark" ? "light" : "dark" };
+      applyThemeToDOM(next);
+      localStorage.setItem(`${STORAGE_KEY}:${defaultDna}`, JSON.stringify(next));
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       return next;
     });
-  }, []);
+  }, [defaultDna]);
 
   const setSkin   = useCallback((skin: SkinId)     => update({ skin }),   [update]);
   const setAccent = useCallback((accent: AccentId) => update({ accent }), [update]);
   const setRadius = useCallback((radius: RadiusId) => update({ radius }), [update]);
   const setFont   = useCallback((font: FontId)     => update({ font }),   [update]);
   const reset     = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
-    setTheme(DEFAULT_THEME);
-    applyTheme(DEFAULT_THEME);
-  }, []);
+    const def = getDefaultThemeForDna(defaultDna);
+    localStorage.removeItem(`${STORAGE_KEY}:${defaultDna}`);
+    setTheme(def);
+    applyThemeToDOM(def);
+  }, [defaultDna]);
 
   if (!mounted) return <>{children}</>;
 
   return (
-    <ThemeContext.Provider value={{ theme, setSkin, setAccent, setRadius, setFont, reset }}>
+    <ThemeContext.Provider
+      value={{ theme, setDna, setMode, toggleMode, setSkin, setAccent, setRadius, setFont, reset }}
+    >
       {children}
     </ThemeContext.Provider>
   );
 }
 
-// ─── CUSTOMIZER ────────────────────────────────────────────────────────────────
+/**
+ * Centralized Shared Shell — Drop this single component into any app's layout.tsx!
+ * Eliminates duplicate client-shell.tsx files across workspaces.
+ */
+export function EcosystemShell({
+  dna = "dx",
+  children,
+}: {
+  dna?: AppDnaId;
+  children: React.ReactNode;
+}) {
+  return (
+    <ThemeProvider defaultDna={dna}>
+      {children}
+      <ThemeCustomizer />
+    </ThemeProvider>
+  );
+}
+
+// ─── VUEXY-STYLE THEME CUSTOMIZER DRAWER ───────────────────────────────────────
 
 export function ThemeCustomizer() {
   const [open, setOpen] = useState(false);
@@ -281,28 +479,20 @@ export function ThemeCustomizer() {
   const panelRef = useRef<HTMLElement>(null);
   const ctx = useThemeSafe();
 
-  // Escape key
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Focus trap — move focus into panel when it opens
-  useEffect(() => {
-    if (open) {
-      requestAnimationFrame(() => {
-        const first = panelRef.current?.querySelector<HTMLElement>("button, [tabindex]");
-        first?.focus();
-      });
-    }
-  }, [open]);
-
   if (!ctx) return null;
-  const { theme, setSkin, setAccent, setRadius, setFont, reset } = ctx;
+  const { theme, setDna, setMode, toggleMode, setSkin, setAccent, setRadius, setFont, reset } = ctx;
 
-  const accentColor = ACCENTS[theme.accent].color;
-  const skinData    = SKINS[theme.skin];
+  const accentColor = ACCENTS[theme.accent]?.color || "#ff0055";
+  const skinObj = SKINS[theme.skin] || SKINS.grunge;
+  const palette = theme.mode === "light" ? skinObj.light : skinObj.dark;
 
   const copyConfig = async () => {
     await navigator.clipboard.writeText(JSON.stringify(theme, null, 2));
@@ -312,75 +502,119 @@ export function ThemeCustomizer() {
 
   return (
     <>
-      {/* ── Global style injection for transitions ── */}
       <style>{`
-        html { transition: background-color 0.25s ease, color 0.25s ease; }
-        :root { transition: --accent 0s; }
+        html, body {
+          background-color: var(--bg) !important;
+          color: var(--text) !important;
+          font-family: var(--font-body);
+          transition: background-color 0.22s ease, color 0.22s ease;
+        }
+        html[data-mode="light"] body {
+          background-image:
+            linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px) !important;
+          background-size: 32px 32px !important;
+        }
+        @keyframes tc-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 ${accentColor}55; }
+          50% { box-shadow: 0 0 0 8px ${accentColor}00; }
+        }
       `}</style>
 
-      {/* ── Overlay ── */}
+      {/* Backdrop */}
       {open && (
         <div
           onClick={() => setOpen(false)}
           aria-hidden
           style={{
-            position: "fixed", inset: 0, zIndex: 9997,
-            background: "rgba(0,0,0,0.6)",
+            position: "fixed",
+            inset: 0,
+            zIndex: 9997,
+            background: "rgba(0,0,0,0.55)",
             backdropFilter: "blur(2px)",
-            animation: "tc-fade-in 0.2s ease",
           }}
         />
       )}
 
-      {/* ── Keyframes ── */}
-      <style>{`
-        @keyframes tc-fade-in  { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes tc-spin     { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
-        @keyframes tc-pulse    { 0%,100% { box-shadow: 0 0 0 0 ${accentColor}55 } 50% { box-shadow: 0 0 0 8px ${accentColor}00 } }
-      `}</style>
-
-      {/* ── Floating Trigger ── */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Open theme customizer"
-        title="Theme Customizer (Esc to close)"
+      {/* Floating Dock (Quick Mode Toggle + Customizer Gear) */}
+      <div
         style={{
           position: "fixed",
           bottom: "1.75rem",
-          right: open ? "calc(340px + 1rem)" : "1.5rem",
+          right: open ? "calc(360px + 1rem)" : "1.5rem",
           zIndex: 9999,
-          width: 46,
-          height: 46,
-          borderRadius: "50%",
-          border: `2px solid ${accentColor}`,
-          background: skinData.bg,
-          color: accentColor,
-          cursor: "pointer",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          fontSize: 18,
-          transition: "right 0.3s cubic-bezier(0.4,0,0.2,1), border-color 0.25s, color 0.25s, transform 0.15s",
-          transform: open ? "rotate(90deg)" : "rotate(0deg)",
-          animation: !open ? "tc-pulse 2.5s ease-in-out infinite" : "none",
-          boxShadow: `0 0 20px ${accentColor}33`,
+          gap: 8,
+          transition: "right 0.3s cubic-bezier(0.4,0,0.2,1)",
         }}
       >
-        ✦
-      </button>
+        {/* Quick Dark / Light Toggle Pill */}
+        <button
+          onClick={toggleMode}
+          title={`Switch to ${theme.mode === "dark" ? "Light" : "Dark"} Mode`}
+          style={{
+            height: 44,
+            padding: "0 14px",
+            borderRadius: "999px",
+            border: `2px solid ${palette.line2}`,
+            background: palette.panel,
+            color: palette.text,
+            cursor: "pointer",
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: "0.08em",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            boxShadow: "4px 4px 0 rgba(0,0,0,0.4)",
+          }}
+        >
+          <span>{theme.mode === "dark" ? "☀ LIGHT" : "☾ DARK"}</span>
+        </button>
 
-      {/* ── Side Panel ── */}
+        {/* Main Vuexy-style Customizer Trigger */}
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open theme customizer"
+          title="DNA & Skin Customizer"
+          style={{
+            width: 46,
+            height: 46,
+            borderRadius: "50%",
+            border: `2px solid ${accentColor}`,
+            background: palette.panel,
+            color: accentColor,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 18,
+            transition: "transform 0.2s",
+            transform: open ? "rotate(90deg)" : "rotate(0deg)",
+            animation: !open ? "tc-pulse 2.5s ease-in-out infinite" : "none",
+          }}
+        >
+          ✦
+        </button>
+      </div>
+
+      {/* Slide-in Drawer */}
       <aside
         ref={panelRef}
         role="dialog"
-        aria-label="Theme customizer"
+        aria-label="DNA & Theme Customizer"
         style={{
           position: "fixed",
-          top: 0, right: 0, bottom: 0,
-          width: 340,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: 360,
           zIndex: 9998,
-          background: skinData.bg,
-          borderLeft: `1px solid ${accentColor}22`,
+          background: palette.bg,
+          color: palette.text,
+          borderLeft: `2px solid ${accentColor}`,
           transform: open ? "translateX(0)" : "translateX(100%)",
           transition: "transform 0.3s cubic-bezier(0.4,0,0.2,1)",
           display: "flex",
@@ -388,11 +622,10 @@ export function ThemeCustomizer() {
           fontFamily: "'JetBrains Mono', 'Courier New', monospace",
           fontSize: 11,
           overflowY: "auto",
-          overscrollBehavior: "contain",
         }}
       >
-        {/* Palette Preview Strip */}
-        <div style={{ display: "flex", height: 4 }}>
+        {/* Top Accent Strip */}
+        <div style={{ display: "flex", height: 5 }}>
           {(Object.entries(ACCENTS) as [AccentId, typeof ACCENTS[AccentId]][]).map(([id, a]) => (
             <div
               key={id}
@@ -402,116 +635,157 @@ export function ThemeCustomizer() {
                 background: a.color,
                 cursor: "pointer",
                 opacity: theme.accent === id ? 1 : 0.35,
-                transition: "opacity 0.2s",
               }}
             />
           ))}
         </div>
 
         {/* Header */}
-        <div style={{
-          padding: "16px 20px 14px",
-          borderBottom: `1px solid ${accentColor}22`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}>
+        <div
+          style={{
+            padding: "16px 20px",
+            borderBottom: `1px solid ${palette.line}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: palette.panel,
+          }}
+        >
           <div>
-            <div style={{
-              color: accentColor,
-              fontWeight: 700,
-              letterSpacing: "0.18em",
-              fontSize: 11,
-              textTransform: "uppercase",
-            }}>
-              ✦ THEME CUSTOMIZER
+            <div style={{ color: accentColor, fontWeight: 900, letterSpacing: "0.16em", fontSize: 12 }}>
+              ✦ DNA &amp; SKIN ENGINE
             </div>
-            <div style={{ color: "#555", fontSize: 10, letterSpacing: "0.08em", marginTop: 3 }}>
-              {SKINS[theme.skin].label} · {ACCENTS[theme.accent].label} · {RADII[theme.radius].label} · {FONTS[theme.font].label}
+            <div style={{ color: palette.muted, fontSize: 9, letterSpacing: "0.08em", marginTop: 3 }}>
+              {theme.dna.toUpperCase()} · {theme.mode.toUpperCase()} · {SKINS[theme.skin].label}
             </div>
           </div>
           <button
             onClick={() => setOpen(false)}
             style={{
-              background: "none",
-              border: `1px solid ${accentColor}33`,
-              color: "#555",
+              background: palette.panel2,
+              border: `1px solid ${palette.line2}`,
+              color: palette.text,
               cursor: "pointer",
-              fontSize: 12,
               width: 28,
               height: 28,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "color 0.1s, border-color 0.1s",
+              display: "grid",
+              placeItems: "center",
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = accentColor; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#555"; }}
           >
             ✕
           </button>
         </div>
 
         {/* Body */}
-        <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column", gap: 24 }}>
-
-          {/* ── SKIN ── */}
+        <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column", gap: 22 }}>
+          {/* 1. MODE: DARK / LIGHT */}
           <section>
-            <SectionLabel color={accentColor}>SKIN</SectionLabel>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
-              {(Object.entries(SKINS) as [SkinId, typeof SKINS[SkinId]][]).map(([id, s]) => {
-                const active = theme.skin === id;
+            <SectionLabel color={accentColor}>01 // APPEARANCE MODE</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {(["dark", "light"] as ModeId[]).map((m) => {
+                const active = theme.mode === m;
                 return (
                   <button
-                    key={id}
-                    onClick={() => setSkin(id)}
+                    key={m}
+                    onClick={() => setMode(m)}
                     style={{
-                      position: "relative",
-                      padding: "10px 6px 8px",
-                      background: s.bg,
-                      border: `1px solid ${active ? accentColor : "#1f1f1f"}`,
+                      padding: "10px",
+                      border: `2px solid ${active ? accentColor : palette.line}`,
+                      background: active ? palette.panel2 : palette.panel,
+                      color: active ? accentColor : palette.text,
                       cursor: "pointer",
+                      fontFamily: "inherit",
+                      fontWeight: 800,
+                      fontSize: 10,
+                      letterSpacing: "0.12em",
                       display: "flex",
-                      flexDirection: "column",
                       alignItems: "center",
-                      gap: 5,
-                      transition: "border-color 0.15s",
-                      outline: "none",
+                      justifyContent: "center",
+                      gap: 6,
                     }}
                   >
-                    {/* Mini palette preview */}
-                    <div style={{ display: "flex", gap: 2 }}>
-                      <div style={{ width: 10, height: 10, background: s.bg, border: "1px solid #333" }} />
-                      <div style={{ width: 10, height: 10, background: s.panel, border: "1px solid #333" }} />
-                      <div style={{ width: 10, height: 10, background: accentColor, borderRadius: "50%" }} />
-                    </div>
-                    <span style={{
-                      fontSize: 9,
-                      letterSpacing: "0.12em",
-                      color: active ? accentColor : "#555",
-                      transition: "color 0.15s",
-                    }}>
-                      {s.label}
-                    </span>
-                    {active && (
-                      <div style={{
-                        position: "absolute",
-                        top: 3, right: 3,
-                        width: 6, height: 6,
-                        borderRadius: "50%",
-                        background: accentColor,
-                      }} />
-                    )}
+                    <span>{m === "dark" ? "☾ DARK MODE" : "☀ LIGHT MODE"}</span>
                   </button>
                 );
               })}
             </div>
           </section>
 
-          {/* ── ACCENT ── */}
+          {/* 2. ECOSYSTEM DNA PRESETS */}
           <section>
-            <SectionLabel color={accentColor}>ACCENT COLOR</SectionLabel>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
+            <SectionLabel color={accentColor}>02 // ECOSYSTEM DNA</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+              {(Object.entries(DNA_PRESETS) as [AppDnaId, typeof DNA_PRESETS[AppDnaId]][]).map(
+                ([id, preset]) => {
+                  const active = theme.dna === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => setDna(id)}
+                      style={{
+                        padding: "10px 8px",
+                        border: `1.5px solid ${active ? accentColor : palette.line}`,
+                        background: palette.panel,
+                        color: active ? accentColor : palette.text,
+                        cursor: "pointer",
+                        textAlign: "left",
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: "0.08em" }}>
+                        {preset.label}
+                      </div>
+                      <div style={{ fontSize: 8, color: palette.muted, marginTop: 3 }}>
+                        {preset.subtitle}
+                      </div>
+                    </button>
+                  );
+                }
+              )}
+            </div>
+          </section>
+
+          {/* 3. SKIN MATRIX */}
+          <section>
+            <SectionLabel color={accentColor}>03 // SURFACE SKIN</SectionLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+              {(Object.entries(SKINS) as [SkinId, typeof SKINS[SkinId]][]).map(([id, s]) => {
+                const active = theme.skin === id;
+                const p = theme.mode === "light" ? s.light : s.dark;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => setSkin(id)}
+                    style={{
+                      padding: "10px 6px",
+                      background: p.bg,
+                      border: `2px solid ${active ? accentColor : p.line}`,
+                      cursor: "pointer",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 6,
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: 3 }}>
+                      <span style={{ width: 10, height: 10, background: p.bg, border: `1px solid ${p.line2}` }} />
+                      <span style={{ width: 10, height: 10, background: p.panel2, border: `1px solid ${p.line2}` }} />
+                      <span style={{ width: 10, height: 10, background: accentColor, borderRadius: "50%" }} />
+                    </div>
+                    <span style={{ fontSize: 9, fontWeight: 800, color: active ? accentColor : p.text }}>
+                      {s.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* 4. ACCENT COLOR */}
+          <section>
+            <SectionLabel color={accentColor}>04 // PRIMARY ACCENT</SectionLabel>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
               {(Object.entries(ACCENTS) as [AccentId, typeof ACCENTS[AccentId]][]).map(([id, a]) => {
                 const active = theme.accent === id;
                 return (
@@ -525,210 +799,126 @@ export function ThemeCustomizer() {
                       borderRadius: "50%",
                       background: a.color,
                       cursor: "pointer",
-                      border: "none",
-                      outline: active ? `3px solid ${a.color}` : "3px solid transparent",
-                      outlineOffset: 3,
-                      boxShadow: active ? `0 0 12px ${a.color}66` : "none",
-                      transition: "outline 0.15s, box-shadow 0.15s, transform 0.1s",
+                      border: `2px solid ${palette.bg}`,
+                      outline: active ? `3px solid ${a.color}` : "2px solid transparent",
+                      outlineOffset: 2,
                       transform: active ? "scale(1.15)" : "scale(1)",
+                      transition: "transform 0.12s",
                     }}
                   />
                 );
               })}
             </div>
-            <div style={{ marginTop: 8, fontSize: 10, letterSpacing: "0.1em", color: accentColor }}>
-              {ACCENTS[theme.accent].label} · {ACCENTS[theme.accent].color}
-            </div>
           </section>
 
-          {/* ── RADIUS ── */}
-          <section>
-            <SectionLabel color={accentColor}>BORDER RADIUS</SectionLabel>
-            <div style={{ display: "flex", gap: 6 }}>
-              {(Object.entries(RADII) as [RadiusId, typeof RADII[RadiusId]][]).map(([id, r]) => {
-                const active = theme.radius === id;
-                return (
-                  <button
-                    key={id}
-                    onClick={() => setRadius(id)}
-                    style={{
-                      flex: 1,
-                      padding: "10px 6px",
-                      border: `1px solid ${active ? accentColor : "#1f1f1f"}`,
-                      background: "transparent",
-                      cursor: "pointer",
-                      color: active ? accentColor : "#555",
-                      fontSize: 9,
-                      letterSpacing: "0.1em",
-                      fontFamily: "inherit",
-                      transition: "border-color 0.15s, color 0.15s",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 4,
-                      borderRadius: r.value,
-                    }}
-                  >
-                    <span style={{ fontSize: 16 }}>{r.preview}</span>
-                    <span>{r.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
+          {/* 5. BORDER RADIUS & FONT */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <section>
+              <SectionLabel color={accentColor}>05 // RADIUS</SectionLabel>
+              <div style={{ display: "flex", gap: 4 }}>
+                {(Object.entries(RADII) as [RadiusId, typeof RADII[RadiusId]][]).map(([id, r]) => {
+                  const active = theme.radius === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => setRadius(id)}
+                      style={{
+                        flex: 1,
+                        padding: "8px 4px",
+                        border: `1.5px solid ${active ? accentColor : palette.line}`,
+                        background: palette.panel,
+                        color: active ? accentColor : palette.muted,
+                        cursor: "pointer",
+                        fontSize: 9,
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      {r.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
 
-          {/* ── FONT ── */}
-          <section>
-            <SectionLabel color={accentColor}>FONT SYSTEM</SectionLabel>
-            <div style={{ display: "flex", gap: 6 }}>
-              {(Object.entries(FONTS) as [FontId, typeof FONTS[FontId]][]).map(([id, f]) => {
-                const active = theme.font === id;
-                return (
-                  <button
-                    key={id}
-                    onClick={() => setFont(id)}
-                    style={{
-                      flex: 1,
-                      padding: "10px 12px",
-                      border: `1px solid ${active ? accentColor : "#1f1f1f"}`,
-                      background: "transparent",
-                      cursor: "pointer",
-                      color: active ? accentColor : "#555",
-                      fontSize: 9,
-                      letterSpacing: "0.1em",
-                      fontFamily: f.stack,
-                      transition: "border-color 0.15s, color 0.15s",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 4,
-                    }}
-                  >
-                    <span style={{ fontSize: 15, fontWeight: 700 }}>{f.sample}</span>
-                    <span style={{ fontFamily: "inherit", fontSize: 9 }}>{f.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* ── LIVE PREVIEW ── */}
-          <section>
-            <SectionLabel color={accentColor}>LIVE PREVIEW</SectionLabel>
-            <div style={{
-              background: skinData.panel,
-              border: `1px solid ${accentColor}22`,
-              padding: "14px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              borderRadius: RADII[theme.radius].value,
-            }}>
-              <div style={{
-                fontSize: 10,
-                fontWeight: 700,
-                color: accentColor,
-                letterSpacing: "0.15em",
-                fontFamily: FONTS[theme.font].stack,
-              }}>
-                ✦ DX // STORY RIOT
+            <section>
+              <SectionLabel color={accentColor}>06 // TYPOGRAPHY</SectionLabel>
+              <div style={{ display: "flex", gap: 4 }}>
+                {(Object.entries(FONTS) as [FontId, typeof FONTS[FontId]][]).map(([id, f]) => {
+                  const active = theme.font === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => setFont(id)}
+                      style={{
+                        flex: 1,
+                        padding: "8px 4px",
+                        border: `1.5px solid ${active ? accentColor : palette.line}`,
+                        background: palette.panel,
+                        color: active ? accentColor : palette.muted,
+                        cursor: "pointer",
+                        fontSize: 9,
+                        fontFamily: f.stack,
+                      }}
+                    >
+                      {f.label}
+                    </button>
+                  );
+                })}
               </div>
-              <div style={{
-                fontSize: 9,
-                color: "#666",
-                fontFamily: FONTS[theme.font].stack,
-                lineHeight: 1.6,
-              }}>
-                Creative Chaos · Developer Business
-              </div>
-              <div style={{ display: "flex", gap: 6, marginTop: 2 }}>
-                <span style={{
-                  display: "inline-block",
-                  padding: "2px 8px",
-                  border: `1px solid ${accentColor}`,
-                  color: accentColor,
-                  fontSize: 8,
-                  letterSpacing: "0.1em",
-                  borderRadius: RADII[theme.radius].value,
-                  fontFamily: FONTS[theme.font].stack,
-                }}>ACTIVE</span>
-                <span style={{
-                  display: "inline-block",
-                  padding: "2px 8px",
-                  border: "1px solid #333",
-                  color: "#555",
-                  fontSize: 8,
-                  letterSpacing: "0.1em",
-                  borderRadius: RADII[theme.radius].value,
-                  fontFamily: FONTS[theme.font].stack,
-                }}>IDLE</span>
-              </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
 
-        {/* ── Footer ── */}
-        <div style={{
-          padding: "12px 20px",
-          borderTop: `1px solid ${accentColor}22`,
-          display: "flex",
-          gap: 6,
-        }}>
+        {/* Footer */}
+        <div
+          style={{
+            padding: "12px 20px",
+            borderTop: `1px solid ${palette.line}`,
+            background: palette.panel,
+            display: "flex",
+            gap: 8,
+          }}
+        >
           <button
             onClick={copyConfig}
             style={{
               ...footerBtn,
-              borderColor: "#2a2a2a",
-              color: copied ? accentColor : "#555",
+              borderColor: palette.line2,
+              color: copied ? accentColor : palette.text,
               flex: 1,
             }}
           >
-            {copied ? "✓ COPIED" : "COPY"}
+            {copied ? "✓ COPIED" : "COPY JSON"}
           </button>
           <button
             onClick={reset}
-            style={{ ...footerBtn, borderColor: "#2a2a2a", color: "#555", flex: 1 }}
+            style={{
+              ...footerBtn,
+              borderColor: palette.line2,
+              color: palette.muted,
+              flex: 1,
+            }}
           >
-            RESET
+            RESET DNA
           </button>
-          <button
-            onClick={() => setOpen(false)}
-            style={{ ...footerBtn, borderColor: accentColor, color: accentColor, flex: 2 }}
-          >
-            APPLY ✦
-          </button>
-        </div>
-
-        {/* Keyboard hint */}
-        <div style={{
-          padding: "6px 20px 10px",
-          fontSize: 9,
-          color: "#2a2a2a",
-          letterSpacing: "0.08em",
-          textAlign: "center",
-        }}>
-          Press ESC to close
         </div>
       </aside>
     </>
   );
 }
 
-// ─── HELPERS ───────────────────────────────────────────────────────────────────
-
 function SectionLabel({ children, color }: { children: React.ReactNode; color: string }) {
   return (
-    <div style={{
-      fontSize: 9,
-      letterSpacing: "0.22em",
-      textTransform: "uppercase",
-      color,
-      marginBottom: 10,
-      display: "flex",
-      alignItems: "center",
-      gap: 6,
-    }}>
-      <span style={{ display: "inline-block", width: 12, height: 1, background: color, opacity: 0.5 }} />
+    <div
+      style={{
+        fontSize: 9,
+        fontWeight: 800,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        color,
+        marginBottom: 8,
+      }}
+    >
       {children}
     </div>
   );
@@ -736,13 +926,11 @@ function SectionLabel({ children, color }: { children: React.ReactNode; color: s
 
 const footerBtn: React.CSSProperties = {
   padding: "9px 10px",
-  border: "1px solid",
+  border: "1.5px solid",
   background: "transparent",
   cursor: "pointer",
   fontSize: 9,
+  fontWeight: 800,
   letterSpacing: "0.12em",
-  fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-  transition: "border-color 0.15s, color 0.15s",
+  fontFamily: "'JetBrains Mono', monospace",
 };
-
-export { DEFAULT_THEME, STORAGE_KEY };

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClientShell } from "./client-shell";
+import { EcosystemShell } from "@local-git/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ClientShell>{children}</ClientShell>
+        <EcosystemShell dna="eisp">{children}</EcosystemShell>
       </body>
     </html>
   );

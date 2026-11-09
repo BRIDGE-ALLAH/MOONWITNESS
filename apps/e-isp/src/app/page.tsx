@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Card, CardTitle, CardDescription, Badge, Button } from "@local-git/ui";
 
 type InfraStatus = {
   containers: { running: number; total: number } | null;
@@ -16,18 +17,16 @@ export default function EISPPage() {
   });
 
   useEffect(() => {
-    // git-engine containers
     fetch("http://localhost:3200/api/v1/containers")
       .then((r) => r.json())
-      .then((data: Array<{ State?: string }>) => {
-        const running = data.filter((c) => c.State === "running").length;
-        setStatus((s) => ({ ...s, containers: { running, total: data.length }, git: "online" }));
+      .then((containerList: Array<{ State?: string }>) => {
+        const running = containerList.filter((c) => c.State === "running").length;
+        setStatus((s) => ({ ...s, containers: { running, total: containerList.length }, git: "online" }));
       })
       .catch(() => setStatus((s) => ({ ...s, git: "offline" })));
 
-    // pocketbase health
     fetch("http://localhost:8091/api/health")
-      .then((r): "online" | "offline" => r.ok ? "online" : "offline")
+      .then((r): "online" | "offline" => (r.ok ? "online" : "offline"))
       .then((st) => setStatus((s) => ({ ...s, pocketbase: st })))
       .catch(() => setStatus((s) => ({ ...s, pocketbase: "offline" })));
   }, []);
@@ -37,121 +36,119 @@ export default function EISPPage() {
     return `${status.containers.running}/${status.containers.total}`;
   };
 
-  const containerClass = status.containers
-    ? status.containers.running > 0 ? "ok" : "warn"
-    : "";
-
   return (
-    <>
-      <div className="strip">
-        <span className="strip-id">E-ISP</span>
+    <div style={{ background: "var(--bg)", color: "var(--text)", minHeight: "100vh" }}>
+      <div className="strip" style={{ background: "var(--panel)", borderColor: "var(--line)" }}>
+        <span className="strip-id" style={{ color: "var(--accent)" }}>E-ISP</span>
         <span className="strip-sep">//</span>
-        <span className="strip-label">EDGE-INFRA SCALE PLATFORM</span>
+        <span className="strip-label" style={{ color: "var(--muted)" }}>EDGE-INFRA SCALE PLATFORM</span>
         <span className="strip-sep">//</span>
-        <span className="strip-label">SOVEREIGN TRI-CLOUD FABRIC</span>
+        <span className="strip-label" style={{ color: "var(--muted)" }}>SOVEREIGN TRI-CLOUD FABRIC</span>
         <span className="strip-status">
-          ✦ MESH {status.git === "online" ? "ONLINE" : status.git === "offline" ? "DEGRADED" : "..."}
+          <Badge variant={status.git === "online" ? "lime" : "gold"}>
+            ✦ MESH {status.git === "online" ? "ONLINE" : status.git === "offline" ? "DEGRADED" : "..."}
+          </Badge>
         </span>
       </div>
 
-      <nav>
-        <a href="#overview" className="active">OVERVIEW</a>
-        <a href="#edge">EDGE SHIELD</a>
-        <a href="#compute">COMPUTE</a>
-        <a href="#storage">STORAGE</a>
-        <a href="#topology">TOPOLOGY</a>
+      <nav style={{ background: "var(--line)", borderColor: "var(--line)" }}>
+        <a href="#overview" className="active" style={{ background: "var(--panel2)", color: "var(--accent)" }}>OVERVIEW</a>
+        <a href="#edge" style={{ background: "var(--panel)", color: "var(--muted)" }}>EDGE SHIELD</a>
+        <a href="#compute" style={{ background: "var(--panel)", color: "var(--muted)" }}>COMPUTE</a>
+        <a href="#storage" style={{ background: "var(--panel)", color: "var(--muted)" }}>STORAGE</a>
+        <a href="#topology" style={{ background: "var(--panel)", color: "var(--muted)" }}>TOPOLOGY</a>
       </nav>
 
       <main>
-        <div className="hero" id="overview">
-          <div className="hero-eyebrow">∴ SOVEREIGN INFRASTRUCTURE LAYER</div>
-          <h1>
+        <Card variant="cyan" className="hero" id="overview" style={{ marginBottom: 32 }}>
+          <Badge variant="cyan" style={{ marginBottom: 14 }}>∴ SOVEREIGN INFRASTRUCTURE LAYER</Badge>
+          <h1 style={{ color: "var(--text)" }}>
             EDGE-INFRA<br />
-            <span>SCALE PLATFORM</span>
+            <span style={{ color: "var(--accent)" }}>SCALE PLATFORM</span>
           </h1>
-          <div className="hero-sub">
+          <div className="hero-sub" style={{ color: "var(--muted)" }}>
             Tri-cloud sovereign mesh. No vendor dependency. No external lock-in.<br />
             Edge Shield × Bare-Metal Compute × Distributed Storage — owned end-to-end.
           </div>
-        </div>
+        </Card>
 
         {/* Live Status */}
-        <div className="status-grid">
-          <div className="metric">
-            <div className="metric-label">Containers</div>
-            <div className={`metric-value ${containerClass}`}>{fmtContainers()}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 32 }}>
+          <Card variant="default">
+            <div className="metric-label">CONTAINERS</div>
+            <div className="metric-value" style={{ color: "var(--accent)" }}>{fmtContainers()}</div>
             <div className="metric-sub">running / total</div>
-          </div>
-          <div className="metric">
-            <div className="metric-label">Git Engine</div>
-            <div className={`metric-value ${status.git === "online" ? "ok" : status.git === "offline" ? "err" : ""}`}>
+          </Card>
+          <Card variant="default">
+            <div className="metric-label">GIT ENGINE</div>
+            <div className="metric-value" style={{ color: status.git === "online" ? "#00ff66" : "#ff0055" }}>
               {status.git === "checking" ? "..." : status.git.toUpperCase()}
             </div>
             <div className="metric-sub">:3200</div>
-          </div>
-          <div className="metric">
-            <div className="metric-label">PocketBase</div>
-            <div className={`metric-value ${status.pocketbase === "online" ? "ok" : status.pocketbase === "offline" ? "err" : ""}`}>
+          </Card>
+          <Card variant="default">
+            <div className="metric-label">POCKETBASE</div>
+            <div className="metric-value" style={{ color: status.pocketbase === "online" ? "#00ff66" : "#ff0055" }}>
               {status.pocketbase === "checking" ? "..." : status.pocketbase.toUpperCase()}
             </div>
             <div className="metric-sub">:8091</div>
-          </div>
-          <div className="metric">
-            <div className="metric-label">Mesh Layer</div>
-            <div className="metric-value ok">ACTIVE</div>
+          </Card>
+          <Card variant="neon">
+            <div className="metric-label">MESH LAYER</div>
+            <div className="metric-value" style={{ color: "#00ff66" }}>ACTIVE</div>
             <div className="metric-sub">tri-node fabric</div>
-          </div>
+          </Card>
         </div>
 
         {/* Pillars */}
-        <div className="pillars">
-          <div className="pillar" id="edge">
-            <div className="pillar-num">01 //</div>
-            <div className="pillar-name edge">EDGE SHIELD</div>
-            <div className="pillar-desc">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 32 }}>
+          <Card variant="cyan" id="edge">
+            <Badge variant="cyan" style={{ marginBottom: 10 }}>01 // EDGE SHIELD</Badge>
+            <CardTitle style={{ marginBottom: 8 }}>INGRESS &amp; GATEWAY</CardTitle>
+            <CardDescription>
               Sovereign gateway layer. Ingress control, rate limiting, TLS termination,
               and adaptive routing. Zero external proxy dependency.
+            </CardDescription>
+            <div className="pillar-tags" style={{ marginTop: 14 }}>
+              <Badge variant="cyan">GATEWAY</Badge>
+              <Badge variant="cyan">RATE-LIMIT</Badge>
+              <Badge variant="default">TLS</Badge>
             </div>
-            <div className="pillar-tags">
-              <span className="tag active">GATEWAY</span>
-              <span className="tag active">RATE-LIMIT</span>
-              <span className="tag">TLS</span>
-              <span className="tag">ROUTING</span>
-            </div>
-          </div>
-          <div className="pillar" id="compute">
-            <div className="pillar-num">02 //</div>
-            <div className="pillar-name compute">COMPUTE MUSCLE</div>
-            <div className="pillar-desc">
+          </Card>
+
+          <Card variant="gold" id="compute">
+            <Badge variant="gold" style={{ marginBottom: 10 }}>02 // COMPUTE MUSCLE</Badge>
+            <CardTitle style={{ marginBottom: 8 }}>BUN × DOCKER</CardTitle>
+            <CardDescription>
               Bun runtime + Docker orchestration. Stateless microservices,
               hot-reload pipelines, container lifecycle management from DX cockpit.
+            </CardDescription>
+            <div className="pillar-tags" style={{ marginTop: 14 }}>
+              <Badge variant="gold">BUN</Badge>
+              <Badge variant="gold">DOCKER</Badge>
+              <Badge variant="default">WORKERS</Badge>
             </div>
-            <div className="pillar-tags">
-              <span className="tag warn">BUN</span>
-              <span className="tag warn">DOCKER</span>
-              <span className="tag">NEXT.JS</span>
-              <span className="tag">WORKERS</span>
-            </div>
-          </div>
-          <div className="pillar" id="storage">
-            <div className="pillar-num">03 //</div>
-            <div className="pillar-name storage">STORAGE MESH</div>
-            <div className="pillar-desc">
+          </Card>
+
+          <Card variant="neon" id="storage">
+            <Badge variant="lime" style={{ marginBottom: 10 }}>03 // STORAGE MESH</Badge>
+            <CardTitle style={{ marginBottom: 8 }}>SOVEREIGN DATASTORE</CardTitle>
+            <CardDescription>
               PocketBase as sovereign datastore. Bare-git repository mesh.
               Snapshot-based backup, zero third-party object storage.
+            </CardDescription>
+            <div className="pillar-tags" style={{ marginTop: 14 }}>
+              <Badge variant="lime">POCKETBASE</Badge>
+              <Badge variant="default">BARE-GIT</Badge>
+              <Badge variant="default">SNAPSHOTS</Badge>
             </div>
-            <div className="pillar-tags">
-              <span className="tag active">POCKETBASE</span>
-              <span className="tag">BARE-GIT</span>
-              <span className="tag">SNAPSHOTS</span>
-            </div>
-          </div>
+          </Card>
         </div>
 
         {/* Topology */}
-        <div className="topology" id="topology">
-          <div className="topology-title">// ARCHITECTURE TOPOLOGY</div>
-          <pre>{`  ┌─────────────────────────────────────────────────────────┐
+        <Card variant="default" className="topology" id="topology" style={{ marginBottom: 32 }}>
+          <div className="topology-title" style={{ color: "var(--muted)" }}>// ARCHITECTURE TOPOLOGY</div>
+          <pre style={{ color: "var(--accent)" }}>{`  ┌─────────────────────────────────────────────────────────┐
   │                    E-ISP MESH LAYER                     │
   │                                                         │
   │   ┌──────────────┐    ┌──────────────┐                  │
@@ -167,33 +164,44 @@ export default function EISPPage() {
   │                                                         │
   │   SERVING ──▶  empire:3001  moon:3002  dx:3000          │
   └─────────────────────────────────────────────────────────┘`}</pre>
-        </div>
+        </Card>
 
         {/* Bridge links */}
-        <div className="bridges">
-          <a className="bridge" href="http://localhost:3001" target="_blank" rel="noreferrer">
-            <div className="bridge-port">:3001 //</div>
-            <div className="bridge-name empire">A-L-L-A-H.COM // EMPIRE</div>
-            <div className="bridge-desc">Supreme origin. Sacred light. Tawhid.</div>
-          </a>
-          <a className="bridge" href="http://localhost:3002" target="_blank" rel="noreferrer">
-            <div className="bridge-port">:3002 //</div>
-            <div className="bridge-name moon">MOONWITNESS</div>
-            <div className="bridge-desc">When the moon is high we share message and knowledge.</div>
-          </a>
-          <a className="bridge" href="http://localhost:3000" target="_blank" rel="noreferrer">
-            <div className="bridge-port">:3000 //</div>
-            <div className="bridge-name dx">DX // STORY RIOT</div>
-            <div className="bridge-desc">Creative Chaos. Developer Business.</div>
-          </a>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: 32 }}>
+          <Card variant="gold">
+            <Badge variant="gold" style={{ marginBottom: 8 }}>:3001 //</Badge>
+            <CardTitle style={{ marginBottom: 6 }}>A-L-L-A-H.COM // EMPIRE</CardTitle>
+            <CardDescription style={{ marginBottom: 14 }}>Supreme origin. Sacred light. Tawhid.</CardDescription>
+            <a href="http://localhost:3001" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="gold" size="sm">OPEN EMPIRE ↗</Button>
+            </a>
+          </Card>
+
+          <Card variant="cyan">
+            <Badge variant="cyan" style={{ marginBottom: 8 }}>:3002 //</Badge>
+            <CardTitle style={{ marginBottom: 6 }}>MOONWITNESS</CardTitle>
+            <CardDescription style={{ marginBottom: 14 }}>When the moon is high we share message and knowledge.</CardDescription>
+            <a href="http://localhost:3002" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="cyan" size="sm">OPEN OBSERVATORY ↗</Button>
+            </a>
+          </Card>
+
+          <Card variant="toxic">
+            <Badge variant="toxic" style={{ marginBottom: 8 }}>:3000 //</Badge>
+            <CardTitle style={{ marginBottom: 6 }}>DX // STORY RIOT</CardTitle>
+            <CardDescription style={{ marginBottom: 14 }}>Creative Chaos. Developer Business.</CardDescription>
+            <a href="http://localhost:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <Button variant="toxic" size="sm">OPEN DX COCKPIT ↗</Button>
+            </a>
+          </Card>
         </div>
       </main>
 
-      <footer>
-        <span className="footer-id">E-ISP</span>
+      <footer style={{ borderColor: "var(--line)", color: "var(--muted)" }}>
+        <span className="footer-id" style={{ color: "var(--accent)" }}>E-ISP</span>
         <span>// EDGE-INFRA SCALE PLATFORM // SOVEREIGN MESH</span>
         <span>✳ 2026</span>
       </footer>
-    </>
+    </div>
   );
 }

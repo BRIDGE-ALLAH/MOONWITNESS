@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClientShell } from "./client-shell";
+import { EcosystemShell } from "@local-git/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -7,15 +7,11 @@ export const metadata: Metadata = {
   description: "Living Celestial Observatory, Lunar Chronicles, Astronomical Science & Sacred Knowledge Sharing.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="id" suppressHydrationWarning>
       <body>
-        <ClientShell>{children}</ClientShell>
+        <EcosystemShell dna="moonwitness">{children}</EcosystemShell>
       </body>
     </html>
   );

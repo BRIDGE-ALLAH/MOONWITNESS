@@ -2,35 +2,59 @@ import React from "react";
 import { cn } from "../lib/utils";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "toxic" | "outline" | "ghost" | "gold";
+  variant?: "primary" | "secondary" | "toxic" | "outline" | "ghost" | "gold" | "cyan";
   size?: "sm" | "md" | "lg" | "icon";
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
-    const baseStyle =
-      "inline-flex items-center justify-center font-mono font-bold uppercase transition-all duration-100 disabled:opacity-50 disabled:pointer-events-none cursor-pointer border-2 select-none";
-
-    const variantStyles: Record<NonNullable<ButtonProps["variant"]>, string> = {
-      primary: "bg-[#00ff66] text-black border-black shadow-[4px_4px_0_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#000]",
-      secondary: "bg-[#111] text-white border-[#333] shadow-[4px_4px_0_#000] hover:border-white hover:text-white",
-      toxic: "bg-[#ff0055] text-white border-black shadow-[4px_4px_0_#000] hover:bg-[#e6004c]",
-      gold: "bg-[#d4af37] text-black border-black shadow-[4px_4px_0_#000] hover:bg-[#f4ff00]",
-      outline: "bg-transparent text-white border-current hover:bg-white hover:text-black",
-      ghost: "border-transparent bg-transparent text-gray-300 hover:text-white hover:bg-[#1a1a1a]",
+  ({ className, variant = "primary", size = "md", style, children, ...props }, ref) => {
+    const palettes: Record<
+      NonNullable<ButtonProps["variant"]>,
+      { bg: string; fg: string; border: string }
+    > = {
+      primary:   { bg: "var(--accent, #00ff66)", fg: "#000", border: "var(--text, #000)" },
+      secondary: { bg: "var(--panel2, #111)",    fg: "var(--text, #fff)", border: "var(--line2, #444)" },
+      toxic:     { bg: "#ff0055",                fg: "#fff", border: "var(--text, #000)" },
+      gold:      { bg: "#d4af37",                fg: "#000", border: "var(--text, #000)" },
+      cyan:      { bg: "#00f0ff",                fg: "#000", border: "var(--text, #000)" },
+      outline:   { bg: "transparent",            fg: "var(--text, #fff)", border: "var(--line2, #666)" },
+      ghost:     { bg: "transparent",            fg: "var(--muted, #aaa)", border: "transparent" },
     };
 
-    const sizeStyles: Record<NonNullable<ButtonProps["size"]>, string> = {
-      sm: "h-8 px-3 text-xs gap-1.5",
-      md: "h-10 px-5 text-sm gap-2",
-      lg: "h-12 px-7 text-base gap-2.5",
-      icon: "h-10 w-10 p-0",
+    const sizes: Record<NonNullable<ButtonProps["size"]>, React.CSSProperties> = {
+      sm:   { height: "32px", padding: "0 12px", fontSize: "11px", gap: "6px" },
+      md:   { height: "40px", padding: "0 18px", fontSize: "12px", gap: "8px" },
+      lg:   { height: "46px", padding: "0 24px", fontSize: "13px", gap: "10px" },
+      icon: { height: "38px", width: "38px", padding: 0 },
+    };
+
+    const p = palettes[variant];
+
+    const inlineStyle: React.CSSProperties = {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
+      fontWeight: 800,
+      textTransform: "uppercase",
+      letterSpacing: "0.08em",
+      cursor: "pointer",
+      userSelect: "none",
+      background: p.bg,
+      color: p.fg,
+      border: `2px solid ${p.border}`,
+      borderRadius: "var(--radius, 0px)",
+      boxShadow: variant === "ghost" ? "none" : "3px 3px 0 rgba(0,0,0,0.28)",
+      transition: "transform 0.1s, opacity 0.15s",
+      ...sizes[size],
+      ...style,
     };
 
     return (
       <button
         ref={ref}
-        className={cn(baseStyle, variantStyles[variant], sizeStyles[size], className)}
+        style={inlineStyle}
+        className={cn("ui-btn", className)}
         {...props}
       >
         {children}
@@ -39,4 +63,3 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 Button.displayName = "Button";
-
