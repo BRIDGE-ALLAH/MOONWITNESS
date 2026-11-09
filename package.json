@@ -1,0 +1,25 @@
+{
+  "name": "local-git-hq",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "bun@1.3.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n WEB,GIT -c blue,green \"bun run dev:web\" \"bun run dev:git\"",
+    "dev:web": "bun --filter @local-git/web dev",
+    "dev:git": "bun --filter @local-git/engine dev",
+    "build": "bun --filter @local-git/web build",
+    "check": "bun --filter @local-git/web check && bun --filter @local-git/engine check",
+    "test": "bun --filter @local-git/engine test",
+    "infra:up": "docker compose up -d --build pocketbase git-engine",
+    "infra:down": "docker compose down",
+    "backup": "bash ./scripts/backup.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

@@ -1,0 +1,52 @@
+services:
+  pocketbase:
+    build:
+      context: ./services/pocketbase
+      args:
+        PB_VERSION: "0.41.1"
+    restart: unless-stopped
+    environment:
+      PB_SUPERUSER_EMAIL: ${PB_SUPERUSER_EMAIL:-admin@local-git.test}
+      PB_SUPERUSER_PASSWORD: ${PB_SUPERUSER_PASSWORD:-change-this-password}
+    command: ["/pb/pocketbase", "serve", "--http=0.0.0.0:8091", "--dir=/pb/pb_data", "--migrationsDir=/pb/pb_migrations"]
+    ports:
+      - "127.0.0.1:8091:8091"
+    volumes:
+      - ./data/pocketbase:/pb/pb_data
+      - ./services/pocketbase/pb_migrations:/pb/pb_migrations
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8091/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  git-engine:
+    build:
+      context: .
+      dockerfile: services/git-engine/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      pocketbase:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3200
+      PB_URL: ${PB_URL_INTERNAL:-http://pocketbase:8091}
+      PB_SUPERUSER_EMAIL: ${PB_SUPERUSER_EMAIL:-admin@local-git.test}
+      PB_SUPERUSER_PASSWORD: ${PB_SUPERUSER_PASSWORD:-change-this-password}
+      TOKEN_PEPPER: ${TOKEN_PEPPER:-replace-this-before-use}
+      GIT_DATA_DIR: ${GIT_DATA_DIR:-/data/git}
+      PUBLIC_GIT_BASE_URL: ${PUBLIC_GIT_BASE_URL:-http://127.0.0.1:3200}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+    ports:
+      - "127.0.0.1:${GIT_ENGINE_PORT:-3200}:3200"
+    volumes:
+      - ./data/git:/data/git
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://127.0.0.1:3200/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
