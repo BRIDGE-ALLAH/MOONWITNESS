@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useThemeSafe, type AppDnaId, DNA_PRESETS, SKINS } from "./theme-customizer";
 import { Badge, type BadgeProps } from "./badge";
 import { Card } from "./card";
+import { Button } from "./button";
 
 const ECOSYSTEM_NODES: Array<{
   dna: AppDnaId;
@@ -337,3 +338,195 @@ export function TerminalWindow({
     </Card>
   );
 }
+
+// ─── 6. REUSABLE MODAL DIALOG ─────────────────────────────────────────────────
+
+export interface ModalDialogProps {
+  open: boolean;
+  onClose: () => void;
+  eyebrow?: string;
+  title: string;
+  maxWidth?: string;
+  children: React.ReactNode;
+}
+
+export function ModalDialog({
+  open,
+  onClose,
+  eyebrow,
+  title,
+  maxWidth = "560px",
+  children,
+}: ModalDialogProps) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9500,
+        background: "rgba(0,0,0,0.65)",
+        backdropFilter: "blur(3px)",
+        display: "grid",
+        placeItems: "center",
+        padding: "20px",
+      }}
+    >
+      <Card
+        variant="grunge"
+        style={{
+          width: "100%",
+          maxWidth,
+          background: "var(--panel)",
+          color: "var(--text)",
+          border: "2px solid var(--accent)",
+          boxShadow: "8px 8px 0 rgba(0,0,0,0.45)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: "12px",
+            paddingBottom: "14px",
+            marginBottom: "16px",
+            borderBottom: "1px solid var(--line)",
+          }}
+        >
+          <div>
+            {eyebrow && (
+              <div style={{ marginBottom: "6px" }}>
+                <Badge variant="outline">{eyebrow}</Badge>
+              </div>
+            )}
+            <h2
+              style={{
+                margin: 0,
+                fontFamily: "var(--font-body, 'JetBrains Mono', monospace)",
+                fontWeight: 900,
+                fontSize: "20px",
+                textTransform: "uppercase",
+                color: "var(--text)",
+              }}
+            >
+              {title}
+            </h2>
+          </div>
+          <Button variant="secondary" size="icon" onClick={onClose} title="Close (Esc)">
+            ✕
+          </Button>
+        </div>
+        {children}
+      </Card>
+    </div>
+  );
+}
+
+// ─── 7. REUSABLE STATUS BANNER ────────────────────────────────────────────────
+
+export interface StatusBannerProps {
+  variant?: "success" | "error" | "info";
+  message: string;
+  onDismiss?: () => void;
+}
+
+export function StatusBanner({ variant = "info", message, onDismiss }: StatusBannerProps) {
+  if (!message) return null;
+  const colors = {
+    success: { border: "#00ff66", fg: "#00ff66", tag: "OK" },
+    error:   { border: "#ff0055", fg: "#ff0055", tag: "ERR" },
+    info:    { border: "#00f0ff", fg: "#00f0ff", tag: "INFO" },
+  }[variant];
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "12px",
+        padding: "10px 14px",
+        marginBottom: "16px",
+        background: "var(--panel2)",
+        border: `1.5px solid ${colors.border}`,
+        borderRadius: "var(--radius, 0px)",
+        fontFamily: "var(--mono, monospace)",
+        fontSize: "12px",
+        color: "var(--text)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <Badge variant={variant === "error" ? "toxic" : variant === "success" ? "lime" : "cyan"}>
+          {colors.tag}
+        </Badge>
+        <span>{message}</span>
+      </div>
+      {onDismiss && (
+        <button
+          onClick={onDismiss}
+          style={{
+            background: "transparent",
+            border: "none",
+            color: "var(--muted)",
+            cursor: "pointer",
+            fontFamily: "inherit",
+            fontSize: "13px",
+          }}
+        >
+          ✕
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ─── 8. REUSABLE EMPTY STATE ──────────────────────────────────────────────────
+
+export interface EmptyStateProps {
+  icon?: React.ReactNode;
+  title: string;
+  description?: string;
+  action?: React.ReactNode;
+}
+
+export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
+  return (
+    <div
+      style={{
+        padding: "42px 24px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "10px",
+        background: "var(--panel)",
+        color: "var(--text)",
+        fontFamily: "var(--mono, monospace)",
+      }}
+    >
+      {icon && <div style={{ color: "var(--accent)", marginBottom: "4px" }}>{icon}</div>}
+      <b style={{ fontSize: "14px", letterSpacing: "0.08em", textTransform: "uppercase" }}>{title}</b>
+      {description && (
+        <span style={{ fontSize: "12px", color: "var(--muted)", maxWidth: "420px" }}>
+          {description}
+        </span>
+      )}
+      {action && <div style={{ marginTop: "8px" }}>{action}</div>}
+    </div>
+  );
+}
+
