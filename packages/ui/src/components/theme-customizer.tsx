@@ -170,6 +170,10 @@ export function useTheme() {
   return ctx;
 }
 
+function useThemeSafe() {
+  return useContext(ThemeContext);
+}
+
 function applyTheme(cfg: ThemeConfig) {
   const root = document.documentElement;
   const skin = SKINS[cfg.skin];
@@ -242,7 +246,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 export function ThemeCustomizer() {
   const [open, setOpen] = useState(false);
-  const { theme, setSkin, setAccent, setRadius, setFont, reset } = useTheme();
+  const ctx = useThemeSafe();
+
+  if (!ctx) return null;
+
+  const { theme, setSkin, setAccent, setRadius, setFont, reset } = ctx;
 
   return (
     <>
@@ -538,3 +546,4 @@ const toggleBtnBase: React.CSSProperties = {
 // ─── RE-EXPORTS ────────────────────────────────────────────────────────────────
 
 export { SKINS, ACCENTS, RADII, FONTS };
+

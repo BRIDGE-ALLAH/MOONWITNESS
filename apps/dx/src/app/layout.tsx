@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { defaultBrandingConfig } from "@/config/branding";
-import { ThemeProvider, ThemeCustomizer } from "@local-git/ui";
+import { ClientShell } from "./client-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,12 +10,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider>
-          {children}
-          <ThemeCustomizer />
-        </ThemeProvider>
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );
