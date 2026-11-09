@@ -131,7 +131,15 @@ Perpaduan estetika yang belum pernah ada sebelumnya:
 
 ---
 
-## 4. INTEGRASI & PETA KONSOLIDASI (SATU KESATUAN UTUH)
+## 6. SPESIFIKASI DNA & GARIS BATAS ANTI-BENTROK (ZERO CONFLICT)
+
+Seluruh entitas memiliki yurisdiksi ketat yang terdokumentasi penuh di [DNA_SPEC.md](docs/DNA_SPEC.md):
+- **A-L-L-A-H.COM (Empire):** Sumber mutlak, Tauhid murni, monumental, hitam-emas sakral. *Dilarang jualan atau transaksional.*
+- **MoonWitness:** Observatorium hidup, riset astronomis, naskah hikmah ("When the moon is high we share message and knowledge"), kobalt-sian kosmik. *Dilarang melayani eksekusi git harian.*
+- **DX Platform:** Mesin kerja developer, bisnis & operasional git bare-metal, PlayStation arcade HUD, manga action lines ("Sin Can Be Better Human"), toxic-acid-neon. *Dilarang mengklaim otoritas moral tertinggi.*
+- **E-ISP:** Edge-Infra Scale Platform — fabric cloud fondasi (Edge + Compute + Storage Mesh) di balik layar yang menopang ketiganya.
+
+---
 
 Seluruh repositori historis (`EMPIRE-OF-LIGHT`, `MOONWITNESS`, `RIOTWORKS`, `rocksoul-dx`, `A-L-L-A-H.COM`) dilebur dan dikonsolidasi ke dalam repositori tunggal ini (`Z:\repo\dx`) sebagai satu ekosistem:
 
