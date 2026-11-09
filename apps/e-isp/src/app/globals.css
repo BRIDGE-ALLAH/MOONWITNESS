@@ -238,3 +238,4 @@ footer .footer-id { color: var(--accent); }
   .pillars, .bridges { grid-template-columns: 1fr; }
   .status-grid { grid-template-columns: repeat(2, 1fr); }
 }
+

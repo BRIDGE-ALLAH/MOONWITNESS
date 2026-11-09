@@ -16,6 +16,13 @@
   --mono: 'JetBrains Mono', 'Courier New', monospace;
   --display: 'Arial Black', Impact, sans-serif;
   --sans: system-ui, sans-serif;
+
+  /* ThemeCustomizer — overridden at runtime */
+  --accent: #ff0055;
+  --accent-dim: rgba(255,0,85,0.15);
+  --accent-border: rgba(255,0,85,0.4);
+  --radius: 0px;
+  --font-body: 'JetBrains Mono', 'Courier New', monospace;
 }
 
 * { box-sizing: border-box; }
