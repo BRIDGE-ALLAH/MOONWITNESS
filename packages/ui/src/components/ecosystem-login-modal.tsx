@@ -141,3 +141,4 @@ export function EcosystemLoginModal({ appName }: EcosystemLoginModalProps) {
     </ModalDialog>
   );
 }
+

@@ -1,0 +1,33 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg, #0b0704);
+  color: var(--text, #fef3c7);
+  font-family: var(--font-body, 'JetBrains Mono', monospace);
+  font-size: 13px;
+}
+
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 5vw 64px;
+}
+
+.patch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.skang-tape {
+  display: inline-block;
+  background: #f59e0b;
+  color: #000;
+  font-weight: 900;
+  padding: 2px 8px;
+  transform: rotate(-1deg);
+  letter-spacing: 0.12em;
+  font-size: 11px;
+}

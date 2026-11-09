@@ -19,6 +19,7 @@ const ECOSYSTEM_NODES: Array<{
   { dna: "moonwitness", port: ":3002", url: "http://127.0.0.1:3002", short: "MOONWITNESS", tag: "OBSERVATORY",  variant: "cyan" },
   { dna: "dx",          port: ":3000", url: "http://127.0.0.1:3000", short: "DX",          tag: "STORY RIOT",   variant: "toxic" },
   { dna: "eisp",        port: ":3003", url: "http://127.0.0.1:3003", short: "E-ISP",       tag: "INFRA MESH",   variant: "lime" },
+  { dna: "rid",         port: ":3004", url: "http://127.0.0.1:3004", short: "RID",         tag: "ROOT ID",      variant: "gold" },
 ];
 
 // ─── 1. UNIVERSAL ECOSYSTEM TOPBAR ────────────────────────────────────────────
@@ -636,6 +637,17 @@ export function EcosystemBridgeGrid({ excludeDna }: { excludeDna?: AppDnaId }) {
       cta: "OPEN E-ISP MESH (:3003) ↗",
       variant: "neon" as const,
       badge: "lime" as const,
+    },
+    {
+      dna: "rid" as AppDnaId,
+      port: ":3004 // SOVEREIGN SOUL",
+      title: "RID // ROOT ID",
+      subtitle: "UR IDENTITY ITS NOT ROCK BUT SOUL",
+      desc: "Skang And Roll rhythm. Patch it, stitch it, claim your soul identity under ALLAH #1. Anti-corporate profiling.",
+      url: "http://127.0.0.1:3004",
+      cta: "OPEN ROOT ID (:3004) ↗",
+      variant: "gold" as const,
+      badge: "gold" as const,
     },
   ].filter((n) => n.dna !== excludeDna);
 

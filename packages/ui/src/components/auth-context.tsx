@@ -125,3 +125,4 @@ export function useAuth(): AuthContextValue {
 export function useAuthSafe(): AuthContextValue | null {
   return useContext(AuthContext);
 }
+

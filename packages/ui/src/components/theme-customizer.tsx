@@ -14,7 +14,7 @@ import { EcosystemLoginModal } from "./ecosystem-login-modal";
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────────
 
-export type AppDnaId = "dx" | "empire" | "moonwitness" | "eisp";
+export type AppDnaId = "dx" | "empire" | "moonwitness" | "eisp" | "rid";
 export type ModeId = "dark" | "light";
 export type SkinId = "grunge" | "sacred" | "celestial" | "steel" | "phantom" | "acid";
 export type AccentId = "toxic" | "lime" | "cyan" | "gold" | "purple" | "orange";
@@ -62,6 +62,13 @@ export const DNA_PRESETS: Record<
     subtitle: "Edge Shield · Compute · Storage Fabric",
     defaultSkin: "steel",
     defaultAccent: "cyan",
+    defaultFont: "mono",
+  },
+  rid: {
+    label: "RID // ROOT ID",
+    subtitle: "Not Rock But Soul · Skang And Roll · Patch It",
+    defaultSkin: "acid",
+    defaultAccent: "orange",
     defaultFont: "mono",
   },
 };
