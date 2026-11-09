@@ -8,6 +8,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import { EcosystemTopBar } from "./ecosystem-bar";
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────────
 
@@ -465,6 +466,7 @@ export function EcosystemShell({
 }) {
   return (
     <ThemeProvider defaultDna={dna}>
+      <EcosystemTopBar currentDna={dna} />
       {children}
       <ThemeCustomizer />
     </ThemeProvider>
@@ -509,11 +511,41 @@ export function ThemeCustomizer() {
           font-family: var(--font-body);
           transition: background-color 0.22s ease, color 0.22s ease;
         }
-        html[data-mode="light"] body {
+        html[data-mode="light"] body,
+        html[data-mode="light"] .landing-root,
+        html[data-mode="light"] .origin-root,
+        html[data-mode="light"] .lunar-root,
+        html[data-mode="light"] .app-shell,
+        html[data-mode="light"] .main-area {
+          background-color: var(--bg) !important;
+          color: var(--text) !important;
           background-image:
             linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
             linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px) !important;
           background-size: 32px 32px !important;
+        }
+        html[data-mode="light"] .sidebar,
+        html[data-mode="light"] .topbar,
+        html[data-mode="light"] .landing-nav,
+        html[data-mode="light"] .psx-top-bar,
+        html[data-mode="light"] .tawhid-header-banner,
+        html[data-mode="light"] .trinity-card,
+        html[data-mode="light"] .lab-card,
+        html[data-mode="light"] .arsenal-card,
+        html[data-mode="light"] .quickstart-card,
+        html[data-mode="light"] .comic-panel-box,
+        html[data-mode="light"] .repo-table,
+        html[data-mode="light"] .modal-card {
+          background: var(--panel) !important;
+          color: var(--text) !important;
+          border-color: var(--line2) !important;
+        }
+        html[data-mode="light"] h1,
+        html[data-mode="light"] h2,
+        html[data-mode="light"] h3,
+        html[data-mode="light"] b,
+        html[data-mode="light"] strong {
+          color: var(--text);
         }
         @keyframes tc-pulse {
           0%, 100% { box-shadow: 0 0 0 0 ${accentColor}55; }

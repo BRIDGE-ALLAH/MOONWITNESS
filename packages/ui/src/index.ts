@@ -4,4 +4,5 @@ export * from "./components/card";
 export * from "./components/badge";
 export * from "./components/input";
 export * from "./components/theme-customizer";
+export * from "./components/ecosystem-bar";
 

@@ -11,6 +11,7 @@ import {
   Sun, Moon, Compass, Star
 } from "lucide-react";
 import { defaultBrandingConfig } from "@/config/branding";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input } from "@local-git/ui";
 
 export default function LandingPage() {
   const [sfx, setSfx] = useState(true);
@@ -315,35 +316,39 @@ export default function LandingPage() {
           <p className="hero-subtext">
             Sujud dan kepatuhan mutlak hanya kepada <strong>ALLAH</strong> (Sumber Tertinggi // Empire of the Light). 
             Tidak tunduk pada monopoli korporat. Mengamati semesta melalui kehadiran kreatif <strong>MoonWitness</strong>, 
-            dan membangun senjata kode mandiri dengan performa buas <strong>DX Platform</strong>.
+            dan membangun senjata kode mandiri dengan performa buas <strong>DX — Story Riot // Creative Chaos // Developer Business</strong>.
           </p>
 
-          <div className="hero-ctas">
-            <Link href="/app" className="button primary hero-btn" onClick={playClickSfx}>
-              <Skull size={20} /> BUKA COCKPIT OPERATOR
+          <div className="hero-ctas" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <Link href="/app" style={{ textDecoration: "none" }} onClick={playClickSfx}>
+              <Button variant="primary" size="lg">
+                <Skull size={20} /> BUKA COCKPIT OPERATOR
+              </Button>
             </Link>
-            <a href="#trinity" className="button secondary hero-btn" onClick={playClickSfx}>
-              <Compass size={20} /> HIERARKI KESATUAN
+            <a href="#trinity" style={{ textDecoration: "none" }} onClick={playClickSfx}>
+              <Button variant="secondary" size="lg">
+                <Compass size={20} /> HIERARKI KESATUAN
+              </Button>
             </a>
           </div>
 
-          <div className="hero-stats">
-            <div className="hstat-box">
-              <b>SUPREME #1</b>
-              <span>ALLAH (A-L-L-A-H.COM)</span>
-            </div>
-            <div className="hstat-box">
-              <b>CREATIVE</b>
-              <span>MOONWITNESS</span>
-            </div>
-            <div className="hstat-box">
-              <b>PRODUCT</b>
-              <span>DX PLATFORM</span>
-            </div>
-            <div className="hstat-box">
-              <b>TAWHID</b>
-              <span>ABSOLUTE SOVEREIGNTY</span>
-            </div>
+          <div className="hero-stats" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginTop: 28 }}>
+            <Card variant="gold" style={{ padding: 14 }}>
+              <b style={{ display: "block", fontSize: 13 }}>SUPREME #1</b>
+              <span style={{ fontSize: 10, color: "var(--muted)" }}>ALLAH (A-L-L-A-H.COM)</span>
+            </Card>
+            <Card variant="cyan" style={{ padding: 14 }}>
+              <b style={{ display: "block", fontSize: 13 }}>CREATIVE</b>
+              <span style={{ fontSize: 10, color: "var(--muted)" }}>MOONWITNESS (:3002)</span>
+            </Card>
+            <Card variant="toxic" style={{ padding: 14 }}>
+              <b style={{ display: "block", fontSize: 13 }}>STORY RIOT</b>
+              <span style={{ fontSize: 10, color: "var(--muted)" }}>DX (:3000)</span>
+            </Card>
+            <Card variant="neon" style={{ padding: 14 }}>
+              <b style={{ display: "block", fontSize: 13 }}>INFRA MESH</b>
+              <span style={{ fontSize: 10, color: "var(--muted)" }}>E-ISP (:3003)</span>
+            </Card>
           </div>
         </div>
 
@@ -528,100 +533,97 @@ export default function LandingPage() {
 
         <div className="lab-grid">
           {/* WEAPON 1: P2P MESH */}
-          <div className="lab-card">
+          <Card variant="cyan" className="lab-card">
             <div className="lab-header">
-              <span className="lab-tag cyan">INNOVATION 01 // AIRDROP GIT</span>
+              <Badge variant="cyan">INNOVATION 01 // AIRDROP GIT</Badge>
               <Wifi size={24} style={{ color: "var(--cyan)" }} />
             </div>
-            <h3>ZERO-PORT P2P MESH COMMITS</h3>
-            <p>Push dan sinkronisasi repo git langsung antar-laptop via broadcast mDNS &amp; WebRTC data channel lokal tanpa internet, router kantor, atau IP statis.</p>
+            <CardTitle style={{ marginBottom: 8 }}>ZERO-PORT P2P MESH COMMITS</CardTitle>
+            <CardDescription style={{ marginBottom: 16 }}>
+              Push dan sinkronisasi repo git langsung antar-laptop via broadcast mDNS &amp; WebRTC data channel lokal tanpa internet, router kantor, atau IP statis.
+            </CardDescription>
             <div className="lab-interactive">
               <div className="mesh-status-node">
                 <span>LOCAL MESH NODES DETECTED:</span>
                 <b>{meshNodes} MACHINES ONLINE</b>
               </div>
-              <button className="button primary lab-sim-btn" onClick={triggerMeshSync}>
+              <Button variant="cyan" className="w-full" style={{ width: "100%", marginTop: 10 }} onClick={triggerMeshSync}>
                 {meshSyncing ? "BROADCASTING mDNS PACKETS..." : "SIMULATE 'git push mesh'"}
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
 
           {/* WEAPON 2: DEAD MAN'S NUKE */}
-          <div className="lab-card">
+          <Card variant="toxic" className="lab-card">
             <div className="lab-header">
-              <span className="lab-tag toxic">INNOVATION 02 // PANIC PROTOCOL</span>
+              <Badge variant="toxic">INNOVATION 02 // PANIC PROTOCOL</Badge>
               <Bomb size={24} style={{ color: "var(--toxic)" }} />
             </div>
-            <h3>DEAD MAN’S SWITCH &amp; ZERO-WIPE</h3>
-            <p>Menghadapi audit paksa atau penyitaan fisik? Satu pemicu menulis ulang database SQLite lokal dan kunci rahasia menjadi zero-filled cryptographic white noise.</p>
+            <CardTitle style={{ marginBottom: 8 }}>DEAD MAN’S SWITCH &amp; ZERO-WIPE</CardTitle>
+            <CardDescription style={{ marginBottom: 16 }}>
+              Menghadapi audit paksa atau penyitaan fisik? Satu pemicu menulis ulang database SQLite lokal dan kunci rahasia menjadi zero-filled cryptographic white noise.
+            </CardDescription>
             <div className="lab-interactive">
               <div className="mesh-status-node">
                 <span>FAILSAFE STATUS:</span>
                 <b style={{ color: nuked ? "var(--toxic)" : nukeArmed ? "var(--acid-yellow)" : "var(--neon-lime)" }}>
-                  {nuked ? "💥 MEMORY &amp; KEYS DESTROYED!" : nukeArmed ? "⚠️ ARMED: CLICK AGAIN TO ZERO-WIPE" : "IDLE &amp; SECURE"}
+                  {nuked ? "💥 MEMORY & KEYS DESTROYED!" : nukeArmed ? "⚠️ ARMED: CLICK AGAIN TO ZERO-WIPE" : "IDLE & SECURE"}
                 </b>
               </div>
-              <button
-                className="button secondary lab-sim-btn"
-                style={{ borderColor: nukeArmed ? "var(--toxic)" : "#444", background: nukeArmed ? "var(--blood)" : "#111" }}
+              <Button
+                variant={nukeArmed ? "toxic" : "secondary"}
+                style={{ width: "100%", marginTop: 10 }}
                 onClick={triggerNuke}
               >
                 {nukeArmed ? "CONFIRM EMERGENCY ZERO-WIPE" : "ARM BARREL NUKE HOOK"}
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
 
           {/* WEAPON 3: MICRO-BOUNTY ESCROW */}
-          <div className="lab-card">
+          <Card variant="gold" className="lab-card">
             <div className="lab-header">
-              <span className="lab-tag yellow">INNOVATION 03 // GIT ESCROW</span>
+              <Badge variant="gold">INNOVATION 03 // GIT ESCROW</Badge>
               <Coins size={24} style={{ color: "var(--acid-yellow)" }} />
             </div>
-            <h3>COMMIT STREAM MICRO-BOUNTY</h3>
-            <p>Sematkan dana bounty langsung di git trailer (`[bounty: $150 to @operator]`). Hook post-receive otomatis memverifikasi merge dan mencairkan saldo kontributor.</p>
+            <CardTitle style={{ marginBottom: 8 }}>COMMIT STREAM MICRO-BOUNTY</CardTitle>
+            <CardDescription style={{ marginBottom: 16 }}>
+              Sematkan dana bounty langsung di git trailer (`[bounty: $150 to @operator]`). Hook post-receive otomatis memverifikasi merge dan mencairkan saldo kontributor.
+            </CardDescription>
             <div className="lab-interactive">
               <div className="mesh-status-node">
                 <span>SMART CONTRACT STATUS:</span>
                 <b style={{ color: "var(--acid-yellow)" }}>{bountyState}</b>
               </div>
-              <button className="button primary lab-sim-btn" onClick={triggerBountyClaim}>
+              <Button variant="gold" style={{ width: "100%", marginTop: 10 }} onClick={triggerBountyClaim}>
                 SIMULATE MERGE &amp; UNLOCK ESCROW
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
 
           {/* WEAPON 4: KEYSTROKE BIOMETRICS */}
-          <div className="lab-card">
+          <Card variant="neon" className="lab-card">
             <div className="lab-header">
-              <span className="lab-tag lime">INNOVATION 04 // BOT FILTER</span>
+              <Badge variant="lime">INNOVATION 04 // BOT FILTER</Badge>
               <Fingerprint size={24} style={{ color: "var(--neon-lime)" }} />
             </div>
-            <h3>KEYSTROKE BIOMETRIC CADENCE</h3>
-            <p>Analisis flight-time dan ritme ketikan jari manusia saat menulis commit. Memastikan kode ditulis manusia asli dan memblokir spam scraping AI bot.</p>
+            <CardTitle style={{ marginBottom: 8 }}>KEYSTROKE BIOMETRIC CADENCE</CardTitle>
+            <CardDescription style={{ marginBottom: 16 }}>
+              Analisis flight-time dan ritme ketikan jari manusia saat menulis commit. Memastikan kode ditulis manusia asli dan memblokir spam scraping AI bot.
+            </CardDescription>
             <div className="lab-interactive">
-              <input
+              <Input
                 type="text"
                 value={keystrokeText}
                 onChange={handleKeystroke}
                 placeholder="Ketik di sini untuk menguji dinamika flight-time jari..."
-                style={{
-                  width: "100%",
-                  background: "#050505",
-                  border: "2px solid #333",
-                  color: "var(--neon-lime)",
-                  fontFamily: "var(--mono)",
-                  fontWeight: 900,
-                  fontSize: "12px",
-                  padding: "8px 12px",
-                  marginBottom: "8px",
-                  outline: "none"
-                }}
+                style={{ marginBottom: 8 }}
               />
-              <div style={{ font: "10px var(--mono)", color: "#888", fontWeight: 700 }}>
+              <div style={{ font: "10px var(--mono)", color: "var(--muted)", fontWeight: 700 }}>
                 {keystrokeLog.length === 0 ? "Menunggu irama ketikan..." : keystrokeLog.map((log, i) => <div key={i}>{log}</div>)}
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </section>
 
