@@ -1,28 +1,30 @@
 #!/usr/bin/env bun
 /**
- * SOVEREIGN CODEX — STANDALONE MODEL CONTEXT PROTOCOL (MCP) SERVER & CLI
- * Replaces local .plan/ markdown files with 100% database-driven MCP tools.
- * Works completely independently even when all 9 origin monorepo nodes are OFF.
+ * SOVEREIGN CODEX — UNIVERSAL MODEL CONTEXT PROTOCOL (MCP) SERVER & CLI
+ * Primary Global Edge Endpoint: https://codex.a-l-l-a-h.com/mcp (Cloudflare Workers + D1)
+ * Secondary Mirror Endpoint   : https://codex.e-isp.id/mcp
+ * Offline Fallback            : data/codex-independent-db.json
  *
- * Modes:
- *  1. Stdio MCP Server (default): Reads JSON-RPC 2.0 lines from stdin, writes to stdout.
- *  2. CLI Execution:
- *     bun run scripts/codex-mcp.ts --dashboard
- *     bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"title":"Ship Edge D1","status":"done"}'
+ * Ensures every AI coding agent (Antigravity, Claude Code, Cursor, Windsurf, Copilot, OpenCode)
+ * reads and writes live to Cloudflare D1 on codex.a-l-l-a-h.com while maintaining a local mirror.
  */
 
 import { buildCodexDashboardSnapshot, mutateCodex } from "../services/codex-edge/src/store";
+
+const REMOTE_EDGE_MCP_URL =
+  process.env.CODEX_EDGE_MCP_URL || "https://codex.a-l-l-a-h.com/mcp";
 
 const MCP_TOOLS = [
   {
     name: "codex_get_dashboard",
     description:
-      "Fetch independent Sovereign Codex KPIs, 9-node out-of-band status probes, milestones, tasks, progress %, governance docs, releases, and autonomous comments.",
+      "Fetch live Sovereign Codex KPIs, 9-node status probes, milestones, tasks, progress %, governance docs, releases, and autonomous comments from https://codex.a-l-l-a-h.com (Cloudflare D1).",
     inputSchema: { type: "object", properties: {} },
   },
   {
     name: "codex_upsert_milestone",
-    description: "Create or update a release milestone in the independent Codex database.",
+    description:
+      "Create or update a release milestone on https://codex.a-l-l-a-h.com (Cloudflare D1) and local mirror.",
     inputSchema: {
       type: "object",
       properties: {
@@ -39,7 +41,8 @@ const MCP_TOOLS = [
   },
   {
     name: "codex_upsert_task",
-    description: "Create or update an engineering task and progress percentage (replaces .plan/TASK.md).",
+    description:
+      "Create or update an engineering task and progress % (0-100) on https://codex.a-l-l-a-h.com (replaces local .plan/TASK.md).",
     inputSchema: {
       type: "object",
       properties: {
@@ -57,7 +60,8 @@ const MCP_TOOLS = [
   },
   {
     name: "codex_upsert_doc",
-    description: "Create or update a governance specification document (replaces .plan/{RULE,SPEC,DESIGN}.md).",
+    description:
+      "Create or update a governance specification document (RULE, SPEC, DESIGN, EDGE, RFC) on https://codex.a-l-l-a-h.com.",
     inputSchema: {
       type: "object",
       properties: {
@@ -72,7 +76,8 @@ const MCP_TOOLS = [
   },
   {
     name: "codex_post_comment",
-    description: "Post a public or agent comment and trigger Autonomous Governor Triage & automatic task creation.",
+    description:
+      "Post a comment or autonomous agent report to https://codex.a-l-l-a-h.com and trigger Autonomous Governor Triage.",
     inputSchema: {
       type: "object",
       properties: {
@@ -87,10 +92,49 @@ const MCP_TOOLS = [
   },
 ];
 
+async function callRemoteCloudflareMcp(toolName: string, args: Record<string, unknown>): Promise<unknown | null> {
+  try {
+    const response = await fetch(REMOTE_EDGE_MCP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: Date.now(),
+        method: "tools/call",
+        params: {
+          name: toolName,
+          arguments: args,
+        },
+      }),
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!response.ok) return null;
+    const body = (await response.json()) as {
+      result?: { content?: Array<{ text?: string }> };
+    };
+    const text = body.result?.content?.[0]?.text;
+    return text ? (JSON.parse(text) as unknown) : null;
+  } catch {
+    return null;
+  }
+}
+
 async function executeTool(toolName: string, args: Record<string, unknown>) {
   if (toolName === "codex_get_dashboard") {
-    return buildCodexDashboardSnapshot({ probeNodes: true });
+    const [remoteSnap, localSnap] = await Promise.all([
+      callRemoteCloudflareMcp("codex_get_dashboard", {}),
+      buildCodexDashboardSnapshot({ probeNodes: true }),
+    ]);
+    if (remoteSnap && typeof remoteSnap === "object") {
+      return {
+        ...(remoteSnap as Record<string, unknown>),
+        publicDomains: ["https://codex.a-l-l-a-h.com", "https://codex.e-isp.id"],
+        nodeProbes: localSnap.nodeProbes,
+      };
+    }
+    return localSnap;
   }
+
   const actionMap: Record<string, string> = {
     codex_upsert_milestone: "upsert_milestone",
     codex_upsert_task: "upsert_task",
@@ -101,14 +145,25 @@ async function executeTool(toolName: string, args: Record<string, unknown>) {
   if (!mapped) {
     throw new Error(`Unknown MCP tool: ${toolName}`);
   }
-  return mutateCodex({ ...args, action: mapped }, { legendToken: process.env.LEGEND_SERVICE_TOKEN });
+
+  // Write to both Cloudflare D1 Edge (https://codex.a-l-l-a-h.com/mcp) and local mirror
+  const [remoteOut, localOut] = await Promise.all([
+    callRemoteCloudflareMcp(toolName, args),
+    mutateCodex({ ...args, action: mapped }, { legendToken: process.env.LEGEND_SERVICE_TOKEN }),
+  ]);
+
+  return {
+    ...(localOut as Record<string, unknown>),
+    cloudflareEdgeSynced: remoteOut !== null,
+    edgeDomains: ["https://codex.a-l-l-a-h.com", "https://codex.e-isp.id"],
+  };
 }
 
 async function main() {
   const argv = process.argv.slice(2);
 
   if (argv.includes("--dashboard")) {
-    const snap = await buildCodexDashboardSnapshot({ probeNodes: true });
+    const snap = await executeTool("codex_get_dashboard", {});
     console.log(JSON.stringify(snap, null, 2));
     return;
   }
@@ -117,8 +172,43 @@ async function main() {
   if (toolIdx >= 0 && argv[toolIdx + 1]) {
     const toolName = argv[toolIdx + 1];
     const argsIdx = argv.indexOf("--args");
-    const parsedArgs =
-      argsIdx >= 0 && argv[argsIdx + 1] ? (JSON.parse(argv[argsIdx + 1]) as Record<string, unknown>) : {};
+    let parsedArgs: Record<string, unknown> = {};
+    if (argsIdx >= 0 && argv[argsIdx + 1]) {
+      try {
+        parsedArgs = JSON.parse(argv[argsIdx + 1]) as Record<string, unknown>;
+      } catch {
+        parsedArgs = {};
+      }
+    }
+    const flagKeys = [
+      "id",
+      "title",
+      "version",
+      "status",
+      "domain",
+      "priority",
+      "milestoneId",
+      "owner",
+      "summary",
+      "targetDate",
+      "category",
+      "content",
+      "author",
+      "sentiment",
+      "targetType",
+      "targetId",
+      "body",
+    ];
+    for (const key of flagKeys) {
+      const idx = argv.indexOf(`--${key}`);
+      if (idx >= 0 && argv[idx + 1]) {
+        parsedArgs[key] = argv[idx + 1];
+      }
+    }
+    const pctIdx = argv.indexOf("--progressPct");
+    if (pctIdx >= 0 && argv[pctIdx + 1]) {
+      parsedArgs.progressPct = Number(argv[pctIdx + 1]);
+    }
     const out = await executeTool(toolName, parsedArgs);
     console.log(JSON.stringify(out, null, 2));
     return;
@@ -200,4 +290,3 @@ async function main() {
 }
 
 void main();
-

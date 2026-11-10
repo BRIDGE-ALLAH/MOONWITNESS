@@ -3,8 +3,10 @@
     "sovereign-codex-mcp": {
       "command": "bun",
       "args": ["run", "scripts/codex-mcp.ts"],
-      "description": "Independent database-driven Sovereign Codex MCP Server (KPIs, Milestones, Tasks, Progress %, Docs, Releases, and Autonomous Comment Triage). Works even when origin project nodes are offline."
+      "env": {
+        "CODEX_EDGE_MCP_URL": "https://codex.a-l-l-a-h.com/mcp"
+      },
+      "description": "Sovereign Codex // Edge Pulse MCP Server synced live to Cloudflare D1 (https://codex.a-l-l-a-h.com & https://codex.e-isp.id). Replaces local .plan/ files with database-driven Milestones, Tasks, Progress %, KPIs, Docs, and Autonomous Comment Triage."
     }
   }
 }
-

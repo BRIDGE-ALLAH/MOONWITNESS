@@ -148,6 +148,11 @@ function verifyVersionAndAgentSync() {
       }
     }
   }
+  if (existsSync(join(ROOT, ".plan"))) {
+    violations.push(
+      "Forbidden local .plan/ folder detected -> Use sovereign-codex-mcp (https://codex.a-l-l-a-h.com/mcp) instead"
+    );
+  }
 }
 
 function run(label: string, command: string, args: string[]) {
