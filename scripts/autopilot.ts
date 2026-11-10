@@ -49,6 +49,7 @@ if (runRelease) {
   const releaseArgs = ["run", "scripts/release.ts", "auto", "--tag"];
   if (runPush) releaseArgs.push("--push");
   step("PHASE 5: Autonomous SemVer Release & Tagging", "bun", releaseArgs);
+  step("PHASE 6: Daily Standup & Telegram Edge Dispatch", "bun", ["run", "scripts/codex-daily.ts", "--post-comment"]);
 }
 
 console.log("\n======================================================");

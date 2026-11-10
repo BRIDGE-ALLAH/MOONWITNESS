@@ -83,6 +83,9 @@ hex = "0.4"
 # Directories
 dirs = "5"
 
+# System info for diagnostics
+sysinfo = "0.30"
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 

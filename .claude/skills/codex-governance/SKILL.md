@@ -13,19 +13,26 @@ description: Operate the 100% independent database-driven Sovereign Codex // Edg
 - **Zero Local `.plan/` Folder**: Never create `.plan/` markdown files (`scripts/gate.ts` blocks `.plan/`). All milestones, tasks, progress percentages, KPIs, specs (`RULE`, `SPEC`, `DESIGN`, `EDGE`, `RFC`), and autonomous comments are persisted in Cloudflare D1 (`sovereign-codex-db`) and mirrored locally.
 
 ## 2. Mandatory Agentic Workflow (Before & After Every Task)
-1. **Read Live State**:
+1. **Read Live State & Intelligence**:
    ```bash
    bun run codex:mcp --dashboard
    ```
-2. **Register / Update Task Progress (`[ ] todo` -> `[~] in_progress` -> `[x] done`)**:
+2. **Register Task as In-Progress Before Writing Code**:
    ```bash
-   bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"id":"task-slice-01","title":"Implement vertical slice","domain":"BACKEND","priority":"HIGH","status":"in_progress","progressPct":50}'
+   bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"id":"task-slice-01","title":"Implement vertical slice","domain":"BACKEND","priority":"HIGH","status":"in_progress","progressPct":30}'
    ```
-3. **Update Milestone or Spec Doc (`RULE` / `SPEC` / `DESIGN` / `EDGE` / `RFC`)**:
+3. **Execute Task with Radical Anti-Slop & Out-of-the-Box Innovation**:
+   - Synthesize research from papers, GitHub Trending, Trendshift & Reddit (`r/rust`, `r/systemdesign`).
+   - Absolute anti-slop: zero TODO, zero mock data, zero placeholder functions.
+4. **Update Milestone / Release / Spec Doc**:
    ```bash
-   bun run scripts/codex-mcp.ts --tool codex_upsert_milestone --args '{"id":"m5-v050","version":"v0.5.0","title":"Decoupled Cloudflare Serverless Edge Status & Multi-Region D1","status":"COMPLETED","progressPct":100}'
+   bun run scripts/codex-mcp.ts --tool codex_upsert_release --args '{"tagName":"v0.4.2","title":"Release Title","channel":"stable","changelogMd":"- Highlights"}'
    ```
-4. **Post Autonomous Verification Comment**:
+5. **Mark Task Completed (`status: done`, `progressPct: 100`)**:
    ```bash
-   bun run scripts/codex-mcp.ts --tool codex_post_comment --args '{"targetType":"milestone","targetId":"m5-v050","author":"autonomous-autopilot","sentiment":"APPROVE","body":"All 5 quality gates and 9/9 E2E smoke tests verified."}'
+   bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"id":"task-slice-01","status":"done","progressPct":100}'
+   ```
+6. **Trigger Daily Standup & Telegram Dispatch**:
+   ```bash
+   bun run codex:daily
    ```

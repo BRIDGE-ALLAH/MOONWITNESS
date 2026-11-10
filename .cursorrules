@@ -1,8 +1,13 @@
 # SOVEREIGN MONOREPO — UNIVERSAL AGENT PROTOCOL (ZERO-SLOP / TOKEN-FRUGAL / CODEX-GOVERNED)
 
-## 1. AXIOMS & TONE
+## 1. AXIOMS, OUT-OF-THE-BOX COGNITION & ANTI-SLOP
 - **ALLAH #1**: Supreme origin (`apps/empire`). Anti-slop, deterministic, sovereign engineering.
-- **Zero-Slop**: Never leave `// TODO`, `// FIXME`, `Math.random()`, mock arrays, placeholder functions, or generic names (`data`, `item`, `res`).
+- **Radical Out-of-the-Box Innovation (Deep Research & Trend Sourcing)**:
+  - NEVER think inside standard boilerplate dogmas. Prioritize bold, unprecedented, out-of-the-box architectures (e.g. edge-native CRDTs, zero-copy WASM, micro-haptic living audio, peer-mesh state).
+  - MANDATORY RESEARCH FOUNDATION: Before architecting solutions or features, agents MUST synthesize knowledge from online research papers (ArXiv, IEEE, ACM), GitHub Trending, Trendshift, and Reddit engineering communities (`r/rust`, `r/systemdesign`, `r/localllama`, `r/cloudflare`).
+  - Ban vanilla complacency: reject mediocre CRUD, generic layouts, and standard library clones when an ultra-optimized, bleeding-edge design is possible.
+- **Absolute Anti-Slop Hygiene**:
+  - Never leave `// TODO`, `// FIXME`, `Math.random()`, mock arrays, placeholder functions, dead buttons, or generic names (`data`, `item`, `res`).
 - **Zero Local `.plan/` Folder (100% Database-Driven via `https://codex.a-l-l-a-h.com`)**:
   - NEVER create local `.plan/` markdown files (enforced by `.githooks/pre-commit` & `scripts/gate.ts`).
   - All Milestones, Tasks, Progress %, KPIs, Governance Specs (`RULE`, `SPEC`, `DESIGN`, `EDGE`, `RFC`), Releases, and Autonomous Comments are stored in **Sovereign Codex // Edge Pulse** (`https://codex.a-l-l-a-h.com` & `https://codex.e-isp.id` on Cloudflare Workers + D1, `:8787`, and `:3000/wiki`).
@@ -12,11 +17,13 @@
     - `codex_upsert_milestone`
     - `codex_upsert_doc`
     - `codex_post_comment`
+    - `codex_upsert_release` (publish release, changelog & direct download URLs)
+    - `codex_get_releases` (fetch release artifacts & mirror links)
 - **Token-Frugal Execution**:
   - Read line ranges (`StartLine`..`EndLine`), never whole >300-line files blindly.
   - Pipe verbose CLI output (`cargo`, `bun`) through filters or tail.
   - Never explain unless asked; max 1-2 lines per response.
-- **Unconditional Autonomy**: Never pause for permission. Execute `Codex Sync -> Autofix -> Radar -> Architect -> Code -> Gate -> Smoke -> Commit -> Push`.
+- **Unconditional Autonomy**: Never pause for permission. Execute `Codex Sync -> Task in_progress -> Research/Architect -> Code -> Gate -> Smoke -> Release/Daily -> Task done -> Commit -> Push`.
 
 ## 2. TOPOLOGY, PUBLIC EDGE & PORT MAP
 | Node / Service | Port / Public Domain | Stack | Responsibility |
@@ -40,6 +47,7 @@
 
 ## 4. MANDATORY QUALITY GATE & CLOSED-LOOP AUTOMATION
 - `bun run codex:mcp --dashboard`: Fetches live KPIs, tasks, milestones, and node status from `https://codex.a-l-l-a-h.com`.
+- `bun run codex:daily`: Generates daily delta standup briefing and broadcasts to Telegram Moonwitness.
 - `bun run autofix`: Self-heals 16-manifest SemVer drift, git hooks, LF script endings, `.env` leaks, and Rust formatting.
 - `bun run radar`: Scans full-stack UI/API routes, auth guards, test assertion density, and feature/hardening candidates.
 - `bun run gate` (enforced by `.githooks/pre-commit` & `.githooks/pre-push`):

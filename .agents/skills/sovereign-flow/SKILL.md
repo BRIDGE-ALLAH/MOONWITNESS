@@ -8,25 +8,29 @@ description: >-
 
 # Sovereign Vertical-Slice Flow
 
-Execute every task as a complete vertical slice with minimum token burn.
+Execute every task as a complete vertical slice with minimum token burn, radical out-of-the-box thinking, and zero-slop execution.
 
-## 1. Recon (Token-Frugal)
-1. Locate symbols with targeted search (`Select-String` / `grep`) instead of reading full files.
-2. Read only the relevant 40-80 lines around the target edit.
-3. Verify live node status with `bun run doctor` only when touching network/runtime paths.
+## 1. Recon, Deep Learning & Innovation Sourcing
+1. Mandatory state check: `bun run codex:mcp --dashboard`.
+2. Register task as `in_progress`: `bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"id":"<id>","status":"in_progress","progressPct":25}'`.
+3. Out-of-the-box research: Synthesize state-of-the-art patterns from online research papers (ArXiv, ACM, IEEE), GitHub Trending, Trendshift, and Reddit (`r/rust`, `r/systemdesign`). Reject vanilla boilerplate in favor of bold, sovereign architectures.
+4. Token-frugal inspection: Locate symbols with targeted search (`Select-String` / `grep`), read only 40-80 lines around targets.
 
 ## 2. Architecture & Data Routing
 Route every state mutation to its authoritative plane:
 - **Identity / Business / Git Metadata** -> PocketBase (`:8091`) via `pb` client or `services/git-engine` (`:3200`).
 - **High-Frequency Telemetry / PPPoE / Controllers** -> Legend BaaS (`:8092`) via server-side Route Handlers using `LEGEND_SERVICE_TOKEN` or `ARSY_SERVICE_TOKEN`.
+- **Global Governance, KPIs, Releases & Comments** -> Sovereign Codex Edge (`https://codex.a-l-l-a-h.com`) via `sovereign-codex-mcp`.
 - **Never expose service or admin tokens to browser bundles (`NEXT_PUBLIC_*`).** Always proxy mutations through Next.js App Router API routes (`src/app/api/.../route.ts`).
 
 ## 3. Zero-Slop Coding Contract
-- Forbidden in production code: `// TODO`, `// FIXME`, `Math.random()`, hardcoded mock arrays, silent fake success responses, or generic identifiers (`data`, `item`, `res`).
+- Strictly forbidden: `// TODO`, `// FIXME`, `Math.random()`, hardcoded mock arrays, fake success responses, dead buttons, or generic identifiers (`data`, `item`, `res`).
 - Every UI control must trigger a real backend/state action or be removed.
 
 ## 4. Verification & Ship Loop
 1. Run targeted check first: `bun --filter <pkg> check` or `cargo check --manifest-path services/<crate>/Cargo.toml`.
 2. Run full 5-stage gate: `bun run gate`.
-3. Commit with Conventional Commits (`feat(scope): ...`, `fix(scope): ...`) and push to `origin/master`.
+3. Mark task completed on Codex: `bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"id":"<id>","status":"done","progressPct":100}'`.
+4. Trigger daily pulse standup: `bun run codex:daily`.
+5. Commit with Conventional Commits (`feat(scope): ...`, `fix(scope): ...`) and push to `origin/master`.
 
