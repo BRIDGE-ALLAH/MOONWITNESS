@@ -20,3 +20,33 @@ services:
       timeout: 5s
       retries: 15
       start_period: 10s
+
+  arsy:
+    build:
+      context: ./services/arsy
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:4000:4000"
+    environment:
+      - PORT=4000
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:4000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  radius:
+    build:
+      context: ./services/radius
+      dockerfile: Dockerfile
+    ports:
+      - "1812:1812/udp"
+      - "1813:1813/udp"
+    env_file:
+      - ./services/radius/.env.example
+    depends_on:
+      arsy:
+        condition: service_healthy
+    restart: unless-stopped

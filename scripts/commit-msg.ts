@@ -21,3 +21,4 @@ if (!pattern.test(msg)) {
   console.error(`  Received: "${msg}"`);
   process.exit(1);
 }
+

@@ -8,6 +8,25 @@ type InfraStatus = {
   containers: { running: number; total: number } | null;
   pocketbase: "online" | "offline" | "checking";
   git: "online" | "offline" | "checking";
+  arsy: "online" | "offline" | "checking";
+};
+
+type PppoeSession = {
+  id: string;
+  username: string;
+  nas_ip: string;
+  nas_port: string;
+  framed_ip_address?: string | null;
+  status: "active" | "terminated" | "pending";
+  acct_session_id: string;
+  session_start: string;
+};
+
+type ArsyController = {
+  id: string;
+  name: string;
+  endpoint: string;
+  status: string;
 };
 
 export default function EISPPage() {
@@ -15,9 +34,47 @@ export default function EISPPage() {
     containers: null,
     pocketbase: "checking",
     git: "checking",
+    arsy: "checking",
   });
+  const [pppoeSessions, setPppoeSessions] = useState<PppoeSession[]>([]);
+  const [controllers, setControllers] = useState<ArsyController[]>([]);
   const [nodePings, setNodePings] = useState<Record<string, number | "ERR">>({});
   const [pinging, setPinging] = useState(false);
+
+  const loadArsyTelemetry = async () => {
+    try {
+      const [hRes, sRes, cRes] = await Promise.all([
+        fetch("http://127.0.0.1:4000/health"),
+        fetch("http://127.0.0.1:4000/api/v1/pppoe/sessions"),
+        fetch("http://127.0.0.1:4000/api/v1/controllers"),
+      ]);
+      if (hRes.ok) setStatus((s) => ({ ...s, arsy: "online" }));
+      if (sRes.ok) setPppoeSessions(await sRes.json());
+      if (cRes.ok) setControllers(await cRes.json());
+    } catch {
+      setStatus((s) => ({ ...s, arsy: "offline" }));
+    }
+  };
+
+  const simulateRadiusDial = async () => {
+    try {
+      await fetch("http://127.0.0.1:4000/api/v1/pppoe/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: crypto.randomUUID(),
+          username: `subscriber-${Math.floor(100 + Math.random() * 900)}@e-isp.mesh`,
+          nas_ip: "10.254.0.1",
+          nas_port: "eth0/pppoe-01",
+          framed_ip_address: `100.64.${Math.floor(Math.random() * 250)}.${Math.floor(2 + Math.random() * 250)}`,
+          session_start: new Date().toISOString(),
+          status: "active",
+          acct_session_id: `ACCT-${Date.now().toString(16).toUpperCase()}`,
+        }),
+      });
+      await loadArsyTelemetry();
+    } catch {}
+  };
 
   const pingAllNodes = async () => {
     setPinging(true);
@@ -44,6 +101,7 @@ export default function EISPPage() {
 
   useEffect(() => {
     pingAllNodes();
+    loadArsyTelemetry();
   }, []);
 
   useEffect(() => {
@@ -115,7 +173,13 @@ export default function EISPPage() {
             sub=":8091"
             valueColor={status.pocketbase === "online" ? "#00ff66" : "#ff0055"}
           />
-          <StatMetric label="MESH LAYER" value="ACTIVE" sub="tri-node fabric" variant="neon" valueColor="#00ff66" />
+          <StatMetric
+            label="ARSY ORCHESTRATOR"
+            value={status.arsy === "checking" ? "..." : status.arsy.toUpperCase()}
+            sub=":4000 // PPPoE & RADIUS"
+            valueColor={status.arsy === "online" ? "#00ff66" : "#ff0055"}
+          />
+          <StatMetric label="PPPoE SESSIONS" value={pppoeSessions.length} sub="active subscribers" variant="neon" valueColor="#00f0ff" />
         </div>
 
         {/* Pillars */}
@@ -162,6 +226,49 @@ export default function EISPPage() {
             </div>
           </Card>
         </div>
+
+        {/* ARSY & RADIUS PPPoE SESSION CONTROL */}
+        <section id="radius" style={{ marginBottom: 32 }}>
+          <SectionHeader
+            eyebrow="/// ARSY ORCHESTRATOR & RADIUS AAA (:4000 / :1812)"
+            title="PPPoE SUBSCRIBER & CONTROLLER SESSIONS"
+            subtitle={`Active Controllers: ${controllers.length} | Live PPPoE Subscribers: ${pppoeSessions.length}`}
+            badgeVariant="lime"
+            rightSlot={
+              <div style={{ display: "flex", gap: 8 }}>
+                <Button variant="secondary" size="sm" onClick={loadArsyTelemetry}>
+                  REFRESH AAA ↻
+                </Button>
+                <Button variant="primary" size="sm" onClick={simulateRadiusDial}>
+                  + SIMULATE PPPoE DIAL ⚡
+                </Button>
+              </div>
+            }
+          />
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
+            {pppoeSessions.length === 0 ? (
+              <Card variant="default" style={{ padding: 20 }}>
+                <div style={{ color: "var(--muted)", fontSize: 12 }}>
+                  No active PPPoE sessions in ARSY memory. Click <b>+ SIMULATE PPPoE DIAL</b> or connect via RADIUS UDP :1812.
+                </div>
+              </Card>
+            ) : (
+              pppoeSessions.map((sess) => (
+                <Card key={sess.id} variant="neon" style={{ padding: 16 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                    <Badge variant={sess.status === "active" ? "lime" : "gold"}>{sess.status.toUpperCase()}</Badge>
+                    <span style={{ fontSize: 10, color: "var(--muted)" }}>{sess.acct_session_id}</span>
+                  </div>
+                  <b style={{ display: "block", fontSize: 14, marginBottom: 4 }}>{sess.username}</b>
+                  <div style={{ fontSize: 11, color: "var(--accent)", fontFamily: "var(--mono)" }}>
+                    IP: {sess.framed_ip_address || "100.64.0.1"} · NAS: {sess.nas_ip} ({sess.nas_port})
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
+        </section>
 
         {/* Topology */}
         <div id="topology" style={{ marginBottom: 32 }}>
