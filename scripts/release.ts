@@ -166,6 +166,21 @@ if (shouldTag) {
       execSync("git push origin HEAD --tags", { stdio: "inherit" });
       console.log(`✅ Pushed commit and tag v${nextVersion} to origin`);
     }
+
+    // Automatically sync release and mirror links to Sovereign Codex Cloudflare Edge D1 & Telegram
+    try {
+      console.log(`⚡ Syncing release v${nextVersion} to Sovereign Codex Edge...`);
+      const tagName = `v${nextVersion}`;
+      const title = `Release ${tagName} // Autonomous Monorepo Release`;
+      const cleanChangelog = bulletCommits.slice(0, 500);
+      execSync(
+        `bun run scripts/codex-mcp.ts --tool codex_upsert_release --tagName "${tagName}" --version "${nextVersion}" --title "${title}" --channel stable --changelogMd "${cleanChangelog}"`,
+        { stdio: "inherit" }
+      );
+      console.log(`✅ Successfully published release metadata & mirror links to Codex Edge.`);
+    } catch (e) {
+      console.warn("⚠️ Non-blocking: Could not mirror release to Codex Edge:", (e as Error).message);
+    }
   } catch (e) {
     console.error("⚠️ Could not auto-commit/tag:", (e as Error).message);
     process.exit(1);
