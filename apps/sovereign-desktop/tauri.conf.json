@@ -30,17 +30,8 @@
   "bundle": {
     "active": true,
     "targets": ["msi"],
-    "icon": [
-      "icons/icon.svg"
-    ],
     "publisher": "CN=Sovereign",
-    "externalBin": [
-      "git-engine.exe",
-      "arsy.exe",
-      "legend.exe",
-      "pocketbase.exe",
-      "radius.exe"
-    ]
+    "externalBin": []
   },
   "plugins": {
     "fs": {

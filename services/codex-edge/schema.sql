@@ -51,7 +51,19 @@ CREATE TABLE IF NOT EXISTS codex_comments (
   created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS codex_releases (
+  tag_name TEXT PRIMARY KEY,
+  version TEXT NOT NULL,
+  title TEXT NOT NULL,
+  channel TEXT NOT NULL CHECK (channel IN ('stable', 'nightly', 'daily')),
+  changelog_md TEXT NOT NULL,
+  published_at TEXT NOT NULL,
+  github_release_url TEXT NOT NULL,
+  artifacts_json TEXT NOT NULL DEFAULT '[]'
+);
+
 CREATE INDEX IF NOT EXISTS idx_tasks_milestone ON codex_tasks(milestone_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_status ON codex_tasks(status);
 CREATE INDEX IF NOT EXISTS idx_comments_target ON codex_comments(target_type, target_id);
+CREATE INDEX IF NOT EXISTS idx_releases_published ON codex_releases(published_at);
 

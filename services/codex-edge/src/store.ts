@@ -50,6 +50,25 @@ export interface CodexComment {
   createdAt: string;
 }
 
+export interface CodexReleaseArtifact {
+  name: string;
+  directUrl: string;
+  sizeBytes?: number;
+  sha256?: string;
+  targetOs?: "windows" | "linux" | "macos" | "any";
+}
+
+export interface CodexRelease {
+  tagName: string;
+  version: string;
+  title: string;
+  channel: "stable" | "nightly" | "daily";
+  changelogMd: string;
+  publishedAt: string;
+  githubReleaseUrl: string;
+  artifacts: CodexReleaseArtifact[];
+}
+
 export interface ReleaseEntry {
   version: string;
   date: string;
@@ -82,6 +101,7 @@ export interface CodexLedgerState {
   tasks: ProjectTask[];
   docs: CodexDoc[];
   comments: CodexComment[];
+  releases: CodexRelease[];
 }
 
 export const SEED_MILESTONES: ProjectMilestone[] = [
@@ -301,6 +321,50 @@ export const SEED_COMMENTS: CodexComment[] = [
   },
 ];
 
+export const DEFAULT_RELEASES_LIST: CodexRelease[] = [
+  {
+    tagName: "v0.4.0",
+    version: "0.4.0",
+    title: "Sovereign Codex // Edge Pulse & Universal Multi-Agent Governance",
+    channel: "stable",
+    changelogMd: [
+      "- 100% Decoupled Cloudflare D1 Edge Status, MCP Server & Wiki at https://codex.a-l-l-a-h.com",
+      "- Zero local .plan/ folder enforcement via scripts/gate.ts across universal coding agents",
+      "- Real-time Telegram notification dispatcher to Moonwitness group",
+      "- Multi-agent stdio and HTTP JSON-RPC 2.0 tool suite",
+    ].join("\n"),
+    publishedAt: "2026-04-10T10:00:00.000Z",
+    githubReleaseUrl: "https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/tag/v0.4.0",
+    artifacts: [
+      {
+        name: "Sovereign-Desktop-Setup-0.4.0.exe",
+        directUrl: "https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/download/v0.4.0/Sovereign-Desktop-Setup-0.4.0.exe",
+        targetOs: "windows",
+      },
+      {
+        name: "sovereign-desktop-x86_64.AppImage",
+        directUrl: "https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/download/v0.4.0/sovereign-desktop-x86_64.AppImage",
+        targetOs: "linux",
+      },
+      {
+        name: "cyclonedx-sbom.json",
+        directUrl: "https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/download/v0.4.0/cyclonedx-sbom.json",
+        targetOs: "any",
+      },
+    ],
+  },
+  {
+    tagName: "v0.3.0",
+    version: "0.3.0",
+    title: "Autonomous Autopilot & SLSA Release Pipeline",
+    channel: "stable",
+    changelogMd: "- Added autofix, radar, smoke, and full-mesh test suites\n- Hardened SLSA provenance",
+    publishedAt: "2026-04-08T08:00:00.000Z",
+    githubReleaseUrl: "https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/tag/v0.3.0",
+    artifacts: [],
+  },
+];
+
 export const DEFAULT_RELEASES: ReleaseEntry[] = [
   {
     version: "v0.4.0",
@@ -372,6 +436,7 @@ export function loadLocalIndependentLedger(): CodexLedgerState {
         tasks: Array.isArray(parsed.tasks) && parsed.tasks.length > 0 ? parsed.tasks : [...SEED_TASKS],
         docs: Array.isArray(parsed.docs) && parsed.docs.length > 0 ? parsed.docs : [...SEED_DOCS],
         comments: Array.isArray(parsed.comments) && parsed.comments.length > 0 ? parsed.comments : [...SEED_COMMENTS],
+        releases: Array.isArray(parsed.releases) && parsed.releases.length > 0 ? parsed.releases : [...DEFAULT_RELEASES_LIST],
       };
     }
     const initial: CodexLedgerState = {
@@ -379,6 +444,7 @@ export function loadLocalIndependentLedger(): CodexLedgerState {
       tasks: [...SEED_TASKS],
       docs: [...SEED_DOCS],
       comments: [...SEED_COMMENTS],
+      releases: [...DEFAULT_RELEASES_LIST],
     };
     saveLocalIndependentLedger(initial);
     return initial;
@@ -388,6 +454,7 @@ export function loadLocalIndependentLedger(): CodexLedgerState {
       tasks: [...SEED_TASKS],
       docs: [...SEED_DOCS],
       comments: [...SEED_COMMENTS],
+      releases: [...DEFAULT_RELEASES_LIST],
     };
   }
 }
@@ -467,6 +534,20 @@ export async function ensureD1Tables(d1: D1DatabaseLike): Promise<void> {
       )`
     )
     .run();
+  await d1
+    .prepare(
+      `CREATE TABLE IF NOT EXISTS codex_releases (
+        tag_name TEXT PRIMARY KEY,
+        version TEXT NOT NULL,
+        title TEXT NOT NULL,
+        channel TEXT NOT NULL,
+        changelog_md TEXT NOT NULL,
+        published_at TEXT NOT NULL,
+        github_release_url TEXT NOT NULL,
+        artifacts_json TEXT NOT NULL DEFAULT '[]'
+      )`
+    )
+    .run();
 }
 
 export async function loadCodexLedger(d1?: D1DatabaseLike): Promise<{
@@ -511,12 +592,24 @@ export async function loadCodexLedger(d1?: D1DatabaseLike): Promise<{
             .run();
         }
       }
-      const [mRes, tRes, dRes, cRes] = await Promise.all([
+      const [mRes, tRes, dRes, cRes, relRes] = await Promise.all([
         d1.prepare("SELECT * FROM codex_milestones ORDER BY id ASC").all<Record<string, unknown>>(),
         d1.prepare("SELECT * FROM codex_tasks ORDER BY updated_at DESC").all<Record<string, unknown>>(),
         d1.prepare("SELECT * FROM codex_docs ORDER BY id ASC").all<Record<string, unknown>>(),
         d1.prepare("SELECT * FROM codex_comments ORDER BY created_at DESC").all<Record<string, unknown>>(),
+        d1.prepare("SELECT * FROM codex_releases ORDER BY published_at DESC").all<Record<string, unknown>>().catch(() => ({ results: [] })),
       ]);
+
+      const loadedReleases = ((relRes?.results ?? []) as Record<string, unknown>[]).map((r) => ({
+        tagName: String(r.tag_name),
+        version: String(r.version),
+        title: String(r.title),
+        channel: (r.channel as CodexRelease["channel"]) ?? "stable",
+        changelogMd: String(r.changelog_md ?? ""),
+        publishedAt: String(r.published_at),
+        githubReleaseUrl: String(r.github_release_url),
+        artifacts: JSON.parse(String(r.artifacts_json ?? "[]")) as CodexReleaseArtifact[],
+      }));
 
       return {
         backend: "cloudflare-d1-edge",
@@ -566,6 +659,7 @@ export async function loadCodexLedger(d1?: D1DatabaseLike): Promise<{
             linkedTaskId: String(r.linked_task_id),
             createdAt: String(r.created_at),
           })),
+          releases: loadedReleases.length > 0 ? loadedReleases : [...DEFAULT_RELEASES_LIST],
         },
       };
     } catch {
@@ -700,6 +794,75 @@ export async function mutateCodex(
     }
     await mirrorToLegendIfOnline("project_milestones", milestone.id, milestone, options?.legendToken);
     return { status: "persisted", action, milestone };
+  }
+
+  if (action === "upsert_release") {
+    const tagName = typeof payload.tagName === "string" ? payload.tagName.trim() : "";
+    const version = typeof payload.version === "string" ? payload.version.trim() : tagName.replace(/^v/, "");
+    if (!tagName) throw new Error("tagName is required for release");
+    const title = typeof payload.title === "string" ? payload.title.trim() : `Release ${tagName}`;
+    const channel: CodexRelease["channel"] =
+      payload.channel === "nightly" || payload.channel === "daily" ? payload.channel : "stable";
+    const changelogMd = typeof payload.changelogMd === "string" ? payload.changelogMd : "";
+    const githubReleaseUrl =
+      typeof payload.githubReleaseUrl === "string" && payload.githubReleaseUrl
+        ? payload.githubReleaseUrl
+        : `https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/tag/${tagName}`;
+    const artifacts: CodexReleaseArtifact[] = Array.isArray(payload.artifacts)
+      ? (payload.artifacts as CodexReleaseArtifact[])
+      : [
+          {
+            name: `Sovereign-Desktop-Setup-${version}.exe`,
+            directUrl: `https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/download/${tagName}/Sovereign-Desktop-Setup-${version}.exe`,
+            targetOs: "windows",
+          },
+          {
+            name: `sovereign-desktop-${version}-x86_64.AppImage`,
+            directUrl: `https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/download/${tagName}/sovereign-desktop-${version}-x86_64.AppImage`,
+            targetOs: "linux",
+          },
+          {
+            name: "cyclonedx-sbom.json",
+            directUrl: `https://github.com/BRIDGE-ALLAH/MOONWITNESS/releases/download/${tagName}/cyclonedx-sbom.json`,
+            targetOs: "any",
+          },
+        ];
+
+    const release: CodexRelease = {
+      tagName,
+      version,
+      title,
+      channel,
+      changelogMd,
+      publishedAt: typeof payload.publishedAt === "string" ? payload.publishedAt : new Date().toISOString(),
+      githubReleaseUrl,
+      artifacts,
+    };
+
+    const existingIdx = state.releases.findIndex((r) => r.tagName === tagName);
+    if (existingIdx >= 0) state.releases[existingIdx] = release;
+    else state.releases.unshift(release);
+    saveLocalIndependentLedger(state);
+
+    if (options?.d1) {
+      await options.d1
+        .prepare(
+          "INSERT OR REPLACE INTO codex_releases (tag_name, version, title, channel, changelog_md, published_at, github_release_url, artifacts_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        )
+        .bind(
+          release.tagName,
+          release.version,
+          release.title,
+          release.channel,
+          release.changelogMd,
+          release.publishedAt,
+          release.githubReleaseUrl,
+          JSON.stringify(release.artifacts)
+        )
+        .run();
+    }
+    await mirrorToLegendIfOnline("codex_releases", release.tagName, release, options?.legendToken);
+    return { status: "persisted", action, release };
   }
 
   if (action === "upsert_doc") {
@@ -1057,6 +1220,8 @@ export async function buildCodexDashboardSnapshot(options?: {
         "codex_upsert_task",
         "codex_upsert_doc",
         "codex_post_comment",
+        "codex_upsert_release",
+        "codex_get_releases",
       ],
     },
     kpis: {
@@ -1070,6 +1235,7 @@ export async function buildCodexDashboardSnapshot(options?: {
       avgTaskProgressPct,
       totalDocs: state.docs.length,
       totalComments: state.comments.length,
+      totalReleases: state.releases.length,
       autonomousResolutionRatePct: 100,
       testAssertions: 31,
       smokeEndpoints: 8,
@@ -1081,12 +1247,13 @@ export async function buildCodexDashboardSnapshot(options?: {
     tasks: state.tasks,
     docs: state.docs,
     comments: state.comments,
-    releases: DEFAULT_RELEASES,
+    releases: state.releases.length > 0 ? state.releases : DEFAULT_RELEASES_LIST,
+    releaseEntries: DEFAULT_RELEASES,
     changelog:
       changelog ||
-      DEFAULT_RELEASES.map(
-        (r) => `## [${r.version}] - ${r.date}\n${r.highlights.map((h) => `- ${h}`).join("\n")}`
-      ).join("\n\n"),
+      (state.releases.length > 0
+        ? state.releases.map((r) => `## [${r.tagName}] - ${r.publishedAt.slice(0, 10)}\n${r.changelogMd}`).join("\n\n")
+        : DEFAULT_RELEASES.map((r) => `## [${r.version}] - ${r.date}\n${r.highlights.map((h) => `- ${h}`).join("\n")}`).join("\n\n")),
     timestamp: new Date().toISOString(),
   };
 }

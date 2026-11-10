@@ -1,0 +1,32 @@
+# Tauri
+target/
+**/target/
+*.msix
+*.appx
+*.appinstaller
+pkg/
+dist/
+
+# UI
+ui/dist/
+ui/node_modules/
+ui/.vite/
+
+# Sidecar binaries
+bin/*.exe
+!bin/.gitkeep
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store

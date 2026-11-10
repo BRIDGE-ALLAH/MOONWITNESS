@@ -679,7 +679,7 @@ function renderStandaloneEdgeHtml(): string {
         \`;
       } else if (currentTab === 'releases') {
         const releasesList = dashboard.releases || [];
-        box.innerHTML = `
+        box.innerHTML = \`
           <div class="grid-2">
             \${releasesList.map(r => \`
               <div class="card gold">
@@ -759,7 +759,9 @@ export async function handleCodexEdgeRequest(request: Request, env?: Env): Promi
         // Trigger Telegram Dispatcher on Codex mutation
         const action = typeof body.action === "string" ? body.action : "upsert_task";
         let notifMsg = `⚡ *SOVEREIGN CODEX // UPDATE*\nAction: \`${action}\``;
-        if (result.task) {
+        if (result.release) {
+          notifMsg = `🚀 *SOVEREIGN RELEASE PUBLISHED* (${result.release.tagName})\nVersion: *${result.release.version}* [${result.release.channel.toUpperCase()}]\nTitle: *${result.release.title}*\n📥 [GitHub Release](${result.release.githubReleaseUrl})\n\n${result.release.changelogMd.slice(0, 300)}`;
+        } else if (result.task) {
           notifMsg += `\nTask: *${result.task.title}*\nDomain: \`${result.task.domain}\` | Status: \`${result.task.status.toUpperCase()}\` (${result.task.progressPct}%)`;
         } else if (result.milestone) {
           notifMsg += `\nMilestone: *${result.milestone.title}* (${result.milestone.version})\nStatus: \`${result.milestone.status}\` (${result.milestone.progressPct}%)`;

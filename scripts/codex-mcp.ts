@@ -90,6 +90,40 @@ const MCP_TOOLS = [
       required: ["body"],
     },
   },
+  {
+    name: "codex_upsert_release",
+    description:
+      "Publish or update an official release record, changelog, and direct binary download URLs (GitHub release mirror) in the independent Codex DB.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        tagName: { type: "string" },
+        version: { type: "string" },
+        title: { type: "string" },
+        channel: { type: "string", enum: ["stable", "nightly", "daily"] },
+        changelogMd: { type: "string" },
+        githubReleaseUrl: { type: "string" },
+        artifacts: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              directUrl: { type: "string" },
+              targetOs: { type: "string" },
+            },
+            required: ["name", "directUrl"],
+          },
+        },
+      },
+      required: ["tagName"],
+    },
+  },
+  {
+    name: "codex_get_releases",
+    description: "Fetch all official releases, changelog history, and direct binary download URLs from the independent Codex DB.",
+    inputSchema: { type: "object", properties: {} },
+  },
 ];
 
 async function callRemoteCloudflareMcp(toolName: string, args: Record<string, unknown>): Promise<unknown | null> {
@@ -135,11 +169,20 @@ async function executeTool(toolName: string, args: Record<string, unknown>) {
     return localSnap;
   }
 
+  if (toolName === "codex_get_releases") {
+    const [remoteSnap, localSnap] = await Promise.all([
+      callRemoteCloudflareMcp("codex_get_releases", {}),
+      buildCodexDashboardSnapshot({ probeNodes: false }),
+    ]);
+    return remoteSnap || localSnap.releases;
+  }
+
   const actionMap: Record<string, string> = {
     codex_upsert_milestone: "upsert_milestone",
     codex_upsert_task: "upsert_task",
     codex_upsert_doc: "upsert_doc",
     codex_post_comment: "post_comment",
+    codex_upsert_release: "upsert_release",
   };
   const mapped = actionMap[toolName];
   if (!mapped) {
@@ -198,6 +241,10 @@ async function main() {
       "targetType",
       "targetId",
       "body",
+      "tagName",
+      "channel",
+      "changelogMd",
+      "githubReleaseUrl",
     ];
     for (const key of flagKeys) {
       const idx = argv.indexOf(`--${key}`);
