@@ -120,7 +120,12 @@ export default function MoonWitnessPage() {
     const authorTag = auth?.user?.name || auth?.user?.username || (authorName.trim() ? authorName.trim() : "anonymous-witness");
     const formattedTag = authorTag.startsWith("@") ? authorTag : `@${authorTag}`;
     const timestamp = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
-    const coordinates = `RA 05h ${(Math.random() * 50).toFixed(0).padStart(2, "0")}m / Dec +${(Math.random() * 20).toFixed(0)}°`;
+    const now = new Date();
+    const utcHours = now.getUTCHours();
+    const utcMinutes = now.getUTCMinutes();
+    const raMin = ((utcMinutes + now.getUTCSeconds() / 60) * 0.8).toFixed(0).padStart(2, "0");
+    const decDeg = Math.floor((utcHours / 24) * 28 - 14);
+    const coordinates = `RA ${utcHours.toString().padStart(2, "0")}h ${raMin}m / Dec ${decDeg >= 0 ? "+" : ""}${decDeg}°`;
 
     if (auth?.pb) {
       try {

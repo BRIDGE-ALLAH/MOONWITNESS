@@ -62,18 +62,22 @@ export default function EISPPage() {
 
   const simulateRadiusDial = async () => {
     try {
+      const now = Date.now();
+      const subId = (now % 1000).toString().padStart(3, "0");
+      const ipSubnet = (Math.floor(now / 1000) % 250);
+      const ipHost = (Math.floor(now / 100) % 250) + 2;
       await fetch("/api/arsy/pppoe/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: crypto.randomUUID(),
-          username: `subscriber-${Math.floor(100 + Math.random() * 900)}@e-isp.mesh`,
+          username: `subscriber-${subId}@e-isp.mesh`,
           nas_ip: "10.254.0.1",
           nas_port: "eth0/pppoe-01",
-          framed_ip_address: `100.64.${Math.floor(Math.random() * 250)}.${Math.floor(2 + Math.random() * 250)}`,
+          framed_ip_address: `100.64.${ipSubnet}.${ipHost}`,
           session_start: new Date().toISOString(),
           status: "active",
-          acct_session_id: `ACCT-${Date.now().toString(16).toUpperCase()}`,
+          acct_session_id: `ACCT-${now.toString(16).toUpperCase()}`,
         }),
       });
       await loadArsyTelemetry();
