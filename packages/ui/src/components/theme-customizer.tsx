@@ -11,10 +11,11 @@ import React, {
 import { EcosystemTopBar, EcosystemFooter } from "./ecosystem-bar";
 import { AuthProvider } from "./auth-context";
 import { EcosystemLoginModal } from "./ecosystem-login-modal";
+import { LivingSurface } from "../engine/living-canvas/living-surface";
 
 // ─── TYPES ─────────────────────────────────────────────────────────────────────
 
-export type AppDnaId = "dx" | "empire" | "moonwitness" | "eisp" | "rid";
+export type AppDnaId = "dx" | "empire" | "moonwitness" | "eisp" | "rid" | "desktop" | "codex";
 export type ModeId = "dark" | "light";
 export type SkinId = "grunge" | "sacred" | "celestial" | "steel" | "phantom" | "acid";
 export type AccentId = "toxic" | "lime" | "cyan" | "gold" | "purple" | "orange";
@@ -69,6 +70,20 @@ export const DNA_PRESETS: Record<
     subtitle: "Not Rock But Soul · Skang And Roll · Patch It",
     defaultSkin: "acid",
     defaultAccent: "orange",
+    defaultFont: "mono",
+  },
+  desktop: {
+    label: "SOVEREIGN DESKTOP",
+    subtitle: "Obsidian Cockpit · HUD Diagnostics",
+    defaultSkin: "steel",
+    defaultAccent: "cyan",
+    defaultFont: "mono",
+  },
+  codex: {
+    label: "CODEX // EDGE PULSE",
+    subtitle: "Eternal Ledger · Wiki & D1 Pulse",
+    defaultSkin: "grunge",
+    defaultAccent: "lime",
     defaultFont: "mono",
   },
 };
@@ -476,8 +491,9 @@ export function EcosystemShell({
   return (
     <AuthProvider>
       <ThemeProvider defaultDna={dna}>
+        <LivingSurface dna={dna} />
         <EcosystemTopBar currentDna={dna} />
-        {children}
+        <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
         <EcosystemFooter currentDna={dna} />
         <ThemeCustomizer />
         <EcosystemLoginModal appName={DNA_PRESETS[dna]?.label} />

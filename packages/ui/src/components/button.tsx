@@ -1,13 +1,15 @@
 import React from "react";
 import { cn } from "../lib/utils";
+import { sovereignSound } from "../engine/audio/sound-engine";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "toxic" | "outline" | "ghost" | "gold" | "cyan";
   size?: "sm" | "md" | "lg" | "icon";
+  soundDna?: "dx" | "empire" | "moonwitness" | "eisp" | "rid" | "desktop" | "codex";
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", style, children, ...props }, ref) => {
+  ({ className, variant = "primary", size = "md", soundDna, onClick, onMouseEnter, style, children, ...props }, ref) => {
     const palettes: Record<
       NonNullable<ButtonProps["variant"]>,
       { bg: string; fg: string; border: string }
@@ -45,7 +47,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       border: `2px solid ${p.border}`,
       borderRadius: "var(--radius, 0px)",
       boxShadow: variant === "ghost" ? "none" : "3px 3px 0 rgba(0,0,0,0.28)",
-      transition: "transform 0.1s, opacity 0.15s",
+      transition: "transform 0.1s, opacity 0.15s, box-shadow 0.15s",
       maxWidth: "100%",
       whiteSpace: "normal",
       textAlign: "center",
@@ -54,11 +56,25 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ...style,
     };
 
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      const activeDna = soundDna || (typeof document !== "undefined" ? (document.documentElement.dataset.dna as any) : "dx");
+      sovereignSound.playClick(activeDna);
+      if (onClick) onClick(e);
+    };
+
+    const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+      const activeDna = soundDna || (typeof document !== "undefined" ? (document.documentElement.dataset.dna as any) : "dx");
+      sovereignSound.playHover(activeDna);
+      if (onMouseEnter) onMouseEnter(e);
+    };
+
     return (
       <button
         ref={ref}
         style={inlineStyle}
         className={cn("ui-btn", className)}
+        onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
         {...props}
       >
         {children}

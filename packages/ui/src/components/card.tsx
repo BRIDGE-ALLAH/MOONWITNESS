@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "../lib/utils";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "grunge" | "neon" | "toxic" | "gold" | "cyan";
+  variant?: "default" | "grunge" | "neon" | "toxic" | "gold" | "cyan" | "hud" | "matrix";
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -14,7 +14,11 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       toxic: "#ff0055",
       gold: "#d4af37",
       cyan: "#00f0ff",
+      hud: "var(--accent, #00f0ff)",
+      matrix: "var(--accent, #00ff66)",
     };
+
+    const isGlowing = variant === "hud" || variant === "matrix" || variant === "gold" || variant === "neon";
 
     const baseInlineStyle: React.CSSProperties = {
       background: "var(--panel, #0a0a0a)",
@@ -22,8 +26,10 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       border: `${variant === "grunge" ? "3px" : "1.5px"} solid ${borderColors[variant]}`,
       borderRadius: "var(--radius, 0px)",
       padding: "20px",
-      boxShadow: "4px 4px 0 rgba(0,0,0,0.22)",
-      transition: "background 0.2s, color 0.2s, border-color 0.2s",
+      boxShadow: isGlowing
+        ? `0 0 12px ${borderColors[variant]}33, 4px 4px 0 rgba(0,0,0,0.3)`
+        : "4px 4px 0 rgba(0,0,0,0.22)",
+      transition: "background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s",
       ...style,
     };
 

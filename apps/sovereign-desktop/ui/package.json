@@ -47,6 +47,7 @@
     "idb": "^8.0.0",
     "lucide-react": "^0.400.0",
     "monaco-editor": "^0.47.0",
+    "@local-git/ui": "workspace:*",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "recharts": "^2.12.0",

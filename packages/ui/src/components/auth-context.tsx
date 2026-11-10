@@ -3,8 +3,10 @@
 import PocketBase, { type RecordModel } from "pocketbase";
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 
+declare const process: { env?: Record<string, string | undefined> } | undefined;
+
 const PB_DEFAULT_URL =
-  (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_PB_URL) ||
+  (typeof process !== "undefined" && process?.env?.NEXT_PUBLIC_PB_URL) ||
   "http://127.0.0.1:8091";
 
 let clientInstance: PocketBase | null = null;
@@ -101,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const registerWithPassword = useCallback(
     async (email: string, pass: string, username?: string, name?: string) => {
-      const created = await pb.collection("users").create<EcosystemUser>({
+      await pb.collection("users").create<EcosystemUser>({
         email,
         password: pass,
         passwordConfirm: pass,
