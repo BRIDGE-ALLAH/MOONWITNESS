@@ -1,0 +1,36 @@
+name: Sovereign Release Automation
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Verify & Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Sovereign Monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun Runtime
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Verify Quality Gate Before Release
+        run: bun run gate
+
+      - name: Generate Release Notes & Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          body_path: CHANGELOG.md

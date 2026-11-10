@@ -1,0 +1,29 @@
+name: Sovereign CI Quality Gate
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  quality-gate:
+    name: Typecheck, Hygiene & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Sovereign Monorepo
+        uses: actions/checkout@v4
+
+      - name: Setup Bun Runtime
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Workspace Dependencies
+        run: bun install --frozen-lockfile || bun install
+
+      - name: Run Sovereign Quality Gate (Hygiene + Typecheck + Tests)
+        run: bun run gate
+
+      - name: Build All 5 Next.js Ecosystem Nodes
+        run: bun run build:all

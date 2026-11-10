@@ -153,16 +153,31 @@ export default function AppPage() {
     }
   }, []);
 
+  const loadTokens = useCallback(async () => {
+    if (!pb.authStore.token) return;
+    setTokensLoading(true);
+    try {
+      const result = await engineRequest<{ items: TokenListItem[] }>("/api/v1/tokens", pb.authStore.token);
+      setTokens(result.items || []);
+    } catch (err) {
+      console.error("Failed to load tokens:", err);
+    } finally {
+      setTokensLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (user) {
       if (activeTab === "repos") void loadRepos();
       if (activeTab === "paas") void loadContainers();
       if (activeTab === "inspector" && selectedRepo) void loadCommits(selectedRepo);
+      void loadTokens();
     } else {
       setRepos([]);
       setContainers([]);
+      setTokens([]);
     }
-  }, [user, activeTab, selectedRepo, loadRepos, loadContainers, loadCommits]);
+  }, [user, activeTab, selectedRepo, loadRepos, loadContainers, loadCommits, loadTokens]);
 
   const handleContainerAction = async (containerId: string, action: "start" | "stop" | "restart" | "logs", containerName = "") => {
     if (!pb.authStore.token) return;
@@ -229,6 +244,7 @@ export default function AppPage() {
         method: "POST", body: JSON.stringify({ name: tokenName, scopes: tokenScopes }),
       });
       setCreatedToken(result); setNotice("Personal access token created. Copy it now; it will not be shown again.");
+      await loadTokens();
     } catch (err) { setError(err instanceof Error ? err.message : "Could not create token"); }
     finally { setBusy(false); }
   }
@@ -645,7 +661,8 @@ export default function AppPage() {
             <Button variant="primary" className="w-full mt-3" onClick={() => { setShowToken(false); setCreatedToken(null); }}>Done</Button>
           </div>
         ) : (
-          <form onSubmit={createAccessToken} className="form-stack">
+          <>
+            <form onSubmit={createAccessToken} className="form-stack">
             <p className="subcopy">Use this token as the password when Git prompts for HTTP credentials.</p>
             <label>TOKEN NAME<Input required maxLength={80} value={tokenName} onChange={(e) => setTokenName(e.target.value)} /></label>
             <div className="scope-box">
@@ -658,6 +675,55 @@ export default function AppPage() {
               <Button variant="primary" disabled={busy || tokenScopes.length === 0}>{busy ? "GENERATING..." : <><KeyRound size={16} /> Generate token</>}</Button>
             </div>
           </form>
+            <div style={{ marginTop: 24, borderTop: "1px solid var(--line)", paddingTop: 20 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <b style={{ fontSize: 13 }}>YOUR TOKENS</b>
+                <Badge variant="outline">{tokens.length}</Badge>
+              </div>
+              {tokensLoading ? (
+                <div style={{ textAlign: "center", padding: 20, color: "var(--muted)" }}>Loading tokens...</div>
+              ) : tokens.length === 0 ? (
+                <div style={{ textAlign: "center", padding: 20, color: "var(--muted)" }}>No tokens yet. Create one above.</div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 300, overflowY: "auto" }}>
+                  {tokens.map((t) => (
+                    <div key={t.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 6 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                          <b style={{ fontSize: 13 }}>{t.name}</b>
+                          <code style={{ fontSize: 11, color: "var(--accent)", background: "var(--bg)", padding: "2px 6px", borderRadius: 4 }}>{t.token_prefix}...</code>
+                          <Badge variant={t.revoked ? "default" : t.expires_at && new Date(t.expires_at).getTime() <= Date.now() ? "toxic" : "lime"} style={{ fontSize: 10 }}>
+                            {t.revoked ? "REVOKED" : t.expires_at && new Date(t.expires_at).getTime() <= Date.now() ? "EXPIRED" : "ACTIVE"}
+                          </Badge>
+                        </div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", fontFamily: "var(--mono)" }}>
+                          Scopes: {t.scopes.join(", ")} · Created: {new Date(t.created).toLocaleDateString()}
+                          {t.expires_at && ` · Expires: ${new Date(t.expires_at).toLocaleDateString()}`}
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        {t.revoked ? (
+                          <Button variant="secondary" size="sm" onClick={async () => {
+                            const res = await engineRequest<{ ok: boolean }>(`/api/v1/tokens/${t.id}`, pb.authStore.token, { method: "PATCH", body: JSON.stringify({ action: "unrevoke" }) });
+                            if (res.ok) { setNotice("Token restored."); await loadTokens(); }
+                          }} disabled={Boolean(t.expires_at && new Date(t.expires_at).getTime() <= Date.now())}>
+                            Restore
+                          </Button>
+                        ) : (
+                          <Button variant="toxic" size="sm" onClick={async () => {
+                            const res = await engineRequest<{ ok: boolean }>(`/api/v1/tokens/${t.id}`, pb.authStore.token, { method: "DELETE" });
+                            if (res.ok) { setNotice("Token revoked."); await loadTokens(); }
+                          }}>
+                            Revoke
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
         )}
       </ModalDialog>
       <div className="copy-toast" data-show={copied}><Check size={14} /> COPIED TO CLIPBOARD</div>

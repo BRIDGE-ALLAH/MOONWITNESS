@@ -36,6 +36,10 @@ export function safeEqualHex(left: string, right: string) {
   return timingSafeEqual(Buffer.from(left, "hex"), Buffer.from(right, "hex"));
 }
 
+export function isValidRecordId(value: string) {
+  return /^[a-zA-Z0-9]{15}$/.test(value);
+}
+
 export async function authenticatePersonalAccessToken(token: string): Promise<GitToken | null> {
   if (!token.startsWith("lgh_") || token.length < 40) return null;
   const hash = hashPersonalAccessToken(token);
@@ -99,6 +103,7 @@ export async function listPersonalAccessTokens(userId: string): Promise<TokenRec
 }
 
 export async function revokePersonalAccessToken(userId: string, tokenId: string): Promise<boolean> {
+  if (!isValidRecordId(tokenId)) return false;
   const admin = await getAdmin();
   try {
     const record = await admin.collection("personal_access_tokens").getFirstListItem(
@@ -112,6 +117,7 @@ export async function revokePersonalAccessToken(userId: string, tokenId: string)
 }
 
 export async function unrevokePersonalAccessToken(userId: string, tokenId: string): Promise<boolean> {
+  if (!isValidRecordId(tokenId)) return false;
   const admin = await getAdmin();
   try {
     const record = await admin.collection("personal_access_tokens").getFirstListItem(

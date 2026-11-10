@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { createPersonalAccessToken, hashPersonalAccessToken, safeEqualHex } from "./security";
+import { createPersonalAccessToken, hashPersonalAccessToken, safeEqualHex, isValidRecordId } from "./security";
 
 // Tests run with TOKEN_PEPPER set by the test command or environment.
 describe("personal access token primitives", () => {
@@ -15,5 +15,13 @@ describe("personal access token primitives", () => {
     expect(safeEqualHex(digest, digest)).toBe(true);
     expect(safeEqualHex(digest, "b".repeat(64))).toBe(false);
     expect(safeEqualHex("invalid", digest)).toBe(false);
+  });
+
+  test("accepts only PocketBase record-id shaped identifiers", () => {
+    expect(isValidRecordId("a1b2c3d4e5f6g7h")).toBe(true);
+    expect(isValidRecordId("short")).toBe(false);
+    expect(isValidRecordId("..\\..\\windows\\evil")).toBe(false);
+    expect(isValidRecordId('x" || owner != "')).toBe(false);
+    expect(isValidRecordId("")).toBe(false);
   });
 });

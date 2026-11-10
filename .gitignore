@@ -1,13 +1,36 @@
+# Dependencies & Build Outputs
 node_modules/
 .next/
 .turbo/
+dist/
+target/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment & Secrets
 .env
 .env.*
 !.env.example
-.DS_Store
-*.log
-coverage/
+docker-compose.secrets.yml
+
+# Runtime Data & Backups
 data/
 backups/
 services/pocketbase/pb_data/
-backups/
+
+# OS & Logs
+.DS_Store
+Thumbs.db
+*.log
+coverage/
+
+# Scratch / Temp Folders
+/arsy/
+/arsy2/
+/arsy_new2/
+/arsy-orchestrator/
+/controller/
+/controller2/
+/intelligent/
+*.restored

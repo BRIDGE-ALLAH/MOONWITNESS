@@ -1,0 +1,8 @@
+{
+  "authorized": true,
+  "framed_ip_address": "10.0.0.100",
+  "framed_ipv6_prefix": "2001:db8::/64",
+  "session_timeout": 86400,
+  "idle_timeout": 3600,
+  "error": null
+}

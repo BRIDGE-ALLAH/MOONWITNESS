@@ -5,6 +5,7 @@ import { promisify } from "node:util";
 import { config } from "./config";
 import { getAdmin, type AuthUser } from "./pocketbase";
 import { createRepositorySchema } from "@local-git/contracts";
+import { isValidRecordId } from "./security";
 
 const execFileAsync = promisify(execFile);
 
@@ -83,6 +84,7 @@ export async function createRepository(user: AuthUser, input: unknown) {
 }
 
 export async function getRepositoryCommits(repoId: string, limit = 20) {
+  if (!isValidRecordId(repoId)) return [];
   const repositoryPath = join(config.dataDir, `${repoId}.git`);
   try {
     const { stdout } = await execFileAsync(

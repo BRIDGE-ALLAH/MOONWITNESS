@@ -1,0 +1,14 @@
+[radius]
+bind_addr = \"0.0.0.0\"
+secret = \"\"
+auth_port = 1812
+acct_port = 1813
+
+[arsy]
+endpoint = \"\"
+client_name = \"\"
+heartbeat_interval_secs = 30
+
+[isp]
+endpoint = \"\"
+api_key = \"\"
