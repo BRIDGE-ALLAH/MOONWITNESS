@@ -16,6 +16,35 @@ export default function EISPPage() {
     pocketbase: "checking",
     git: "checking",
   });
+  const [nodePings, setNodePings] = useState<Record<string, number | "ERR">>({});
+  const [pinging, setPinging] = useState(false);
+
+  const pingAllNodes = async () => {
+    setPinging(true);
+    const targets = [
+      { id: "empire", url: "http://localhost:3001" },
+      { id: "moon", url: "http://localhost:3002" },
+      { id: "dx", url: "http://localhost:3000" },
+      { id: "rid", url: "http://localhost:3004" },
+      { id: "pocketbase", url: "http://localhost:8091/api/health" },
+    ];
+    const results: Record<string, number | "ERR"> = {};
+    for (const t of targets) {
+      const start = performance.now();
+      try {
+        await fetch(t.url, { mode: "no-cors" });
+        results[t.id] = Math.round(performance.now() - start);
+      } catch {
+        results[t.id] = "ERR";
+      }
+    }
+    setNodePings(results);
+    setPinging(false);
+  };
+
+  useEffect(() => {
+    pingAllNodes();
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:3200/api/v1/containers")
@@ -136,6 +165,51 @@ export default function EISPPage() {
 
         {/* Topology */}
         <div id="topology" style={{ marginBottom: 32 }}>
+          <SectionHeader
+            eyebrow="/// LIVE TOPOLOGY TELEMETRY"
+            title="SOVEREIGN FABRIC PROBE"
+            subtitle="Pengukuran latensi round-trip (RTT) langsung ke setiap node independen."
+            badgeVariant="cyan"
+            rightSlot={
+              <Button variant="primary" size="sm" onClick={pingAllNodes} disabled={pinging}>
+                {pinging ? "PROBING..." : "PING ALL NODES ⚡"}
+              </Button>
+            }
+          />
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 20 }}>
+            <Card variant="gold" style={{ padding: 14 }}>
+              <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>EMPIRE :3001</div>
+              <b style={{ fontSize: 18, color: nodePings.empire === "ERR" ? "#ff0055" : "var(--accent)" }}>
+                {nodePings.empire === undefined ? "..." : typeof nodePings.empire === "number" ? `${nodePings.empire} ms` : "ERR"}
+              </b>
+            </Card>
+            <Card variant="cyan" style={{ padding: 14 }}>
+              <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>MOONWITNESS :3002</div>
+              <b style={{ fontSize: 18, color: nodePings.moon === "ERR" ? "#ff0055" : "#00f0ff" }}>
+                {nodePings.moon === undefined ? "..." : typeof nodePings.moon === "number" ? `${nodePings.moon} ms` : "ERR"}
+              </b>
+            </Card>
+            <Card variant="toxic" style={{ padding: 14 }}>
+              <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>DX COCKPIT :3000</div>
+              <b style={{ fontSize: 18, color: nodePings.dx === "ERR" ? "#ff0055" : "#ff0055" }}>
+                {nodePings.dx === undefined ? "..." : typeof nodePings.dx === "number" ? `${nodePings.dx} ms` : "ERR"}
+              </b>
+            </Card>
+            <Card variant="neon" style={{ padding: 14 }}>
+              <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>ROOT ID :3004</div>
+              <b style={{ fontSize: 18, color: nodePings.rid === "ERR" ? "#ff0055" : "#00ff66" }}>
+                {nodePings.rid === undefined ? "..." : typeof nodePings.rid === "number" ? `${nodePings.rid} ms` : "ERR"}
+              </b>
+            </Card>
+            <Card variant="default" style={{ padding: 14 }}>
+              <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>POCKETBASE :8091</div>
+              <b style={{ fontSize: 18, color: nodePings.pocketbase === "ERR" ? "#ff0055" : "#00ff66" }}>
+                {nodePings.pocketbase === undefined ? "..." : typeof nodePings.pocketbase === "number" ? `${nodePings.pocketbase} ms` : "ERR"}
+              </b>
+            </Card>
+          </div>
+
           <TerminalWindow title="E-ISP // ARCHITECTURE TOPOLOGY" variant="cyan">
             <pre style={{ color: "var(--accent)", margin: 0, overflowX: "auto" }}>{`  ┌─────────────────────────────────────────────────────────┐
   │                    E-ISP MESH LAYER                     │
