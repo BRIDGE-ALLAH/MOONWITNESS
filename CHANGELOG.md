@@ -1,5 +1,13 @@
 # CHANGELOG — SOVEREIGN ECOSYSTEM
 
+## [v0.3.0] - 2026-11-10
+
+- feat(automation): add autonomous autofix, feature radar, autopilot orchestrator, and legend stats endpoint (e6d6856)
+- test(radius): add RFC 2865 wire protocol, MD5 authenticator, and WISPr unit tests (31da3c8)
+- chore(governance): add legend to dependabot and configure enterprise PR template (d70f0d4)
+- test(contracts): add zod contract schema unit tests and bind to monorepo test runner (6dacc90)
+- chore: sync cargo lockfiles after v0.2.1 bump (0eabbb6)
+
 ## [v0.2.1] - 2026-11-10
 
 - feat(agi): modularize dx agi client into http and ws facades with clean barrel exports (347d711)
