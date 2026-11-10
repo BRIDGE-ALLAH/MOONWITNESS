@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Moon, Sparkles, Send, Code2, Server, Disc3 } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero, EcosystemBridgeGrid, useAuthSafe } from "@local-git/ui";
+import { Moon, Sparkles, Send, Code2, Server, Disc3, BookOpen } from "lucide-react";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero, EcosystemBridgeGrid, ModalDialog, useAuthSafe } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -14,6 +14,7 @@ interface Transmission {
 
 export default function MoonWitnessPage() {
   const auth = useAuthSafe();
+  const [selectedScroll, setSelectedScroll] = useState<{ title: string; subtitle: string; content: string } | null>(null);
   const [moonData, setMoonData] = useState({
     phase: "Waxing Gibbous",
     illumination: "87%",
@@ -205,7 +206,18 @@ export default function MoonWitnessPage() {
         />
 
         <div className="knowledge-grid">
-          <Card variant="default" style={{ display: "flex", flexDirection: "column" }}>
+          <Card
+            variant="default"
+            style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
+            onClick={() =>
+              setSelectedScroll({
+                title: "Matahari dan Bulan Beredar Menurut Perhitungan",
+                subtitle: "Kajian Astronomi Falakiyah & Ketertiban Kosmos",
+                content:
+                  "Pergerakan benda-benda langit bukanlah kebetulan liar. Matahari dan bulan beredar menurut hukum hisab yang sangat presisi (Q.S. Ar-Rahman: 5). Gravitasi, kecepatan sudut, presesi orbit, serta periode sinodis rembulan selama 29.530589 hari membuktikan adanya Perancang Maha Tunggal yang menciptakan keteraturan matematis ini. Dalam sains kedaulatan, kita mempelajari keteraturan ini untuk menguatkan ketundukan moral, bukan mengeksploitasinya demi keserakahan duniawi.",
+              })
+            }
+          >
             <Badge variant="cyan" style={{ alignSelf: "flex-start", marginBottom: 12 }}>ASTRONOMY &amp; TAWHID // 01</Badge>
             <CardTitle style={{ marginBottom: 10 }}>Matahari dan Bulan Beredar Menurut Perhitungan</CardTitle>
             <CardDescription style={{ flex: 1 }}>
@@ -213,11 +225,22 @@ export default function MoonWitnessPage() {
             </CardDescription>
             <CardFooter>
               <span>KURATOR: @moon-archive</span>
-              <Badge variant="lime">EPHEMERIS VERIFIED</Badge>
+              <Badge variant="lime">READ SCROLL ↗</Badge>
             </CardFooter>
           </Card>
 
-          <Card variant="default" style={{ display: "flex", flexDirection: "column" }}>
+          <Card
+            variant="default"
+            style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
+            onClick={() =>
+              setSelectedScroll({
+                title: "Kemandirian Arsip Pengetahuan di Era Digital",
+                subtitle: "Epistemic Sovereignty & Dekonstruksi Monopoli Pengetahuan",
+                content:
+                  "Ketika perpustakaan dan repositori digital dikuasai oleh segelintir korporasi raksasa, akses terhadap hakikat ilmu pengetahuan dapat diputus sewaktu-waktu melalui sistem lisensi predator dan algoritma rekomendasi beracun. MoonWitness berdiri sebagai observatorium arsip terbuka (Open Celestial Archive), mendistribusikan salinan pengetahuan moral, sains, dan kode berdaulat secara bebas bagi siapa pun yang bersujud pada kebenaran hakiki.",
+              })
+            }
+          >
             <Badge variant="cyan" style={{ alignSelf: "flex-start", marginBottom: 12 }}>EPISTEMIC SOVEREIGNTY // 02</Badge>
             <CardTitle style={{ marginBottom: 10 }}>Kemandirian Arsip Pengetahuan di Era Digital</CardTitle>
             <CardDescription style={{ flex: 1 }}>
@@ -225,11 +248,22 @@ export default function MoonWitnessPage() {
             </CardDescription>
             <CardFooter>
               <span>KURATOR: @scribe-omega</span>
-              <Badge variant="cyan">FREE ACCESS</Badge>
+              <Badge variant="cyan">READ SCROLL ↗</Badge>
             </CardFooter>
           </Card>
 
-          <Card variant="default" style={{ display: "flex", flexDirection: "column" }}>
+          <Card
+            variant="default"
+            style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
+            onClick={() =>
+              setSelectedScroll({
+                title: "Sin Can Be Better Human: Doktrin Pertobatan & Aksi",
+                subtitle: "Moral Philosophy & Transformasi Jiwa",
+                content:
+                  "Manusia tidak diciptakan sempurna dan steril layaknya robot korporat. Kesalahan, luka, dan dosa masa lalu sering kali menjadi jurang penyesalan mendalam. Namun dalam perspektif ilahiah, pertobatan (tawbah) adalah titik balik terbesar; saat seorang hamba mengakui kelemahannya di hadapan ALLAH Yang Maha Pengasih, luka masa lalu ditempa menjadi bahan bakar kerendahan hati, empati yang membara, dan determinasi baja untuk menebusnya dengan karya nyata bagi peradaban.",
+              })
+            }
+          >
             <Badge variant="gold" style={{ alignSelf: "flex-start", marginBottom: 12 }}>MORAL PHILOSOPHY // 03</Badge>
             <CardTitle style={{ marginBottom: 10 }}>Sin Can Be Better Human: Doktrin Pertobatan &amp; Aksi</CardTitle>
             <CardDescription style={{ flex: 1 }}>
@@ -237,7 +271,7 @@ export default function MoonWitnessPage() {
             </CardDescription>
             <CardFooter>
               <span>KURATOR: @witness-xi</span>
-              <Badge variant="gold">CANONICAL</Badge>
+              <Badge variant="gold">READ SCROLL ↗</Badge>
             </CardFooter>
           </Card>
         </div>
@@ -298,6 +332,30 @@ export default function MoonWitnessPage() {
         />
         <EcosystemBridgeGrid excludeDna="moonwitness" />
       </section>
+
+      {/* SACRED SCROLL READING MODAL */}
+      <ModalDialog
+        open={Boolean(selectedScroll)}
+        onClose={() => setSelectedScroll(null)}
+        eyebrow="CELESTIAL ARCHIVE // CANONICAL SCROLL"
+        title={selectedScroll?.title || ""}
+        maxWidth="640px"
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ color: "var(--accent)", fontSize: 12, fontFamily: "var(--mono)", letterSpacing: "0.1em" }}>
+            {selectedScroll?.subtitle}
+          </div>
+          <p style={{ lineHeight: 1.8, fontSize: 14, color: "var(--text)" }}>
+            {selectedScroll?.content}
+          </p>
+          <div style={{ borderTop: "1px solid var(--line2)", paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Badge variant="gold">ALLAH #1 // SOVEREIGN ORIGIN</Badge>
+            <Button variant="secondary" size="sm" onClick={() => setSelectedScroll(null)}>
+              TUTUP ARSIP ✕
+            </Button>
+          </div>
+        </div>
+      </ModalDialog>
     </div>
   );
 }
