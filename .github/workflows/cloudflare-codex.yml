@@ -40,3 +40,4 @@ jobs:
           else
             echo "CLOUDFLARE_API_TOKEN not set in repository secrets; standalone Edge verification succeeded."
           fi
+

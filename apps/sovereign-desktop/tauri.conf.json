@@ -54,8 +54,8 @@
     "fs": {
       "scope": {
         "allow": [
-          { "path": "/Sovereign/**" },
-          { "path": "C:\Users\bjo16/**" }
+          { "path": "$APPDATA/Sovereign/**" },
+          { "path": "$HOME/**" }
         ]
       }
     },

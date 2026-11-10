@@ -33,3 +33,4 @@ description: Operate the 100% independent database-driven Sovereign Codex // Edg
   ```bash
   bun run scripts/codex-mcp.ts --tool codex_post_comment --args '{"targetType":"milestone","targetId":"m5-v050","author":"agent@allah.com","sentiment":"IDEA","body":"Add multi-region D1 read replicas"}'
   ```
+

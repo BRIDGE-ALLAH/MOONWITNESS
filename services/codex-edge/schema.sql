@@ -54,3 +54,4 @@ CREATE TABLE IF NOT EXISTS codex_comments (
 CREATE INDEX IF NOT EXISTS idx_tasks_milestone ON codex_tasks(milestone_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_status ON codex_tasks(status);
 CREATE INDEX IF NOT EXISTS idx_comments_target ON codex_comments(target_type, target_id);
+

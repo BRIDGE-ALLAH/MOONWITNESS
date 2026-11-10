@@ -160,6 +160,46 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
           <span>● EDGE :8787</span>
         </a>
 
+        <a
+          href="http://127.0.0.1:3000/wiki"
+          title="Sovereign Codex — Project Management, Brand DNA & Architecture Wiki"
+          style={{
+            textDecoration: "none",
+            padding: "3px 8px",
+            border: "1.5px solid #eab308",
+            background: "rgba(234, 179, 8, 0.12)",
+            color: "#eab308",
+            fontWeight: 900,
+            borderRadius: "var(--radius, 0px)",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <span>★ WIKI &amp; PM</span>
+        </a>
+
+        <a
+          href="http://127.0.0.1:8787"
+          target="_blank"
+          rel="noreferrer"
+          title="Sovereign Codex // Edge Pulse — 100% Decoupled Status & PM Portal (:8787 / Cloudflare D1)"
+          style={{
+            textDecoration: "none",
+            padding: "3px 8px",
+            border: "1.5px solid #10b981",
+            background: "rgba(16, 185, 129, 0.12)",
+            color: "#10b981",
+            fontWeight: 900,
+            borderRadius: "var(--radius, 0px)",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <span>● EDGE :8787</span>
+        </a>
+
         {auth && (
           auth.isAuthenticated ? (
             <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", marginLeft: "4px" }}>

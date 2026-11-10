@@ -14,8 +14,8 @@ INDEPENDENT_EDGE_MODE = "true"
 [[d1_databases]]
 binding = "CODEX_DB"
 database_name = "sovereign-codex-db"
-database_id = "00000000-0000-0000-0000-000000000001"
-migrations_dir = "services/codex-edge"
+database_id = "3dc374d8-ae42-4086-9879-eb1730c89f11"
 
 [observability]
 enabled = true
+
