@@ -891,3 +891,98 @@ async fn main() -> Result<()> {
     let svc = Service::new(settings);
     svc.run().await
 }
+
+#[cfg(test)]
+mod tests {
+    use super::wire::{self, Attr};
+
+    #[test]
+    fn encode_and_decode_roundtrip_verifies_md5_authenticator() {
+        let secret = b"sovereign-radius-shared-secret";
+        let attrs = vec![
+            Attr::str_val(wire::USER_NAME, "sub-1001@e-isp.id"),
+            Attr::str_val(wire::ACCT_SESSION_ID, "sess-9001"),
+            Attr::u32_val(wire::ACCT_STATUS_TYPE, 1),
+            Attr::u32_val(wire::NAS_PORT, 42),
+        ];
+
+        let raw = wire::encode(wire::ACCOUNTING_REQUEST, 7, &attrs, None, secret);
+        let decoded = wire::decode(&raw, secret).expect("valid packet should decode");
+
+        assert_eq!(decoded.code, wire::ACCOUNTING_REQUEST);
+        assert_eq!(decoded.identifier, 7);
+        assert_eq!(
+            decoded.get_str(wire::USER_NAME).as_deref(),
+            Some("sub-1001@e-isp.id")
+        );
+        assert_eq!(
+            decoded.get_str(wire::ACCT_SESSION_ID).as_deref(),
+            Some("sess-9001")
+        );
+        assert_eq!(decoded.get_u32(wire::ACCT_STATUS_TYPE), Some(1));
+        assert_eq!(decoded.get_u32(wire::NAS_PORT), Some(42));
+    }
+
+    #[test]
+    fn decode_rejects_wrong_shared_secret() {
+        let attrs = vec![Attr::str_val(wire::USER_NAME, "sub-1001@e-isp.id")];
+        let raw = wire::encode(wire::ACCESS_REQUEST, 1, &attrs, None, b"correct-secret");
+        let err = wire::decode(&raw, b"wrong-secret").expect_err("must reject wrong secret");
+        assert_eq!(err, "bad authenticator");
+    }
+
+    #[test]
+    fn decode_rejects_truncated_and_mismatched_length_packets() {
+        let secret = b"secret";
+        assert!(wire::decode(&[1, 2, 3], secret).is_err());
+
+        let mut bad_len = vec![0u8; 20];
+        bad_len[0] = wire::ACCESS_REQUEST;
+        bad_len[1] = 1;
+        bad_len[2..4].copy_from_slice(&40u16.to_be_bytes());
+        assert!(wire::decode(&bad_len, secret).is_err());
+    }
+
+    #[test]
+    fn decode_rejects_malformed_attribute_bounds() {
+        let secret = b"secret";
+        let mut packet = vec![0u8; 22];
+        packet[0] = wire::ACCESS_REQUEST;
+        packet[1] = 3;
+        packet[2..4].copy_from_slice(&22u16.to_be_bytes());
+        packet[20] = wire::USER_NAME;
+        packet[21] = 1; // invalid attr len (< 2)
+
+        let mut check = Vec::new();
+        check.extend_from_slice(&packet[0..4]);
+        check.extend(std::iter::repeat_n(0u8, 16));
+        check.extend_from_slice(&packet[20..22]);
+        check.extend_from_slice(secret);
+        let auth = wire::md5_hash(&check);
+        packet[4..20].copy_from_slice(&auth);
+
+        let err = wire::decode(&packet, secret).expect_err("malformed attribute must fail");
+        assert_eq!(err, "malformed attribute");
+    }
+
+    #[test]
+    fn wispr_vendor_attribute_encodes_rfc_vendor_id() {
+        let attr = wire::wispr_attr(8, 100_000_000);
+        assert_eq!(attr.ty, wire::VENDOR_SPECIFIC);
+        assert_eq!(attr.val.len(), 14);
+        let vendor_id = u32::from_be_bytes([attr.val[0], attr.val[1], attr.val[2], attr.val[3]]);
+        assert_eq!(vendor_id, wire::WISPR_VENDOR_ID);
+        assert_eq!(attr.val[4], 8);
+    }
+
+    #[test]
+    fn response_authenticator_binds_to_request_authenticator() {
+        let secret = b"top-secret";
+        let req_auth = [0xAAu8; 16];
+        let attrs = vec![Attr::str_val(wire::REPLY_MESSAGE, "Welcome")];
+        let p1 = wire::encode(wire::ACCESS_ACCEPT, 9, &attrs, Some(&req_auth), secret);
+        let other_auth = [0xBBu8; 16];
+        let p2 = wire::encode(wire::ACCESS_ACCEPT, 9, &attrs, Some(&other_auth), secret);
+        assert_ne!(&p1[4..20], &p2[4..20]);
+    }
+}
