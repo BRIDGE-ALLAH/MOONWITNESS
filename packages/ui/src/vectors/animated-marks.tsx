@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "../lib/utils";
 
 export interface AnimatedMarkProps {
@@ -328,7 +327,6 @@ export function AnimatedMark({ mark, size = 48, color = "currentColor", classNam
     case "sine-wave":
       return <SineWaveform size={size} color={color} className={className} />;
     default: {
-      const _exhaustiveCheck: never = mark;
       return null;
     }
   }

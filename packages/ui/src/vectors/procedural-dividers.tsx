@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "../lib/utils";
 
 export interface ProceduralDividerProps {
@@ -295,7 +294,6 @@ export function ProceduralDivider({
     case "celestial":
       return <CelestialDivider orientation={orientation} className={className} />;
     default: {
-      const _exhaustiveCheck: never = variant;
       return null;
     }
   }

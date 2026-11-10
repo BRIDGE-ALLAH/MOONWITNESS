@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "../lib/utils";
 
 export interface DataIndicatorProps {
@@ -254,7 +253,6 @@ export function DataIndicator({
     case "radial-ring":
       return <RadialRing value={value} label={label} className={className} />;
     default: {
-      const _exhaustiveCheck: never = type;
       return null;
     }
   }

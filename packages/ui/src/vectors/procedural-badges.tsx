@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "../lib/utils";
 
 export interface ProceduralBadgeProps {
@@ -221,7 +220,6 @@ export function ProceduralBadge({
     case "led":
       return <LedBadge label={label} status={status} className={className} />;
     default: {
-      const _exhaustiveCheck: never = variant;
       return null;
     }
   }

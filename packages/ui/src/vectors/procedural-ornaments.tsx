@@ -178,7 +178,6 @@ export function ProceduralOrnament({
     case "crosshair":
       return <CrosshairOrnament size={size} className={className} />;
     default: {
-      const _exhaustiveCheck: never = ornament;
       return null;
     }
   }

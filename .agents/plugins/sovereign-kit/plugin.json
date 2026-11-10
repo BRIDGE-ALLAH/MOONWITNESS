@@ -1,7 +1,7 @@
 {
   "name": "sovereign-kit",
   "displayName": "Sovereign Monorepo Agent Kit",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Token-frugal, zero-slop multi-agent workflow, SurrealDB Legend BaaS ops, mesh self-healing, closed-loop autopilot, and SLSA release governance for the Sovereign Monorepo.",
   "author": "BRIDGE-ALLAH",
   "repository": "https://github.com/BRIDGE-ALLAH/MOONWITNESS.git",

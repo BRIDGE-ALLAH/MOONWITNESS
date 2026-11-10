@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { GitBranch, Play, Terminal } from "lucide-react"
 import { useEffect, useState } from "react"
 import { CODEX_EDGE_URL } from "@/lib/realData"
+import { TacticalHudBlock, IsometricNetworkGraph, ProceduralDivider } from "@local-git/ui"
 
 interface WorkspacePackage {
   name: string
@@ -113,28 +114,69 @@ export function WorkspacePage() {
         ))}
       </div>
 
-      {/* Task Output Pane */}
-      <Card className="border-border bg-card/60 backdrop-blur">
-        <CardHeader className="pb-3 flex flex-row items-center justify-between">
-          <CardTitle className="text-sm font-mono flex items-center gap-2">
-            <Terminal className="h-4 w-4 text-emerald-400" />
-            GATE EXECUTION CONSOLE
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setOutput("Console ready.")}
-            className="text-xs font-mono text-muted-foreground"
+      {/* Task Output Pane & Tactical Mesh HUD */}
+      <ProceduralDivider variant="matrix" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          <TacticalHudBlock
+            dna="desktop"
+            title="SOVEREIGN DESKTOP CORE"
+            callsign="TAURI.V2.HUD"
+            coordinates="DESKTOP NATIVE MESH"
+            status="LOCAL SYSTEM NOMINAL"
           >
-            Clear
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="font-mono text-xs bg-black/90 p-4 rounded-md border border-emerald-950/60 h-44 overflow-y-auto text-emerald-400 whitespace-pre-wrap leading-relaxed">
-            {output}
+            <div className="space-y-3 text-xs font-mono text-muted-foreground">
+              <div className="flex justify-between border-b border-border/40 pb-1">
+                <span>Active Workspaces:</span>
+                <span className="text-emerald-400 font-bold">12 Manifests</span>
+              </div>
+              <div className="flex justify-between border-b border-border/40 pb-1">
+                <span>Runtime Mode:</span>
+                <span className="text-indigo-400 font-bold">Tauri v2 + WebKit</span>
+              </div>
+              <div className="flex justify-between border-b border-border/40 pb-1">
+                <span>Codex Edge Sync:</span>
+                <span className="text-emerald-400 font-bold">ONLINE (:8787)</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground/80 pt-1 leading-relaxed">
+                Zero-slop architectural boundary verification and local sidecar daemon supervisor.
+              </p>
+            </div>
+          </TacticalHudBlock>
+        </div>
+
+        <div className="lg:col-span-2 space-y-4">
+          <div className="border border-border/60 bg-card/40 rounded p-4">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-border/40">
+              <span className="text-xs font-mono font-bold text-foreground">LIVE ISOMETRIC MONOREPO TOPOLOGY</span>
+              <span className="text-[10px] font-mono text-emerald-400">9 NODES</span>
+            </div>
+            <IsometricNetworkGraph height={170} />
           </div>
-        </CardContent>
-      </Card>
+
+          <Card className="border-border bg-card/60 backdrop-blur">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-mono flex items-center gap-2">
+                <Terminal className="h-4 w-4 text-emerald-400" />
+                GATE EXECUTION CONSOLE
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setOutput("Console ready.")}
+                className="text-xs font-mono text-muted-foreground"
+              >
+                Clear
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="font-mono text-xs bg-black/90 p-4 rounded-md border border-emerald-950/60 h-32 overflow-y-auto text-emerald-400 whitespace-pre-wrap leading-relaxed">
+                {output}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 }

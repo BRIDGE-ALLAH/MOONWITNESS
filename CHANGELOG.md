@@ -1,5 +1,22 @@
 # CHANGELOG — SOVEREIGN ECOSYSTEM
 
+## [v0.4.3] - 2026-11-10
+
+- feat(ui): integrate tactical hud, sacred cards, isometric graphs, audio visualizer and cosmic archives across frontends (276da9c)
+- feat(rocksoul): integrate critique and mesh-heal tools with episodic surreal memory sync (23ad9c6)
+- feat(sovereign-desktop): add sidecar build pipeline and PWA support (f8ea603)
+- feat(sovereign-desktop): add PWA support with vite-plugin-pwa (a2d5a77)
+- feat(sovereign-desktop): add sidecar build pipeline and externalBin config (e1700dc)
+- fix: resolve sovereign-desktop compilation errors (8d8b2fc)
+- feat(tenant): fix tenant.rs compilation errors and implement full tenant commands (9f160d1)
+- feat(pppoe): add pppoe_list_sessions, pppoe_get_session, pppoe_disconnect_session, pppoe_radius_logs, pppoe_nas_list, pppoe_nas_config, pppoe_nas_update commands (e64a2e4)
+- feat(rocksoul): AGILITY agent runtime — Rust/Tauri v2 core + React/Vite riot UI (9d0f971)
+- feat(surreal): add surreal_explain, surreal_schema, surreal_live_query, surreal_export_table, surreal_import_table commands (d7691c1)
+- feat(mesh): add mesh_get_config, mesh_update_config, mesh_get_port_map, mesh_export_diagnostics commands (6aa5952)
+- feat(git): add missing git commands (checkout, add, blame, show, register_repo, list_repos) (381cd23)
+- feat(desktop): purge mock arrays in GitInspector and Diagnostics with live bindings (7b2d637)
+- feat(desktop): eliminate fake mock arrays and wire real data to mesh, pppoe, surreal, tenant, and workspace (688ec61)
+
 ## [v0.4.2] - 2026-11-10
 
 - feat(desktop): add Releases & ChatOps controller, git refspec fix, and CI artifact matrix (9a754c1)
