@@ -10,10 +10,10 @@ use axum::{
 };
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use surrealdb::engine::local::{Db, Mem, SurrealKv};
+use surrealdb::engine::local::{Db, Mem, SurrealKV};
 use surrealdb::Surreal;
 use tower_http::cors::{Any, CorsLayer};
-use tracing::info;
+use tracing::{info, warn};
 use uuid::Uuid;
 
 #[derive(Clone)]
@@ -47,7 +47,7 @@ pub async fn init_db() -> Result<Surreal<Db>> {
     } else {
         std::fs::create_dir_all("data")?;
         info!("Legend BaaS starting with persistent SurrealKV engine at {}", db_path);
-        Surreal::new::<SurrealKv>(db_path.as_str()).await?
+        Surreal::new::<SurrealKV>(db_path.as_str()).await?
     };
 
     db.use_ns("sovereign").use_db("operational").await?;
@@ -197,3 +197,4 @@ async fn main() -> Result<()> {
 
     Ok(())
 }
+

@@ -49,4 +49,24 @@ services:
     depends_on:
       arsy:
         condition: service_healthy
+
+  legend:
+    build:
+      context: ./services/legend
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8092:8092"
+    environment:
+      - PORT=8092
+      - HOST=0.0.0.0
+      - LEGEND_DATA_PATH=/data/legend.db
+    volumes:
+      - ./data/legend:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8092/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     restart: unless-stopped
