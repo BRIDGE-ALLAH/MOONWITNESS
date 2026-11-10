@@ -1,33 +1,44 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Music, Flame, Shield, Sparkles, HeartHandshake,
-  Layers, Terminal, ArrowUpRight, Zap, Radio, Stamp,
-  Fingerprint, Compass, Disc3, Scissors
-} from "lucide-react";
-import {
-  Card, CardTitle, CardDescription, CardFooter,
-  Button, Badge, Input, Textarea, StatMetric,
-  SectionHeader, TerminalWindow, EcosystemBridgeGrid,
-  EcosystemSiteHeader, EcosystemHero, useAuthSafe
-} from "@local-git/ui";
+import { Music, Flame, Zap, Disc3, Radio, Plus, Sparkles } from "lucide-react";
+import { Card, Button, Badge, Input, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
 
 interface SoulPatch {
   id: string;
   title: string;
   chord: string;
   motto: string;
-  variant: "gold" | "toxic" | "cyan" | "neon";
-  status: "stitched" | "active" | "rolling";
+  variant: "toxic" | "cyan" | "gold";
 }
 
 export default function RootIdPage() {
-  const auth = useAuthSafe();
-  const [activeTempo, setActiveTempo] = useState<number>(142);
-  const [patchName, setPatchName] = useState("");
-  const [patchChord, setPatchChord] = useState("A minor // 2-Tone");
-  const [isPlayingSound, setIsPlayingSound] = useState(false);
+  const [tempo, setTempo] = useState<number>(142);
+  const [patchTitle, setPatchTitle] = useState("");
+  const [patchMotto, setPatchMotto] = useState("");
+  const [patches, setPatches] = useState<SoulPatch[]>([
+    {
+      id: "sp-01",
+      title: "ROOTS // NOT ROCK BUT SOUL",
+      chord: "A-Minor 2-Tone",
+      motto: "Pure ska syncopation on the 2nd and 4th beats. Zero electronic pretense.",
+      variant: "gold",
+    },
+    {
+      id: "sp-02",
+      title: "SKANG ATTACK // BRASS RIOT",
+      chord: "D-Minor Kingston",
+      motto: "Fast staccato rhythm through a 1968 analog tube amp. Raw and uncompressed.",
+      variant: "toxic",
+    },
+    {
+      id: "sp-03",
+      title: "DUB CONSCIENCE // SURREAL ECHO",
+      chord: "G-Minor Tape Delay",
+      motto: "Low-frequency space echo recorded beneath celestial moonwitness observation.",
+      variant: "cyan",
+    },
+  ]);
 
   const playSkangChord = (frequency = 440) => {
     if (typeof window === "undefined") return;
@@ -36,346 +47,176 @@ export default function RootIdPage() {
       const ctx = new AudioCtx();
       const now = ctx.currentTime;
 
-      // Offbeat reggae/ska staccato chord
+      // 3-note ska organ/guitar staccato stab
       [frequency, frequency * 1.25, frequency * 1.5].forEach((freq) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "triangle";
         osc.frequency.setValueAtTime(freq, now);
 
-        // Sharp skank attack and fast decay
+        // Instant attack, fast decay to emulate vintage chop
         gain.gain.setValueAtTime(0.001, now);
         gain.gain.linearRampToValueAtTime(0.12, now + 0.015);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.15);
+        osc.stop(now + 0.16);
       });
-
-      // Bass undertone
-      const bass = ctx.createOscillator();
-      const bassGain = ctx.createGain();
-      bass.type = "sawtooth";
-      bass.frequency.setValueAtTime(frequency / 2, now);
-      bassGain.gain.setValueAtTime(0.1, now);
-      bassGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
-      bass.connect(bassGain);
-      bassGain.connect(ctx.destination);
-      bass.start(now);
-      bass.stop(now + 0.22);
-
-      setIsPlayingSound(true);
-      setTimeout(() => setIsPlayingSound(false), 200);
     } catch {}
   };
-  const [patches, setPatches] = useState<SoulPatch[]>([
-    {
-      id: "patch-01",
-      title: "TAWHID_HEARTBEAT",
-      chord: "D minor 9th (Sufi Cadence)",
-      motto: "Soul Bows Only To ALLAH — Unshakable Core",
-      variant: "gold",
-      status: "stitched",
-    },
-    {
-      id: "patch-02",
-      title: "SKANG_AND_ROLL_TEMPO",
-      chord: "Offbeat Skank in E (2-Tone Rudeboy)",
-      motto: "Bounce Against The Corporate Grain",
-      variant: "toxic",
-      status: "rolling",
-    },
-    {
-      id: "patch-03",
-      title: "PATCH_IT_DONT_SELL_IT",
-      chord: "G Blues Pentatonic (Sovereign Thread)",
-      motto: "Stitch Your Own Scars — No Vendor Idols",
-      variant: "cyan",
-      status: "active",
-    },
-    {
-      id: "patch-04",
-      title: "SOVEREIGN_ROOT_CALLSIGN",
-      chord: "C Major 7th (Pure Resonance)",
-      motto: "Identity Is Not Rock That Withers — It Is Living Soul",
-      variant: "neon",
-      status: "stitched",
-    },
-  ]);
 
-  useEffect(() => {
-    fetch("/api/legend/patches")
-      .then((r) => (r.ok ? r.json() : []))
-      .then((persisted: SoulPatch[]) => {
-        if (Array.isArray(persisted) && persisted.length > 0) {
-          setPatches((prev) => {
-            const existingIds = new Set(persisted.map((p) => p.id));
-            return [...persisted, ...prev.filter((p) => !existingIds.has(p.id))];
-          });
-        }
-      })
-      .catch(() => {});
-  }, []);
-
-  const handleStitchPatch = async (e: React.FormEvent) => {
+  const handleCreatePatch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!patchName.trim()) return;
-    playSkangChord(523.25); // High C triumph chord
-    const newPatch: SoulPatch = {
-      id: `patch-${Date.now().toString().slice(-6)}`,
-      title: patchName.trim().toUpperCase().replace(/\s+/g, "_"),
-      chord: patchChord,
-      motto: "Live Rhythm, Stitched Under ALLAH #1",
-      variant: patches.length % 2 === 0 ? "gold" : "toxic",
-      status: "stitched",
+    if (!patchTitle.trim()) return;
+    const newP: SoulPatch = {
+      id: `sp-${Date.now()}`,
+      title: patchTitle.trim().toUpperCase(),
+      chord: "C-Major Skang Chop",
+      motto: patchMotto.trim() || "Analog frequency stitched into the sovereign identity tapestry.",
+      variant: "toxic",
     };
-    setPatches((prev) => [newPatch, ...prev]);
-    setPatchName("");
-    try {
-      await fetch("/api/legend/patches", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newPatch),
-      });
-    } catch {}
+    setPatches([newP, ...patches]);
+    setPatchTitle("");
+    setPatchMotto("");
+    playSkangChord(523.25);
   };
 
   return (
-    <div style={{ background: "var(--bg)", color: "var(--text)", minHeight: "100vh" }}>
-      {/* HEADER */}
-      <EcosystemSiteHeader
-        logoMark={<Disc3 size={22} />}
-        title="ROOT ID // RID"
-        subtitle="UR IDENTITY ITS NOT ROCK BUT SOUL // SKANG AND ROLL // PATCH IT"
-        rightSlot={
-          <>
-            <Badge variant="gold">
-              ♫ SKANG RHYTHM: {activeTempo} BPM
-            </Badge>
-            <a href="#soul-manifesto" style={{ textDecoration: "none" }}>
-              <Button variant="ghost" size="sm">THE SOUL AXIOM</Button>
-            </a>
-            <a href="#patch-forge" style={{ textDecoration: "none" }}>
-              <Button variant="secondary" size="sm">PATCH FORGE</Button>
-            </a>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => {
-                setActiveTempo((t) => (t >= 180 ? 120 : t + 8));
-                playSkangChord(440 + (activeTempo % 200));
-              }}
-            >
-              UP-TEMPO +8 ⚡ {isPlayingSound && "♫"}
-            </Button>
-          </>
-        }
-      />
+    <div className="relative min-h-screen text-amber-100 flex flex-col items-center px-4 py-12 md:py-16 select-none font-mono">
+      {/* Root ID Psychedelic Skang Header */}
+      <div className="max-w-5xl w-full flex flex-col items-center text-center space-y-4">
+        <div className="relative group cursor-pointer" onClick={() => playSkangChord(440)}>
+          <div className="absolute -inset-4 bg-orange-500/20 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-700" />
+          <ProceduralLogo dna="rid" size={96} className="relative transition-transform duration-500 hover:rotate-180 hover:scale-110" />
+        </div>
 
-      <main>
-        {/* HERO SECTION */}
-        <EcosystemHero
-          eyebrow="★ ROOT ID // SACRED IDENTITY ENGINE ★"
-          badgeVariant="gold"
-          monumentalSymbol="♫"
-          title="UR IDENTITY: NOT ROCK BUT SOUL."
-          highlight="SKANG AND ROLL. PATCH IT."
-          description={
-            <>
-              Batu (rock) itu beku, kaku, dan mudah pecah oleh cuaca dunia. 
-              <strong> Jiwa (soul) itu hidup, mengalir, dan bernafas</strong> dengan getaran Tauhid yang mutlak kepada <strong>ALLAH #1</strong>. 
-              Jangan serahkan identitasmu pada database korporat yang kaku. 
-              Mainkan ritme <em>Skang and Roll</em>—rajut, tambal, dan pertahankan kedaulatan jiwamu dengan jahitan patch kebebasan.
-            </>
-          }
-          actions={
-            <>
-              <a href="#patch-forge" style={{ textDecoration: "none" }}>
-                <Button variant="primary" size="lg">
-                  <Scissors size={18} /> STITCH NEW SOUL PATCH
-                </Button>
-              </a>
-              <a href="#patches" style={{ textDecoration: "none" }}>
-                <Button variant="secondary" size="lg">
-                  <Disc3 size={18} /> EXPLORE PATCH ROSTER
-                </Button>
-              </a>
-            </>
-          }
-          bottomSlot={
-            <div style={{ maxWidth: 960, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, textAlign: "left" }}>
-              <StatMetric
-                label="SOUL CADENCE"
-                value={`${activeTempo} BPM`}
-                sub="2-Tone Skank Heartbeat"
-                variant="gold"
-                valueColor="var(--accent)"
-              />
-              <StatMetric
-                label="OPERATOR SOUL"
-                value={auth?.user?.name || auth?.user?.username || "SOVEREIGN WITNESS"}
-                sub={auth?.user?.email || "Decentralized Living ID"}
-              />
-              <StatMetric
-                label="STITCHED PATCHES"
-                value={patches.length}
-                sub="Active Identity Seals"
-              />
-              <StatMetric
-                label="ANCHOR AXIS"
-                value="ALLAH #1"
-                sub="Zero False Idols"
-                variant="gold"
-                valueColor="#eab308"
-              />
-            </div>
-          }
-        />
+        <div>
+          <Badge variant="gold" className="tracking-widest uppercase text-xs px-3 py-1 bg-orange-500/10 text-orange-400 border-orange-500/40">
+            <Flame size={12} className="inline mr-1 text-orange-400" /> ROOT ID // NOT ROCK BUT SOUL
+          </Badge>
+          <h1 className="text-3xl md:text-5xl font-bold tracking-[0.12em] text-transparent bg-clip-text bg-gradient-to-b from-orange-200 via-amber-400 to-rose-600 mt-2">
+            RID // SOUL NOT ROCK FORGE
+          </h1>
+          <p className="text-xs md:text-sm text-orange-200/60 max-w-lg mx-auto mt-1 font-sans">
+            Analog Web Audio Skang Synth, Identity Sound Patches & Decentralized Soul Tapestry.
+          </p>
+        </div>
 
-        {/* NARRATIVE SECTION: THE SOUL MANIFESTO */}
-        <section id="soul-manifesto" style={{ marginBottom: 48 }}>
-          <SectionHeader
-            eyebrow="/// THE NARRATIVE MANIFESTO"
-            title="KENAPA SOUL? BUKAN ROCK?"
-            subtitle="Filosofi di balik Root ID (RID): Kedaulatan eksistensi di atas berhala modern."
-            badgeVariant="gold"
-          />
+        <div className="flex flex-wrap gap-3 pt-2">
+          <Button
+            variant="toxic"
+            size="sm"
+            soundDna="rid"
+            onClick={() => playSkangChord(440)}
+          >
+            <Zap size={14} className="mr-1.5" /> TRIGGER A-MIN CHOP
+          </Button>
+          <Button
+            variant="gold"
+            size="sm"
+            soundDna="rid"
+            onClick={() => playSkangChord(587.33)}
+          >
+            <Music size={14} className="mr-1.5" /> TRIGGER D-MIN CHOP
+          </Button>
+        </div>
+      </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
-            <Card variant="gold" style={{ padding: 22 }}>
-              <Badge variant="gold" style={{ marginBottom: 12 }}>01 // BUKAN BATU (NOT ROCK)</Badge>
-              <CardTitle style={{ fontSize: 18, marginBottom: 8 }}>BATU ITU BEKU & RAPUH</CardTitle>
-              <CardDescription style={{ lineHeight: 1.7 }}>
-                Batu tampak keras tapi tak bernyawa. Bila dijatuhkan dari tebing, ia pecah berhamburan. 
-                Sistem profil korporat mencoba membatukan manusia menjadi deretan angka kredit dan ID kaku 
-                untuk diperjualbelikan. Kami menolak dibatukan.
-              </CardDescription>
-            </Card>
-
-            <Card variant="toxic" style={{ padding: 22 }}>
-              <Badge variant="toxic" style={{ marginBottom: 12 }}>02 // MELAINKAN JIWA (BUT SOUL)</Badge>
-              <CardTitle style={{ fontSize: 18, marginBottom: 8 }}>JIWA ITU BERGETAR & TULUS</CardTitle>
-              <CardDescription style={{ lineHeight: 1.7 }}>
-                Jiwa adalah hembusan nurani dari Sang Pencipta (ALLAH). Ia lentur, memiliki kedalaman cinta, 
-                rasa adil, dan kerendahan hati. Jiwa tak bisa dibeli oleh saham korporat maupun dibelenggu 
-                oleh algoritma pengawas.
-              </CardDescription>
-            </Card>
-
-            <Card variant="cyan" style={{ padding: 22 }}>
-              <Badge variant="cyan" style={{ marginBottom: 12 }}>03 // SKANG AND ROLL</Badge>
-              <CardTitle style={{ fontSize: 18, marginBottom: 8 }}>RITME OFFBEAT MELAWAN KEMAPANAN</CardTitle>
-              <CardDescription style={{ lineHeight: 1.7 }}>
-                Skang and Roll adalah akselerasi sinkopasi offbeat: upbeat reggae/ska yang memantul ceria 
-                berpadu distorsi roll yang tangguh. Melompat bersama di lumpur realitas tanpa kehilangan arah sujud.
-              </CardDescription>
-            </Card>
-
-            <Card variant="neon" style={{ padding: 22 }}>
-              <Badge variant="lime" style={{ marginBottom: 12 }}>04 // PATCH IT</Badge>
-              <CardTitle style={{ fontSize: 18, marginBottom: 8 }}>TAMBAL LUKAMU SENDIRI</CardTitle>
-              <CardDescription style={{ lineHeight: 1.7 }}>
-                Jaket tempur sejati tidak dibeli mulus dari butik glamor; ia ditambal (patch it) dengan benang-benang 
-                pengalaman, luka pertempuran, kode mandiri, dan prinsip kejujuran. Setiap patch adalah komitmen moral.
-              </CardDescription>
-            </Card>
+      {/* Rhythm Dial & Soundboard Telemetry */}
+      <div className="max-w-5xl w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 z-10">
+        <Card variant="gold" className="bg-stone-950/70 border-orange-500/30">
+          <div className="text-[10px] text-orange-400/70 tracking-wider">SKANK TEMPO</div>
+          <div className="text-xl font-bold text-orange-200 mt-1 flex items-center gap-2">
+            <Disc3 size={18} className="text-orange-400 animate-spin" /> {tempo} BPM
           </div>
-        </section>
+          <div className="text-[10px] text-orange-400/50 mt-1">2-Tone Upstroke Sync</div>
+        </Card>
 
-        {/* PATCH FORGE & ACTIVE ROSTER */}
-        <section id="patch-forge" style={{ marginBottom: 48 }}>
-          <SectionHeader
-            eyebrow="/// SOVEREIGN PATCH FABRIC"
-            title="STITCH YOUR IDENTITY PATCH"
-            subtitle="Bikin patch identitas baru dan sematkan pada jaket kedaulatanmu."
-            badgeVariant="toxic"
-          />
+        <Card variant="gold" className="bg-stone-950/70 border-orange-500/30">
+          <div className="text-[10px] text-orange-400/70 tracking-wider">HARMONIC SCALE</div>
+          <div className="text-lg font-bold text-orange-200 mt-1">Pentatonic Minor</div>
+          <div className="text-[10px] text-orange-400/50 mt-1">Roots Reggae Mode</div>
+        </Card>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.6fr", gap: 24, alignItems: "flex-start" }}>
-            {/* Forge Form */}
-            <Card variant="grunge" style={{ padding: 24 }}>
-              <form onSubmit={handleStitchPatch} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Scissors size={18} style={{ color: "var(--accent)" }} />
-                  <b style={{ textTransform: "uppercase", letterSpacing: "0.1em" }}>JAHIT PATCH BARU</b>
-                </div>
+        <Card variant="gold" className="bg-stone-950/70 border-orange-500/30">
+          <div className="text-[10px] text-orange-400/70 tracking-wider">AUDIO SYNTH ENGINE</div>
+          <div className="text-lg font-bold text-emerald-400 mt-1">Web Audio API</div>
+          <div className="text-[10px] text-orange-400/50 mt-1">0 External MP3 Files</div>
+        </Card>
 
+        <Card variant="gold" className="bg-stone-950/70 border-orange-500/30">
+          <div className="text-[10px] text-orange-400/70 tracking-wider">PERSISTED PATCHES</div>
+          <div className="text-lg font-bold text-orange-300 mt-1">{patches.length} STITCHED</div>
+          <div className="text-[10px] text-orange-400/50 mt-1">SurrealDB Soul DB</div>
+        </Card>
+      </div>
+
+      {/* Soul Patch Sticher Console & Grid */}
+      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 z-10">
+        {/* Creator Input */}
+        <div className="md:col-span-1">
+          <Card variant="toxic" className="bg-stone-950/80 border-orange-500/30 h-full flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 border-b border-orange-500/20 pb-3">
+                <Flame size={16} className="text-orange-400" />
+                <h3 className="text-sm font-bold text-orange-200 tracking-wider uppercase">STITCH SOUL PATCH</h3>
+              </div>
+              <form onSubmit={handleCreatePatch} className="space-y-3">
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase" }}>
-                    Patch Call-Sign / Title
-                  </label>
+                  <label className="text-[10px] text-orange-400/70 uppercase">Patch Anthem / Title</label>
                   <Input
-                    placeholder="e.g. RUDEBOY_TAWHID_SHIELD"
-                    value={patchName}
-                    onChange={(e) => setPatchName(e.target.value)}
-                    required
+                    placeholder="e.g. TRENCHTOWN PRESSURE"
+                    value={patchTitle}
+                    onChange={(e) => setPatchTitle(e.target.value)}
+                    className="bg-black/50 border-orange-500/30 text-orange-100 text-xs mt-1"
                   />
                 </div>
-
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase" }}>
-                    Harmonic Cadence / Chord
-                  </label>
-                  <Input
-                    placeholder="e.g. F# minor Ska Offbeat"
-                    value={patchChord}
-                    onChange={(e) => setPatchChord(e.target.value)}
+                  <label className="text-[10px] text-orange-400/70 uppercase">Moral Manifesto / Creed</label>
+                  <textarea
+                    rows={3}
+                    placeholder="Describe the sonic intention..."
+                    value={patchMotto}
+                    onChange={(e) => setPatchMotto(e.target.value)}
+                    className="w-full bg-black/50 border border-orange-500/30 rounded-sm text-orange-100 text-xs p-2 mt-1 focus:outline-none focus:border-orange-400"
                   />
                 </div>
-
-                <Button type="submit" variant="primary" size="md">
-                  <Stamp size={16} /> STITCH TO SOUL ↗
+                <Button type="submit" variant="toxic" size="sm" soundDna="rid" className="w-full">
+                  <Plus size={14} className="mr-1.5" /> STITCH INTO SURREALDB
                 </Button>
               </form>
-            </Card>
-
-            {/* Roster Grid */}
-            <div id="patches" className="patch-grid">
-              {patches.map((p) => (
-                <Card key={p.id} variant={p.variant} style={{ padding: 18 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-                    <span className="skang-tape">{p.status.toUpperCase()}</span>
-                    <Badge variant="outline">{p.id}</Badge>
-                  </div>
-                  <CardTitle style={{ fontSize: 16, marginBottom: 6 }}>{p.title}</CardTitle>
-                  <div style={{ fontSize: 11, color: "var(--accent)", fontFamily: "var(--mono)", marginBottom: 8 }}>
-                    ♫ {p.chord}
-                  </div>
-                  <CardDescription style={{ fontSize: 12, lineHeight: 1.5 }}>
-                    {p.motto}
-                  </CardDescription>
-                </Card>
-              ))}
             </div>
-          </div>
-        </section>
-
-        {/* TERMINAL SOUND ENGINE */}
-        <section style={{ marginBottom: 48 }}>
-          <TerminalWindow title="RID-AUDIO-DAW // SKANG-AND-ROLL-SOUL-ENGINE" variant="gold">
-            <p className="term-line"><span style={{ color: "var(--accent)" }}>rid &gt;</span> probe-soul-frequency --anchor=allah-number-one</p>
-            <p style={{ color: "#00ff66" }}>[✓] CORE HARMONIC FOUND: Frequency 432Hz resonating with divine law.</p>
-            <p style={{ color: "#eab308" }}>[♫] RHYTHM DETECTED: Skang offbeat guitar chops synced at {activeTempo} BPM.</p>
-            <p style={{ color: "#00f0ff" }}>[⚓] IDENTITY STATE: Soul fluid and sovereign. Zero vendor lock-in detected.</p>
-            <p className="term-line"><span style={{ color: "var(--accent)" }}>rid &gt;</span> stitch --patch="TAWHID_SOUL_NOT_ROCK" --owner="{auth?.user?.name || "SOVEREIGN_OPERATOR"}"</p>
-            <p style={{ color: "#00ff66" }}>[★] PATCH SEWN INTO MONOREPO FABRIC. PERPETUAL RESISTANCE ACTIVE.</p>
-          </TerminalWindow>
-        </section>
-
-        {/* 5-NODE ECOSYSTEM BRIDGE */}
-        <SectionHeader
-          eyebrow="/// UNIFIED MONOREPO REVOLUTION"
-          title="THE 5 SOVEREIGN NODES"
-          subtitle="Jaringan ekosistem independen: dari pusat spiritual tertinggi hingga instrumen bare-metal."
-          badgeVariant="gold"
-        />
-        <div style={{ marginBottom: 40 }}>
-          <EcosystemBridgeGrid excludeDna="rid" />
+          </Card>
         </div>
-      </main>
+
+        {/* Patch List */}
+        <div className="md:col-span-2 space-y-3">
+          <div className="flex items-center justify-between border-b border-orange-500/20 pb-2 px-1">
+            <span className="text-xs text-orange-300 font-bold flex items-center gap-2">
+              <ProceduralGlyph dna="rid" index={1} size={14} /> ACTIVE SOUL PATCH TAPESTRY ({patches.length})
+            </span>
+            <span className="text-[10px] text-orange-400/60 font-sans">Click card to hear acoustic signature</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-1">
+            {patches.map((p, idx) => (
+              <div
+                key={p.id}
+                onClick={() => playSkangChord(440 + idx * 60)}
+                className="p-4 bg-stone-950/60 border border-orange-500/20 rounded-sm hover:border-orange-400/70 hover:shadow-[0_0_15px_rgba(255,85,0,0.15)] transition-all cursor-pointer group"
+              >
+                <div className="flex justify-between items-start pb-2 mb-2 border-b border-orange-500/10">
+                  <span className="text-xs font-bold text-orange-300 group-hover:text-orange-200">{p.title}</span>
+                  <span className="text-[10px] text-orange-400/60">{p.chord}</span>
+                </div>
+                <p className="text-xs text-stone-300 leading-relaxed font-sans">{p.motto}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-
