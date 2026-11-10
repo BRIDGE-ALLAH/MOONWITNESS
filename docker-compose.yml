@@ -28,11 +28,17 @@ services:
     ports:
       - "127.0.0.1:4000:4000"
     environment:
-      - PORT=4000
-      - HOST=0.0.0.0
+      ARSY_PORT: "4000"
+      HOST: 0.0.0.0
+      ARSY_SERVICE_TOKEN: ${ARSY_SERVICE_TOKEN:?ARSY_SERVICE_TOKEN required}
+      LEGEND_ENDPOINT: http://legend:8092
+      LEGEND_SERVICE_TOKEN: ${LEGEND_SERVICE_TOKEN:?LEGEND_SERVICE_TOKEN required}
     restart: unless-stopped
+    depends_on:
+      legend:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:4000/health"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:4000/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -46,6 +52,9 @@ services:
       - "1813:1813/udp"
     env_file:
       - ./services/radius/.env.example
+    environment:
+      ARSY_SERVICE_TOKEN: ${ARSY_SERVICE_TOKEN:?ARSY_SERVICE_TOKEN required}
+    restart: unless-stopped
     depends_on:
       arsy:
         condition: service_healthy
@@ -57,16 +66,18 @@ services:
     ports:
       - "127.0.0.1:8092:8092"
     environment:
-      - PORT=8092
-      - HOST=0.0.0.0
-      - LEGEND_DATA_PATH=/data/legend.db
+      LEGEND_HOST: 0.0.0.0
+      LEGEND_PORT: "8092"
+      LEGEND_DATA_PATH: /data/legend.db
+      LEGEND_SERVICE_TOKEN: ${LEGEND_SERVICE_TOKEN:?LEGEND_SERVICE_TOKEN required}
+      LEGEND_ADMIN_TOKEN: ${LEGEND_ADMIN_TOKEN:?LEGEND_ADMIN_TOKEN required}
+      LEGEND_CORS_ORIGINS: ${LEGEND_CORS_ORIGINS:-http://127.0.0.1:3003}
     volumes:
       - ./data/legend:/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8092/health"]
+      test: ["CMD", "/usr/local/bin/legend", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 15s
-    restart: unless-stopped

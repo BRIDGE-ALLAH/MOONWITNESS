@@ -1,6 +1,8 @@
 #!/usr/bin/env bun
 /**
  * SOVEREIGN MONOREPO RELEASE & VERSION BUMP AUTOMATION
+ * Synchronizes versions across all package.json, Rust Cargo.toml crates,
+ * .release-please-manifest.json, and CHANGELOG.md.
  * Usage:
  *   bun scripts/release.ts [patch|minor|major|<explicit_semver>] [--tag]
  */
@@ -21,6 +23,11 @@ const PACKAGE_FILES = [
   "apps/rid/package.json",
   "services/git-engine/package.json",
   "services/arsy/package.json",
+];
+
+const CARGO_FILES = [
+  "services/legend/Cargo.toml",
+  "services/radius/Cargo.toml",
 ];
 
 function bumpSemver(current: string, mode: string): string {
@@ -52,28 +59,54 @@ for (const relPath of PACKAGE_FILES) {
   console.log(`  ✓ Updated ${relPath} (${nextVersion})`);
 }
 
-// Generate / prepend CHANGELOG.md entry
+for (const cargoPath of CARGO_FILES) {
+  const full = join(ROOT, cargoPath);
+  if (!existsSync(full)) continue;
+  const toml = readFileSync(full, "utf8");
+  const updated = toml.replace(/^version\s*=\s*"[^"]+"/m, `version = "${nextVersion}"`);
+  writeFileSync(full, updated, "utf8");
+  console.log(`  ✓ Updated ${cargoPath} (${nextVersion})`);
+}
+
+const manifestPath = join(ROOT, ".release-please-manifest.json");
+writeFileSync(manifestPath, JSON.stringify({ ".": nextVersion }, null, 2) + "\n", "utf8");
+console.log(`  ✓ Updated .release-please-manifest.json (${nextVersion})`);
+
 const changelogPath = join(ROOT, "CHANGELOG.md");
 let recentCommits = "";
 try {
-  recentCommits = execSync("git log -n 15 --pretty=format:\"- %s (%h)\"", { encoding: "utf8" }).trim();
+  recentCommits = execSync('git log -n 15 --pretty=format:"- %s (%h)"', { encoding: "utf8" }).trim();
 } catch {
   recentCommits = "- Initial release snapshot";
 }
 
 const dateStr = new Date().toISOString().slice(0, 10);
 const entry = `## [v${nextVersion}] - ${dateStr}\n\n${recentCommits}\n\n`;
-const existingChangelog = existsSync(changelogPath) ? readFileSync(changelogPath, "utf8") : "# CHANGELOG — SOVEREIGN ECOSYSTEM\n\n";
+const existingChangelog = existsSync(changelogPath)
+  ? readFileSync(changelogPath, "utf8")
+  : "# CHANGELOG — SOVEREIGN ECOSYSTEM\n\n";
 const updatedChangelog = existingChangelog.replace(
   "# CHANGELOG — SOVEREIGN ECOSYSTEM\n\n",
   `# CHANGELOG — SOVEREIGN ECOSYSTEM\n\n${entry}`
 );
-writeFileSync(changelogPath, updatedChangelog.startsWith("# CHANGELOG") ? updatedChangelog : `# CHANGELOG — SOVEREIGN ECOSYSTEM\n\n${entry}${existingChangelog}`, "utf8");
+writeFileSync(
+  changelogPath,
+  updatedChangelog.startsWith("# CHANGELOG")
+    ? updatedChangelog
+    : `# CHANGELOG — SOVEREIGN ECOSYSTEM\n\n${entry}${existingChangelog}`,
+  "utf8"
+);
 console.log(`  ✓ Updated CHANGELOG.md`);
 
 if (shouldTag) {
   try {
-    execSync(`git add ${PACKAGE_FILES.filter((p) => existsSync(join(ROOT, p))).join(" ")} CHANGELOG.md`, { stdio: "inherit" });
+    const trackedFiles = [
+      ...PACKAGE_FILES.filter((p) => existsSync(join(ROOT, p))),
+      ...CARGO_FILES.filter((p) => existsSync(join(ROOT, p))),
+      ".release-please-manifest.json",
+      "CHANGELOG.md",
+    ];
+    execSync(`git add ${trackedFiles.join(" ")}`, { stdio: "inherit" });
     execSync(`git commit -m "chore(release): v${nextVersion}"`, { stdio: "inherit" });
     execSync(`git tag -a v${nextVersion} -m "Release v${nextVersion}"`, { stdio: "inherit" });
     console.log(`✅ Created commit and git tag v${nextVersion}`);
@@ -81,4 +114,3 @@ if (shouldTag) {
     console.error("⚠️ Could not auto-commit/tag:", (e as Error).message);
   }
 }
-

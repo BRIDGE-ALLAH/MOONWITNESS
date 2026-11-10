@@ -2,10 +2,11 @@
 /**
  * SOVEREIGN MONOREPO QUALITY GATE
  * Enforces Zero-Slop Production Hygiene across all workspaces:
- * 1. Zero forbidden markers (TODO, FIXME, mock_data placeholders)
- * 2. Zero tracked secrets (.env files)
- * 3. Full TypeScript check across all workspaces
- * 4. Automated Unit Test Suite
+ * 1. Zero forbidden markers (TODO, FIXME)
+ * 2. Full TypeScript check across all workspaces
+ * 3. TypeScript unit test suites
+ * 4. Zero tracked secrets (.env files)
+ * 5. Rust fmt + clippy (-D warnings) + tests for legend and radius
  */
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -22,7 +23,7 @@ const FORBIDDEN_PATTERNS = [
   { regex: /\/\/\s*FIXME\b/i, reason: "Zero // FIXME allowed in production code" },
 ];
 
-let violations: string[] = [];
+const violations: string[] = [];
 
 function walk(dir: string) {
   let entries: string[] = [];
@@ -47,8 +48,7 @@ function walk(dir: string) {
     } else if (stat.isFile()) {
       const ext = name.slice(name.lastIndexOf("."));
       if (!CODE_EXTS.has(ext)) continue;
-      const content = readFileSync(fullPath, "utf8");
-      const lines = content.split("\n");
+      const lines = readFileSync(fullPath, "utf8").split("\n");
       lines.forEach((line, idx) => {
         for (const pat of FORBIDDEN_PATTERNS) {
           if (pat.regex.test(line)) {
@@ -60,11 +60,16 @@ function walk(dir: string) {
   }
 }
 
-console.log("⚡ [GATE 1/3] Scanning for Zero-Slop Production Hygiene...");
-for (const d of SCAN_DIRS) {
-  walk(join(ROOT, d));
+function run(label: string, command: string, args: string[]) {
+  const result = spawnSync(command, args, { stdio: "inherit", shell: true });
+  if (result.status !== 0) {
+    console.error(`❌ ${label} failed.`);
+    process.exit(result.status || 1);
+  }
 }
 
+console.log("⚡ [GATE 1/5] Scanning for Zero-Slop Production Hygiene...");
+for (const d of SCAN_DIRS) walk(join(ROOT, d));
 if (violations.length > 0) {
   console.error("❌ HYGIENE VIOLATIONS DETECTED:");
   violations.forEach((v) => console.error("  - " + v));
@@ -72,19 +77,27 @@ if (violations.length > 0) {
 }
 console.log("✓ Hygiene clean (0 TODO/FIXME markers).");
 
-console.log("⚡ [GATE 2/3] Running Monorepo TypeScript Verification...");
-const checkRes = spawnSync("bun", ["run", "check"], { stdio: "inherit", shell: true });
-if (checkRes.status !== 0) {
-  console.error("❌ Typecheck failed.");
-  process.exit(checkRes.status || 1);
-}
+console.log("⚡ [GATE 2/5] Running Monorepo TypeScript Verification...");
+run("Typecheck", "bun", ["run", "check"]);
 
-console.log("⚡ [GATE 3/3] Running Monorepo Test Suite...");
-const testRes = spawnSync("bun", ["run", "test"], { stdio: "inherit", shell: true });
-if (testRes.status !== 0) {
-  console.error("❌ Tests failed.");
-  process.exit(testRes.status || 1);
+console.log("⚡ [GATE 3/5] Running TypeScript Test Suites...");
+run("Tests", "bun", ["run", "test"]);
+
+console.log("⚡ [GATE 4/5] Verifying no secrets are tracked...");
+const tracked = spawnSync("git", ["ls-files"], { encoding: "utf8" }).stdout.split("\n");
+const leakedEnv = tracked.filter((path) => /(^|\/)\.env(\.[^/]*)?$/.test(path) && !path.endsWith(".env.example"));
+if (leakedEnv.length > 0) {
+  console.error("❌ Tracked secret files: " + leakedEnv.join(", "));
+  process.exit(1);
 }
+console.log("✓ No tracked .env files.");
+
+console.log("⚡ [GATE 5/5] Running Rust lint + tests (legend, radius)...");
+if (spawnSync("cargo", ["--version"], { stdio: "ignore", shell: true }).status !== 0) {
+  console.error("❌ cargo not found; Rust gate cannot be skipped.");
+  process.exit(1);
+}
+run("Rust lint", "bun", ["run", "lint:rust"]);
+run("Rust tests", "bun", ["run", "test:rust"]);
 
 console.log("✅ ALL SOVEREIGN QUALITY GATES PASSED.");
-

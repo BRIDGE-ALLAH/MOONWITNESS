@@ -10,7 +10,7 @@
     },
     "apps/dx": {
       "name": "@local-git/dx",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@local-git/contracts": "workspace:*",
         "@local-git/ui": "workspace:*",
@@ -32,7 +32,7 @@
     },
     "apps/e-isp": {
       "name": "@local-git/e-isp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@local-git/contracts": "workspace:*",
         "@local-git/ui": "workspace:*",
@@ -51,7 +51,7 @@
     },
     "apps/empire": {
       "name": "@local-git/empire",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@local-git/contracts": "workspace:*",
         "@local-git/ui": "workspace:*",
@@ -70,7 +70,7 @@
     },
     "apps/moonwitness": {
       "name": "@local-git/moonwitness",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@local-git/contracts": "workspace:*",
         "@local-git/ui": "workspace:*",
@@ -89,7 +89,7 @@
     },
     "apps/rid": {
       "name": "@local-git/rid",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@local-git/contracts": "workspace:*",
         "@local-git/ui": "workspace:*",
@@ -108,14 +108,14 @@
     },
     "packages/contracts": {
       "name": "@local-git/contracts",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "zod": "^4.0.0",
       },
     },
     "packages/ui": {
       "name": "@local-git/ui",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "clsx": "^2.1.1",
         "lucide-react": "^0.468.0",
@@ -135,7 +135,7 @@
     },
     "services/arsy": {
       "name": "@local-git/arsy",
-      "version": "1.0.0",
+      "version": "0.2.0",
       "dependencies": {
         "fastify": "^4.28.1",
         "fastify-type-provider-zod": "^1.2.0",
@@ -143,13 +143,14 @@
         "zod": "^3.23.8",
       },
       "devDependencies": {
+        "@types/bun": "^1.2.0",
         "@types/node": "^22.5.0",
         "typescript": "^5.9.0",
       },
     },
     "services/git-engine": {
       "name": "@local-git/engine",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@local-git/contracts": "workspace:*",
         "pocketbase": "^0.28.1",

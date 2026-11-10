@@ -6,25 +6,64 @@ on:
   pull_request:
     branches: [master, main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
-  quality-gate:
-    name: Typecheck, Hygiene & Test
+  typescript:
+    name: TypeScript — hygiene, typecheck, tests, build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Sovereign Monorepo
-        uses: actions/checkout@v4
-
-      - name: Setup Bun Runtime
-        uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run test
+      - run: bun run build:all
 
-      - name: Install Workspace Dependencies
-        run: bun install --frozen-lockfile || bun install
+  rust:
+    name: Rust — ${{ matrix.crate }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        crate: [legend, radius]
+    defaults:
+      run:
+        working-directory: services/${{ matrix.crate }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: services/${{ matrix.crate }}
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --locked -- -D warnings
+      - run: cargo test --locked
 
-      - name: Run Sovereign Quality Gate (Hygiene + Typecheck + Tests)
-        run: bun run gate
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build All 5 Next.js Ecosystem Nodes
-        run: bun run build:all
-
+  compose:
+    name: Compose config validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cp .env.example .env
+      - run: docker compose config --quiet

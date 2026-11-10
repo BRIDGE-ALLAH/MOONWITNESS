@@ -58,7 +58,7 @@ export default function EISPPage() {
 
   const simulateRadiusDial = async () => {
     try {
-      await fetch("http://127.0.0.1:4000/api/v1/pppoe/sessions", {
+      await fetch("/api/arsy/pppoe/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,6 +1,9 @@
 import Fastify from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import { z } from 'zod';
+import { hydrateSessions, isAuthorizedBearer, legendConfigured, persistSession } from './legend';
+
+const ARSY_SERVICE_TOKEN = process.env.ARSY_SERVICE_TOKEN || '';
 
 const app = Fastify({
   logger: { transport: { target: 'pino-pretty' } }
@@ -18,6 +21,12 @@ app.addHook('onRequest', async (request, reply) => {
   }
 });
 
+app.addHook('preHandler', async (request, reply) => {
+  if (request.method === 'GET' || request.method === 'OPTIONS' || !request.url.startsWith('/api/')) return;
+  if (!isAuthorizedBearer(request.headers.authorization, ARSY_SERVICE_TOKEN)) {
+    return reply.code(401).send({ message: 'invalid or missing bearer token' });
+  }
+});
 const ControllerServiceSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -137,21 +146,6 @@ app.delete('/api/v1/controllers/:id', {
   return reply.code(204).send();
 });
 
-const LEGEND_ENDPOINT = process.env.LEGEND_ENDPOINT || 'http://127.0.0.1:8092';
-
-async function syncToLegend(table: string, payload: Record<string, unknown>) {
-  try {
-    await fetch(`${LEGEND_ENDPOINT}/api/v1/records/${table}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ payload }),
-      signal: AbortSignal.timeout(1500)
-    });
-  } catch {
-    // Non-blocking fallback to local memory plane
-  }
-}
-
 // PPPoE Session endpoints (for RADIUS service)
 app.post('/api/v1/pppoe/sessions', {
   schema: {
@@ -165,7 +159,7 @@ app.post('/api/v1/pppoe/sessions', {
     last_update: new Date().toISOString()
   };
   pppoeSessions.set(session.id, session);
-  await syncToLegend('pppoe_sessions', session as unknown as Record<string, unknown>);
+  await persistSession(session);
   return reply.code(201).send(session);
 });
 
@@ -190,7 +184,7 @@ app.post('/api/v1/pppoe/sessions/:id/terminate', {
   if (!session) return reply.code(404).send({ message: 'Session not found' });
   session.status = 'terminated';
   session.last_update = new Date().toISOString();
-  await syncToLegend('pppoe_sessions', session as unknown as Record<string, unknown>);
+  await persistSession(session);
   return session;
 });
 
@@ -210,7 +204,7 @@ app.post('/api/v1/pppoe/sessions/:id/accounting', {
   if (accounting.framed_ipv6_prefix !== undefined) session.framed_ipv6_prefix = accounting.framed_ipv6_prefix;
   session.status = accounting.status;
   session.last_update = accounting.last_update;
-  await syncToLegend('pppoe_sessions', session as unknown as Record<string, unknown>);
+  await persistSession(session);
   
   return session;
 });
@@ -219,6 +213,8 @@ const PORT = Number(process.env.ARSY_PORT || process.env.PORT) || 4000;
 const HOST = process.env.HOST || '127.0.0.1';
 
 try {
+  const restored = await hydrateSessions(pppoeSessions);
+  app.log.info({ restored, legend: legendConfigured() }, 'PPPoE sessions hydrated from Legend');
   await app.listen({ port: PORT, host: HOST });
   console.log('ARSY orchestrator running on http://' + HOST + ':' + PORT);
 } catch (err) {
