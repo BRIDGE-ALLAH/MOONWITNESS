@@ -14,6 +14,24 @@ function resolveEnv(key: string, fallback = ""): string {
   return fallback;
 }
 
+export async function GET() {
+  const endpoint = resolveEnv("ARSY_ENDPOINT", "http://127.0.0.1:4000");
+  try {
+    const upstream = await fetch(`${endpoint}/api/v1/pppoe/sessions`, {
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(3000),
+      cache: "no-store",
+    });
+    if (!upstream.ok) {
+      return NextResponse.json({ message: "Failed to fetch sessions from ARSY" }, { status: upstream.status });
+    }
+    const data = await upstream.json();
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ message: "ARSY orchestrator unreachable" }, { status: 502 });
+  }
+}
+
 export async function POST(request: Request) {
   const endpoint = resolveEnv("ARSY_ENDPOINT", "http://127.0.0.1:4000");
   const token = resolveEnv("ARSY_SERVICE_TOKEN");

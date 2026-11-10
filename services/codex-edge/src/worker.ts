@@ -727,6 +727,73 @@ export async function handleCodexEdgeRequest(request: Request, env?: Env): Promi
 
   const url = new URL(request.url);
 
+  if (url.pathname === "/api/telegram-webhook" && request.method === "POST") {
+    try {
+      const update = (await request.json()) as {
+        message?: {
+          chat?: { id?: number | string };
+          text?: string;
+          from?: { first_name?: string; username?: string };
+        };
+      };
+
+      const chatId = update.message?.chat?.id;
+      const text = (update.message?.text || "").trim();
+      const sender = update.message?.from?.username || update.message?.from?.first_name || "Anonymous";
+
+      if (chatId && text.startsWith("/")) {
+        const parts = text.split(" ");
+        const cmd = parts[0].toLowerCase();
+        const arg = parts.slice(1).join(" ").trim();
+
+        let reply = "";
+        if (cmd === "/status" || cmd === "/health") {
+          const snapshot = await buildCodexDashboardSnapshot({ d1: env?.CODEX_DB, probeNodes: true });
+          const online = snapshot.nodeProbes.filter((n) => n.status === "ONLINE").length;
+          reply = `🌐 *SOVEREIGN MONOREPO // HEALTH STATUS*\n• Mesh Nodes: \`${online}/${snapshot.nodeProbes.length} ONLINE\`\n• Overall Completion: *${snapshot.kpis.overallCompletionPct}%*\n• Platform: \`${snapshot.kpis.edgePlatform}\`\n• Active Tasks: *${snapshot.kpis.tasksDone} Done / ${snapshot.kpis.tasksInProgress} Active*`;
+        } else if (cmd === "/releases" || cmd === "/release" || cmd === "/download") {
+          const snapshot = await buildCodexDashboardSnapshot({ d1: env?.CODEX_DB });
+          const latest = snapshot.releases[0];
+          if (latest) {
+            reply = `🚀 *LATEST SOVEREIGN RELEASE: ${latest.tagName}*\nTitle: *${latest.title}*\nPublished: \`${latest.publishedAt.slice(0, 10)}\`\n\n📥 *Direct Downloads:*\n${latest.artifacts.map((a) => `• [${a.name}](${a.directUrl})`).join("\n")}\n\n🔗 [GitHub Release](${latest.githubReleaseUrl})`;
+          } else {
+            reply = "ℹ️ Belum ada rilis resmi terdaftar di database Codex.";
+          }
+        } else if (cmd === "/tasks" || cmd === "/todo") {
+          const snapshot = await buildCodexDashboardSnapshot({ d1: env?.CODEX_DB });
+          const active = snapshot.tasks.filter((t) => t.status === "in_progress" || t.status === "todo");
+          reply = `📋 *ACTIVE TASKS (${active.length}):*\n` + active.map((t) => `• [${t.status.toUpperCase()}] *${t.title}* (${t.progressPct}%)`).join("\n");
+        } else if (cmd === "/task" && arg) {
+          const res = await mutateCodex({
+            action: "upsert_task",
+            title: arg,
+            domain: "BACKEND",
+            priority: "HIGH",
+            status: "todo",
+            progressPct: 0,
+            owner: `@${sender}`,
+          }, { d1: env?.CODEX_DB });
+          reply = `✅ *TASK CREATED VIA TELEGRAM CHATOPS*\nID: \`${res.task?.id}\`\nTitle: *${res.task?.title}*\nOwner: \`${res.task?.owner}\``;
+        } else {
+          reply = `🤖 *SOVEREIGN CHATOPS COMMANDS:*\n• \`/status\` - Live 9-node & edge health\n• \`/releases\` - Direct binary download links\n• \`/tasks\` - Active engineering tasks\n• \`/task <title>\` - Auto-create task to Codex D1`;
+        }
+
+        const token = env?.TELEGRAM_BOT_TOKEN || (typeof process !== "undefined" ? process.env?.TELEGRAM_BOT_TOKEN : undefined);
+        if (token) {
+          await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: reply, parse_mode: "Markdown" }),
+          });
+        }
+      }
+
+      return jsonResponse({ ok: true });
+    } catch (err) {
+      return jsonResponse({ ok: false, error: (err as Error).message }, 400);
+    }
+  }
+
   if (url.pathname === "/health") {
     return jsonResponse({
       status: "ok",

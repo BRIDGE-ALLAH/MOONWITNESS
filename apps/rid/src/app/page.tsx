@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Music, Flame, Zap, Disc3, Radio, Plus, Sparkles } from "lucide-react";
+import { Music, Flame, Zap, Disc3, Plus } from "lucide-react";
 import { Card, Button, Badge, Input, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
 
 interface SoulPatch {
@@ -9,13 +9,14 @@ interface SoulPatch {
   title: string;
   chord: string;
   motto: string;
-  variant: "toxic" | "cyan" | "gold";
+  variant?: "toxic" | "cyan" | "gold";
 }
 
 export default function RootIdPage() {
-  const [tempo, setTempo] = useState<number>(142);
+  const [tempo] = useState<number>(142);
   const [patchTitle, setPatchTitle] = useState("");
   const [patchMotto, setPatchMotto] = useState("");
+  const [saving, setSaving] = useState(false);
   const [patches, setPatches] = useState<SoulPatch[]>([
     {
       id: "sp-01",
@@ -39,6 +40,22 @@ export default function RootIdPage() {
       variant: "cyan",
     },
   ]);
+
+  const loadPatchesFromSurreal = async () => {
+    try {
+      const res = await fetch("/api/legend/patches");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setPatches(data);
+        }
+      }
+    } catch {}
+  };
+
+  useEffect(() => {
+    loadPatchesFromSurreal();
+  }, []);
 
   const playSkangChord = (frequency = 440) => {
     if (typeof window === "undefined") return;
@@ -67,20 +84,58 @@ export default function RootIdPage() {
     } catch {}
   };
 
-  const handleCreatePatch = (e: React.FormEvent) => {
+  const handleCreatePatch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!patchTitle.trim()) return;
-    const newP: SoulPatch = {
-      id: `sp-${Date.now()}`,
-      title: patchTitle.trim().toUpperCase(),
-      chord: "C-Major Skang Chop",
-      motto: patchMotto.trim() || "Analog frequency stitched into the sovereign identity tapestry.",
-      variant: "toxic",
-    };
-    setPatches([newP, ...patches]);
-    setPatchTitle("");
-    setPatchMotto("");
-    playSkangChord(523.25);
+    setSaving(true);
+    const newTitle = patchTitle.trim().toUpperCase();
+    const newMotto = patchMotto.trim() || "Analog frequency stitched into the sovereign identity tapestry.";
+
+    try {
+      const res = await fetch("/api/legend/patches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newTitle,
+          chord: "C-Major Skang Chop",
+          motto: newMotto,
+          variant: "toxic",
+          status: "stitched",
+        }),
+      });
+
+      if (res.ok) {
+        await loadPatchesFromSurreal();
+      } else {
+        // Optimistic fallback
+        setPatches((prev) => [
+          {
+            id: `sp-${Date.now()}`,
+            title: newTitle,
+            chord: "C-Major Skang Chop",
+            motto: newMotto,
+            variant: "toxic",
+          },
+          ...prev,
+        ]);
+      }
+    } catch {
+      setPatches((prev) => [
+        {
+          id: `sp-${Date.now()}`,
+          title: newTitle,
+          chord: "C-Major Skang Chop",
+          motto: newMotto,
+          variant: "toxic",
+        },
+        ...prev,
+      ]);
+    } finally {
+      setSaving(false);
+      setPatchTitle("");
+      setPatchMotto("");
+      playSkangChord(523.25);
+    }
   };
 
   return (
@@ -183,8 +238,8 @@ export default function RootIdPage() {
                     className="w-full bg-black/50 border border-orange-500/30 rounded-sm text-orange-100 text-xs p-2 mt-1 focus:outline-none focus:border-orange-400"
                   />
                 </div>
-                <Button type="submit" variant="toxic" size="sm" soundDna="rid" className="w-full">
-                  <Plus size={14} className="mr-1.5" /> STITCH INTO SURREALDB
+                <Button type="submit" variant="toxic" size="sm" soundDna="rid" className="w-full" disabled={saving}>
+                  <Plus size={14} className="mr-1.5" /> {saving ? "STITCHING TO SURREALDB..." : "STITCH INTO SURREALDB"}
                 </Button>
               </form>
             </div>

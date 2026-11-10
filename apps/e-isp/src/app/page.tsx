@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Server, Activity, Wifi, Shield, RefreshCw, Radio, Layers } from "lucide-react";
+import { Server, Wifi, Shield, RefreshCw, Radio, Layers, Plus, PowerOff, CheckCircle } from "lucide-react";
 import { Card, Button, Badge, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
 
 type InfraStatus = {
@@ -34,14 +34,16 @@ export default function EISPPage() {
   const [pppoeSessions, setPppoeSessions] = useState<PppoeSession[]>([]);
   const [legendTotalRecords, setLegendTotalRecords] = useState<number | null>(null);
   const [pinging, setPinging] = useState(false);
+  const [dialing, setDialing] = useState(false);
+  const [dialResult, setDialResult] = useState<string | null>(null);
 
   const loadArsyTelemetry = async () => {
     setPinging(true);
     try {
       const [hRes, sRes, legRes] = await Promise.allSettled([
         fetch("http://127.0.0.1:4000/health"),
-        fetch("http://127.0.0.1:4000/api/v1/pppoe/sessions"),
-        fetch("http://127.0.0.1:8092/api/v1/stats"),
+        fetch("/api/arsy/pppoe/sessions"),
+        fetch("/api/legend/stats"),
       ]);
 
       const arsyOnline = hRes.status === "fulfilled" && hRes.value.ok;
@@ -49,7 +51,7 @@ export default function EISPPage() {
       if (sRes.status === "fulfilled" && sRes.value.ok) {
         try {
           const body = await sRes.value.json();
-          sessions = body.data || body;
+          sessions = Array.isArray(body) ? body : body.data || [];
         } catch {}
       }
 
@@ -83,6 +85,52 @@ export default function EISPPage() {
     }
   };
 
+  const handleDialSubscriber = async () => {
+    setDialing(true);
+    setDialResult(null);
+    try {
+      const id = crypto.randomUUID();
+      const subscriberNum = 1000 + (Date.now() % 9000);
+      const ipHost = 2 + ((Date.now() >> 2) % 250);
+      const res = await fetch("/api/arsy/pppoe/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          username: `sub-${subscriberNum}@e-isp.mesh`,
+          nas_ip: "10.0.0.1",
+          nas_port: "5000",
+          framed_ip_address: `10.100.0.${ipHost}`,
+          status: "active",
+          acct_session_id: `acct-${Date.now()}`,
+          session_start: new Date().toISOString(),
+        }),
+      });
+      if (res.ok) {
+        setDialResult(`DIAL OK: sub-${subscriberNum}@e-isp.mesh`);
+        await loadArsyTelemetry();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        setDialResult(`DIAL FAILED: ${err.message || "Unknown error"}`);
+      }
+    } catch (e: any) {
+      setDialResult(`ERR: ${e?.message || "Unreachable"}`);
+    } finally {
+      setDialing(false);
+    }
+  };
+
+  const handleTerminateSession = async (sessionId: string) => {
+    try {
+      const res = await fetch(`/api/arsy/pppoe/sessions/${sessionId}/terminate`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        await loadArsyTelemetry();
+      }
+    } catch {}
+  };
+
   useEffect(() => {
     loadArsyTelemetry();
   }, []);
@@ -108,9 +156,18 @@ export default function EISPPage() {
           </p>
         </div>
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex flex-wrap gap-3 justify-center pt-2">
           <Button
             variant="cyan"
+            size="sm"
+            soundDna="eisp"
+            onClick={handleDialSubscriber}
+            disabled={dialing}
+          >
+            <Plus size={13} className="mr-1.5" /> {dialing ? "DIALING..." : "DIAL SUBSCRIBER TUNNEL"}
+          </Button>
+          <Button
+            variant="secondary"
             size="sm"
             soundDna="eisp"
             onClick={loadArsyTelemetry}
@@ -119,6 +176,12 @@ export default function EISPPage() {
             <RefreshCw size={13} className={`mr-1.5 ${pinging ? "animate-spin" : ""}`} /> REFRESH MESH TOPOLOGY
           </Button>
         </div>
+
+        {dialResult && (
+          <div className="text-xs text-cyan-300 bg-cyan-950/40 border border-cyan-500/30 px-3 py-1 rounded flex items-center gap-1.5">
+            <CheckCircle size={12} /> {dialResult}
+          </div>
+        )}
       </div>
 
       {/* Grid Telemetry Metrics */}
@@ -179,6 +242,7 @@ export default function EISPPage() {
                   <th className="p-2">Assigned IP</th>
                   <th className="p-2">Acct Session ID</th>
                   <th className="p-2">Status</th>
+                  <th className="p-2 text-right">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -194,12 +258,23 @@ export default function EISPPage() {
                           {s.status}
                         </span>
                       </td>
+                      <td className="p-2 text-right">
+                        {s.status === "active" && (
+                          <button
+                            onClick={() => handleTerminateSession(s.id)}
+                            title="Terminate Tunnel"
+                            className="px-2 py-1 text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded hover:bg-rose-500/20 cursor-pointer"
+                          >
+                            <PowerOff size={10} className="inline mr-1" /> TERMINATE
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="p-6 text-center text-slate-500 text-xs">
-                      No active sessions connected. Monorepo automated smoke creates ephemeral test dials.
+                    <td colSpan={6} className="p-6 text-center text-slate-500 text-xs">
+                      No active sessions connected. Click &quot;DIAL SUBSCRIBER TUNNEL&quot; above to create a live session.
                     </td>
                   </tr>
                 )}
