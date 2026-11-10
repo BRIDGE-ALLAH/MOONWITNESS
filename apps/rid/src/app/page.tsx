@@ -27,6 +27,49 @@ export default function RootIdPage() {
   const [activeTempo, setActiveTempo] = useState<number>(142);
   const [patchName, setPatchName] = useState("");
   const [patchChord, setPatchChord] = useState("A minor // 2-Tone");
+  const [isPlayingSound, setIsPlayingSound] = useState(false);
+
+  const playSkangChord = (frequency = 440) => {
+    if (typeof window === "undefined") return;
+    try {
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+
+      // Offbeat reggae/ska staccato chord
+      [frequency, frequency * 1.25, frequency * 1.5].forEach((freq) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, now);
+
+        // Sharp skank attack and fast decay
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      });
+
+      // Bass undertone
+      const bass = ctx.createOscillator();
+      const bassGain = ctx.createGain();
+      bass.type = "sawtooth";
+      bass.frequency.setValueAtTime(frequency / 2, now);
+      bassGain.gain.setValueAtTime(0.1, now);
+      bassGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+      bass.connect(bassGain);
+      bassGain.connect(ctx.destination);
+      bass.start(now);
+      bass.stop(now + 0.22);
+
+      setIsPlayingSound(true);
+      setTimeout(() => setIsPlayingSound(false), 200);
+    } catch {}
+  };
   const [patches, setPatches] = useState<SoulPatch[]>([
     {
       id: "patch-01",
@@ -65,6 +108,7 @@ export default function RootIdPage() {
   const handleStitchPatch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!patchName.trim()) return;
+    playSkangChord(523.25); // High C triumph chord
     const newPatch: SoulPatch = {
       id: `patch-${Date.now().toString().slice(-4)}`,
       title: patchName.trim().toUpperCase().replace(/\s+/g, "_"),
@@ -98,9 +142,12 @@ export default function RootIdPage() {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => setActiveTempo((t) => (t >= 180 ? 120 : t + 8))}
+              onClick={() => {
+                setActiveTempo((t) => (t >= 180 ? 120 : t + 8));
+                playSkangChord(440 + (activeTempo % 200));
+              }}
             >
-              UP-TEMPO +8 ⚡
+              UP-TEMPO +8 ⚡ {isPlayingSound && "♫"}
             </Button>
           </>
         }
