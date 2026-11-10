@@ -195,6 +195,7 @@ pub fn create_router(state: AppState, cors_origins: &[String]) -> Router {
         .allow_headers([header::CONTENT_TYPE, header::AUTHORIZATION]);
 
     let records = Router::new()
+        .route("/api/v1/stats", get(get_stats))
         .route(
             "/api/v1/records/:table",
             post(create_record).get(list_records),
@@ -258,6 +259,38 @@ async fn get_metadata() -> impl IntoResponse {
             "Native Git Engine Audit & Event Sinks"
         ]
     }))
+}
+
+async fn count_table(state: &AppState, table: &str) -> Result<u64, ApiError> {
+    let mut response = state
+        .db
+        .query("SELECT record_id FROM type::table($tb)")
+        .bind(("tb", table.to_string()))
+        .await
+        .map_err(db_error)?;
+    let rows: surrealdb::Value = response.take(0).map_err(db_error)?;
+    let count = surreal_to_json(rows)
+        .as_array()
+        .map(|arr| arr.len() as u64)
+        .unwrap_or(0);
+    Ok(count)
+}
+
+async fn get_stats(State(state): State<AppState>) -> Result<impl IntoResponse, ApiError> {
+    let pppoe_sessions = count_table(&state, "pppoe_sessions").await?;
+    let telemetry_events = count_table(&state, "telemetry_events").await?;
+    let edge_nodes = count_table(&state, "edge_nodes").await?;
+    Ok(Json(json!({
+        "namespace": "sovereign",
+        "database": "operational",
+        "tables": {
+            "pppoe_sessions": pppoe_sessions,
+            "telemetry_events": telemetry_events,
+            "edge_nodes": edge_nodes
+        },
+        "total_records": pppoe_sessions + telemetry_events + edge_nodes,
+        "timestamp": Utc::now().to_rfc3339()
+    })))
 }
 
 fn validate_path(table: &str, id: Option<&str>) -> Result<(), ApiError> {
@@ -589,5 +622,24 @@ mod tests {
         let (status, body) = send(&app, "GET", "/health", None, None).await;
         assert_eq!(status, StatusCode::OK);
         assert_eq!(body["status"], "ok");
+    }
+
+    #[tokio::test]
+    async fn stats_endpoint_returns_table_counts() {
+        let app = test_app().await;
+        let (status, _) = send(
+            &app,
+            "PUT",
+            "/api/v1/records/pppoe_sessions/sess-stats-1",
+            Some(SERVICE),
+            Some(json!({ "payload": { "status": "active" } })),
+        )
+        .await;
+        assert_eq!(status, StatusCode::OK);
+
+        let (status, stats) = send(&app, "GET", "/api/v1/stats", Some(SERVICE), None).await;
+        assert_eq!(status, StatusCode::OK);
+        assert_eq!(stats["tables"]["pppoe_sessions"], 1);
+        assert_eq!(stats["total_records"], 1);
     }
 }

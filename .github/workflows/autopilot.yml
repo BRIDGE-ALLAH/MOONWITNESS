@@ -1,0 +1,69 @@
+name: Sovereign Autonomous Autopilot
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      auto_release:
+        description: "Automatically compute SemVer bump and publish release if new commits exist"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  autopilot:
+    name: Autofix, Feature Radar & Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            services/legend
+            services/radius
+
+      - name: Install Workspace Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Autonomous Autofix Engine
+        run: bun run autofix
+
+      - name: Commit Self-Healed Drift (if any)
+        run: |
+          git config user.name "sovereign-autopilot[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "chore(autofix): autonomous self-healing of formatting and manifest drift"
+            git push origin HEAD
+          fi
+
+      - name: Run Autonomous Topology & Feature Radar
+        run: bun run radar
+
+      - name: Run Full 5-Stage Sovereign Quality Gate
+        run: bun run gate
+
+      - name: Trigger Autonomous Release (if requested)
+        if: ${{ inputs.auto_release == true }}
+        run: |
+          git config user.name "sovereign-autopilot[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bun run release:auto --push
+

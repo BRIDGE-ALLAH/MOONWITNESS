@@ -24,7 +24,7 @@ jobs:
       - uses: github/codeql-action/analyze@v3
 
   cargo-audit:
-    name: cargo audit — ${{ matrix.crate }}
+    name: RustSec cargo-audit — ${{ matrix.crate }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -32,8 +32,8 @@ jobs:
         crate: [legend, radius]
     steps:
       - uses: actions/checkout@v4
-      - uses: rustsec/audit-check@v2
+      - uses: taiki-e/install-action@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          working-directory: services/${{ matrix.crate }}
-
+          tool: cargo-audit
+      - name: Audit Cargo.lock against RustSec Advisory DB
+        run: cargo audit --file services/${{ matrix.crate }}/Cargo.lock
