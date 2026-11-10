@@ -16,6 +16,7 @@ import { spawnSync } from "node:child_process";
 
 const args = process.argv.slice(2);
 const runDoctor = args.includes("--doctor");
+const runSmoke = args.includes("--smoke");
 const runRelease = args.includes("--release");
 const runPush = args.includes("--push");
 
@@ -38,6 +39,10 @@ step("PHASE 3: 5-Stage Sovereign Quality Gate", "bun", ["run", "scripts/gate.ts"
 
 if (runDoctor) {
   step("PHASE 4: 9-Node Live Runtime Mesh Doctor", "bun", ["run", "scripts/doctor.ts"]);
+}
+
+if (runSmoke) {
+  step("PHASE 4B: End-to-End Live Mesh Smoke & Persistence Verification", "bun", ["run", "scripts/smoke.ts"]);
 }
 
 if (runRelease) {

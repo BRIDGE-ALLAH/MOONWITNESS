@@ -28,6 +28,7 @@
     "lint:rust": "cargo fmt --manifest-path services/legend/Cargo.toml --check && cargo fmt --manifest-path services/radius/Cargo.toml --check && cargo clippy --manifest-path services/legend/Cargo.toml --all-targets -- -D warnings && cargo clippy --manifest-path services/radius/Cargo.toml --all-targets -- -D warnings",
     "autofix": "bun run scripts/autofix.ts",
     "radar": "bun run scripts/radar.ts",
+    "smoke": "bun run scripts/smoke.ts",
     "autopilot": "bun run scripts/autopilot.ts",
     "gate": "bun run scripts/gate.ts",
     "doctor": "bun run scripts/doctor.ts",

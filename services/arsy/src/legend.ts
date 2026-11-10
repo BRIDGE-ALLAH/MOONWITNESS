@@ -1,7 +1,21 @@
 import { timingSafeEqual } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-const LEGEND_ENDPOINT = process.env.LEGEND_ENDPOINT || 'http://127.0.0.1:8092';
-const LEGEND_SERVICE_TOKEN = process.env.LEGEND_SERVICE_TOKEN || '';
+export function resolveRootEnv(key: string, fallback = ''): string {
+  if (process.env[key]) return process.env[key] as string;
+  for (const rel of ['.env', '../../.env']) {
+    const p = resolve(process.cwd(), rel);
+    if (existsSync(p)) {
+      const match = readFileSync(p, 'utf8').match(new RegExp(`^${key}=(.+)$`, 'm'));
+      if (match?.[1]) return match[1].trim().replace(/^["']|["']$/g, '');
+    }
+  }
+  return fallback;
+}
+
+const LEGEND_ENDPOINT = resolveRootEnv('LEGEND_ENDPOINT', 'http://127.0.0.1:8092');
+const LEGEND_SERVICE_TOKEN = resolveRootEnv('LEGEND_SERVICE_TOKEN');
 const PPPOE_TABLE = 'pppoe_sessions';
 
 type LegendRecord<T> = { record_id: string; payload: T };
@@ -58,4 +72,3 @@ export function isAuthorizedBearer(header: string | undefined, expected: string)
   const reference = Buffer.from(expected);
   return provided.length === reference.length && timingSafeEqual(provided, reference);
 }
-

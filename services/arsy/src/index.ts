@@ -1,9 +1,9 @@
 import Fastify from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import { z } from 'zod';
-import { hydrateSessions, isAuthorizedBearer, legendConfigured, persistSession } from './legend';
+import { hydrateSessions, isAuthorizedBearer, legendConfigured, persistSession, resolveRootEnv } from './legend';
 
-const ARSY_SERVICE_TOKEN = process.env.ARSY_SERVICE_TOKEN || '';
+const ARSY_SERVICE_TOKEN = resolveRootEnv('ARSY_SERVICE_TOKEN');
 
 const app = Fastify({
   logger: { transport: { target: 'pino-pretty' } }

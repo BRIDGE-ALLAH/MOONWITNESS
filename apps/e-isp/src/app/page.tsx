@@ -40,20 +40,28 @@ export default function EISPPage() {
   });
   const [pppoeSessions, setPppoeSessions] = useState<PppoeSession[]>([]);
   const [controllers, setControllers] = useState<ArsyController[]>([]);
+  const [legendTotalRecords, setLegendTotalRecords] = useState<number | null>(null);
   const [nodePings, setNodePings] = useState<Record<string, number | "ERR">>({});
   const [pinging, setPinging] = useState(false);
 
   const loadArsyTelemetry = async () => {
     try {
-      const [hRes, sRes, cRes, lRes] = await Promise.all([
+      const [hRes, sRes, cRes, lRes, stRes] = await Promise.all([
         fetch("http://127.0.0.1:4000/health"),
         fetch("http://127.0.0.1:4000/api/v1/pppoe/sessions"),
         fetch("http://127.0.0.1:4000/api/v1/controllers"),
         fetch("http://127.0.0.1:8092/health"),
+        fetch("/api/legend/stats"),
       ]);
       if (hRes.ok) setStatus((s) => ({ ...s, arsy: "online" }));
       if (sRes.ok) setPppoeSessions(await sRes.json());
       if (cRes.ok) setControllers(await cRes.json());
+      if (stRes.ok) {
+        const statsBody = (await stRes.json()) as { total_records?: number };
+        if (typeof statsBody.total_records === "number") {
+          setLegendTotalRecords(statsBody.total_records);
+        }
+      }
       setStatus((s) => ({ ...s, legend: lRes.ok ? "online" : "offline" }));
     } catch {
       setStatus((s) => ({ ...s, arsy: "offline", legend: "offline" }));
@@ -190,7 +198,11 @@ export default function EISPPage() {
           <StatMetric
             label="LEGEND BAAS"
             value={status.legend === "checking" ? "..." : status.legend.toUpperCase()}
-            sub=":8092 // SurrealDB Rust"
+            sub={
+              legendTotalRecords !== null
+                ? `:8092 // ${legendTotalRecords} persisted records`
+                : ":8092 // SurrealDB Rust"
+            }
             valueColor={status.legend === "online" ? "#00f0ff" : "#ff0055"}
           />
           <StatMetric label="PPPoE SESSIONS" value={pppoeSessions.length} sub="active subscribers" variant="neon" valueColor="#00f0ff" />

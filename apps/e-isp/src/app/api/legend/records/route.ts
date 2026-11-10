@@ -1,29 +1,42 @@
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { NextResponse } from "next/server";
 
-const LEGEND_ENDPOINT = process.env.LEGEND_ENDPOINT || "http://127.0.0.1:8092";
-const LEGEND_SERVICE_TOKEN = process.env.LEGEND_SERVICE_TOKEN || "";
+function resolveEnv(key: string, fallback = ""): string {
+  if (process.env[key]) return process.env[key] as string;
+  for (const rel of [".env", "../../.env"]) {
+    const p = resolve(process.cwd(), rel);
+    if (existsSync(p)) {
+      const match = readFileSync(p, "utf8").match(new RegExp(`^${key}=(.+)$`, "m"));
+      if (match?.[1]) return match[1].trim().replace(/^["']|["']$/g, "");
+    }
+  }
+  return fallback;
+}
 
 export async function GET(request: Request) {
+  const endpoint = resolveEnv("LEGEND_ENDPOINT", "http://127.0.0.1:8092");
+  const serviceToken = resolveEnv("LEGEND_SERVICE_TOKEN");
   const { searchParams } = new URL(request.url);
   const table = searchParams.get("table") || "pppoe_sessions";
   const limit = searchParams.get("limit") || "50";
 
   try {
-    const res = await fetch(`${LEGEND_ENDPOINT}/api/v1/records/${table}?limit=${limit}`, {
+    const upstream = await fetch(`${endpoint}/api/v1/records/${table}?limit=${limit}`, {
       headers: {
-        Authorization: `Bearer ${LEGEND_SERVICE_TOKEN}`,
+        Authorization: `Bearer ${serviceToken}`,
       },
-      signal: AbortSignal.timeout(2000),
+      signal: AbortSignal.timeout(2500),
+      cache: "no-store",
     });
 
-    if (!res.ok) {
-      return NextResponse.json({ error: "Failed to fetch from Legend" }, { status: res.status });
+    if (!upstream.ok) {
+      return NextResponse.json({ error: "Failed to fetch from Legend" }, { status: upstream.status });
     }
 
-    const data = await res.json();
-    return NextResponse.json(data);
+    const records = await upstream.json();
+    return NextResponse.json(records);
   } catch {
     return NextResponse.json({ error: "Legend BaaS unreachable" }, { status: 502 });
   }
 }
-

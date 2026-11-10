@@ -1,14 +1,30 @@
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { NextResponse } from "next/server";
 
-const ARSY_ENDPOINT = process.env.ARSY_ENDPOINT || "http://127.0.0.1:4000";
+function resolveEnv(key: string, fallback = ""): string {
+  if (process.env[key]) return process.env[key] as string;
+  for (const rel of [".env", "../../.env"]) {
+    const p = resolve(process.cwd(), rel);
+    if (existsSync(p)) {
+      const match = readFileSync(p, "utf8").match(new RegExp(`^${key}=(.+)$`, "m"));
+      if (match?.[1]) return match[1].trim().replace(/^["']|["']$/g, "");
+    }
+  }
+  return fallback;
+}
 
 export async function POST(request: Request) {
-  const token = process.env.ARSY_SERVICE_TOKEN;
+  const endpoint = resolveEnv("ARSY_ENDPOINT", "http://127.0.0.1:4000");
+  const token = resolveEnv("ARSY_SERVICE_TOKEN");
   if (!token) {
-    return NextResponse.json({ message: "ARSY_SERVICE_TOKEN not configured on E-ISP server" }, { status: 503 });
+    return NextResponse.json(
+      { message: "ARSY_SERVICE_TOKEN not configured on E-ISP server" },
+      { status: 503 }
+    );
   }
   try {
-    const upstream = await fetch(`${ARSY_ENDPOINT}/api/v1/pppoe/sessions`, {
+    const upstream = await fetch(`${endpoint}/api/v1/pppoe/sessions`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: await request.text(),
@@ -23,4 +39,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "ARSY orchestrator unreachable" }, { status: 502 });
   }
 }
-
