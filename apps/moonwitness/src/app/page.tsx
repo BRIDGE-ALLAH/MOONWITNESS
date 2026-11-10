@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Moon, Orbit, Send, Radio, Compass, Sparkles } from "lucide-react";
-import { Card, Button, Badge, Input, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
+import { Card, Button, Badge, Input, ProceduralLogo, ProceduralGlyph, CosmicArchives, ProceduralDivider } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -176,6 +176,21 @@ export default function MoonWitnessPage() {
             ))}
           </div>
         </div>
+      </div>
+      {/* Astral Observatory Cosmic Archives */}
+      <div className="max-w-5xl w-full mt-10 z-10">
+        <ProceduralDivider variant="celestial" className="mb-6" />
+        <CosmicArchives
+          title="CELESTIAL CODEX // HISTORICAL OBSERVATIONS"
+          items={transmissions.map((t) => ({
+            id: t.id,
+            title: `${t.author} — ${t.coordinates}`,
+            timestamp: t.timestamp,
+            coordinates: t.coordinates,
+            tag: "OBSERVATORY",
+            content: <p className="text-xs text-cyan-200/90 leading-relaxed font-sans">{t.text}</p>,
+          }))}
+        />
       </div>
     </div>
   );

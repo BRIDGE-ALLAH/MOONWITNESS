@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Orbit, Compass, Sparkles, Shield, ChevronRight } from "lucide-react";
-import { ProceduralLogo, ProceduralGlyph, Card, Button, Badge } from "@local-git/ui";
+import { ProceduralLogo, ProceduralGlyph, Card, Button, Badge, SacredGeometricCard, ProceduralDivider } from "@local-git/ui";
 
 export default function AllahOriginPage() {
   const [pulse, setPulse] = useState({
@@ -80,44 +80,42 @@ export default function AllahOriginPage() {
 
       {/* Triad Axiom Sanctum Cards */}
       <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 z-10">
-        <Card variant="gold" className="relative backdrop-blur-md bg-stone-950/70 border-amber-500/30 hover:border-amber-400 transition-all duration-300">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-amber-400/80 tracking-widest">AXIOM 01</span>
-              <ProceduralGlyph dna="empire" index={0} size={20} className="text-amber-400" />
-            </div>
-            <h3 className="text-lg font-serif font-bold text-amber-200">TAWHID (ONENESS)</h3>
-            <p className="text-xs font-serif leading-relaxed text-stone-300/80">
-              Satu asal mula segala rekayasa. Menolak ketergantungan pada SaaS asing, arsitektur terfragmentasi, dan kompromi kualitas slop.
-            </p>
-          </div>
-        </Card>
+        <SacredGeometricCard
+          dna="empire"
+          title="TAWHID (ONENESS)"
+          subtitle="AXIOM 01 // SUPREME DEVOTION"
+          pattern="octagram"
+        >
+          <p className="text-xs font-serif leading-relaxed text-stone-300/80">
+            Satu asal mula segala rekayasa. Menolak ketergantungan pada SaaS asing, arsitektur terfragmentasi, dan kompromi kualitas slop.
+          </p>
+        </SacredGeometricCard>
 
-        <Card variant="gold" className="relative backdrop-blur-md bg-stone-950/70 border-amber-500/30 hover:border-amber-400 transition-all duration-300">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-amber-400/80 tracking-widest">AXIOM 02</span>
-              <ProceduralGlyph dna="empire" index={1} size={20} className="text-amber-400" />
-            </div>
-            <h3 className="text-lg font-serif font-bold text-amber-200">DETERMINISTIC PURITY</h3>
-            <p className="text-xs font-serif leading-relaxed text-stone-300/80">
-              Setiap baris kode, kueri database SurrealDB, dan proses mikroskopis berjalan dengan deterministik presisi tanpa mock data.
-            </p>
-          </div>
-        </Card>
+        <SacredGeometricCard
+          dna="empire"
+          title="DETERMINISTIC PURITY"
+          subtitle="AXIOM 02 // ZERO SLOP"
+          pattern="flower-of-life"
+        >
+          <p className="text-xs font-serif leading-relaxed text-stone-300/80">
+            Setiap baris kode, kueri database SurrealDB, dan proses mikroskopis berjalan dengan deterministik presisi tanpa mock data.
+          </p>
+        </SacredGeometricCard>
 
-        <Card variant="gold" className="relative backdrop-blur-md bg-stone-950/70 border-amber-500/30 hover:border-amber-400 transition-all duration-300">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-amber-400/80 tracking-widest">AXIOM 03</span>
-              <ProceduralGlyph dna="empire" index={2} size={20} className="text-amber-400" />
-            </div>
-            <h3 className="text-lg font-serif font-bold text-amber-200">ETERNAL PULSE</h3>
-            <p className="text-xs font-serif leading-relaxed text-stone-300/80">
-              Sistem hidup mandiri di Cloudflare Edge D1 (:8787). Tetap online dan berdaulat bahkan ketika origin server offline.
-            </p>
-          </div>
-        </Card>
+        <SacredGeometricCard
+          dna="empire"
+          title="ETERNAL PULSE"
+          subtitle="AXIOM 03 // CLOUDFLARE D1 EDGE"
+          pattern="arabesque"
+        >
+          <p className="text-xs font-serif leading-relaxed text-stone-300/80">
+            Sistem hidup mandiri di Cloudflare Edge D1 (:8787). Tetap online dan berdaulat bahkan ketika origin server offline.
+          </p>
+        </SacredGeometricCard>
+      </div>
+
+      <div className="max-w-5xl w-full my-8 z-10">
+        <ProceduralDivider variant="sacred" />
       </div>
 
       {/* Sovereign Live Mesh Telemetry Sanctuary */}

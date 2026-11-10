@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Music, Flame, Zap, Disc3, Plus } from "lucide-react";
-import { Card, Button, Badge, Input, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
+import { Card, Button, Badge, Input, ProceduralLogo, ProceduralGlyph, AudioVisualizerBlock, ProceduralDivider } from "@local-git/ui";
 
 interface SoulPatch {
   id: string;
@@ -270,6 +270,21 @@ export default function RootIdPage() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Procedural Audio Visualizer & Frequency Oscilloscope */}
+      <div className="max-w-5xl w-full mt-10 z-10">
+        <ProceduralDivider variant="tactical" className="mb-6" />
+        <div className="border border-orange-500/30 bg-stone-950/80 rounded p-4">
+          <div className="flex items-center justify-between pb-3 border-b border-orange-500/20 mb-3">
+            <span className="text-xs font-bold text-orange-300 font-mono flex items-center gap-2">
+              <Disc3 size={16} className="text-orange-400" />
+              WEB AUDIO SKANG SYNTHESIZER OSCILLOSCOPE
+            </span>
+            <span className="text-[10px] font-mono text-orange-400/70">60FPS LIVE HARMONICS</span>
+          </div>
+          <AudioVisualizerBlock dna="rid" mode="oscilloscope" height={160} />
         </div>
       </div>
     </div>

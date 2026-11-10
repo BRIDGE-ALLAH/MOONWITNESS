@@ -11,7 +11,12 @@ import {
   Sun, Moon, Compass, Star
 } from "lucide-react";
 import { defaultBrandingConfig } from "@/config/branding";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
+import {
+  Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input,
+  SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader,
+  ProceduralLogo, ProceduralGlyph, TacticalHudBlock, IsometricNetworkGraph,
+  AudioVisualizerBlock, ProceduralDivider
+} from "@local-git/ui";
 
 export default function LandingPage() {
   const [sfx, setSfx] = useState(true);
@@ -706,6 +711,54 @@ export default function LandingPage() {
             <CardTitle style={{ marginBottom: 8 }}>NEOBRUTALIST DEV DASHBOARD</CardTitle>
             <CardDescription>Cockpit cyber-grunge ergonomis untuk menghilangkan beban kognitif. Inspeksi repo instan, telemetri sistem, dan navigasi kilat.</CardDescription>
           </Card>
+        </div>
+
+        {/* TACTICAL HUD & LIVE NETWORK VISUALIZATION */}
+        <div style={{ marginTop: 48 }}>
+          <ProceduralDivider variant="matrix" />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24, marginTop: 32 }}>
+            <TacticalHudBlock
+              dna="dx"
+              title="DX KINETIC COCKPIT"
+              callsign="DX.NODE.00"
+              coordinates="ALLAH.COM MESH :3000"
+              status="COCKPIT ONLINE"
+            >
+              <div style={{ fontSize: 13, color: "#aaa", lineHeight: 1.6 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(0,255,102,0.2)", paddingBottom: 6, marginBottom: 8 }}>
+                  <span style={{ color: "#fff" }}>Engine Plane:</span>
+                  <span style={{ color: "var(--toxic)" }}>Bun + Native Git HTTP</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(0,255,102,0.2)", paddingBottom: 6, marginBottom: 8 }}>
+                  <span style={{ color: "#fff" }}>SurrealDB BaaS:</span>
+                  <span style={{ color: "var(--cyan)" }}>Legend :8092</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(0,255,102,0.2)", paddingBottom: 6, marginBottom: 8 }}>
+                  <span style={{ color: "#fff" }}>Edge Pulse:</span>
+                  <span style={{ color: "var(--gold)" }}>Cloudflare D1 :8787</span>
+                </div>
+                <p style={{ fontSize: 11, color: "var(--muted-slate)", margin: "8px 0 0" }}>
+                  Autonomous 9-node sovereign mesh operating under zero-slop constraints.
+                </p>
+              </div>
+            </TacticalHudBlock>
+
+            <div style={{ border: "2px solid var(--toxic)", background: "#050505", padding: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: "bold", color: "var(--toxic)", marginBottom: 8, display: "flex", justifyContent: "space-between" }}>
+                <span>ISOMETRIC MESH RADAR</span>
+                <span style={{ color: "var(--muted-slate)" }}>60FPS WEBGL/CANVAS</span>
+              </div>
+              <IsometricNetworkGraph height={180} />
+            </div>
+
+            <div style={{ border: "2px solid var(--cyan)", background: "#050505", padding: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: "bold", color: "var(--cyan)", marginBottom: 8, display: "flex", justifyContent: "space-between" }}>
+                <span>DNA SYNTHESIS HARMONICS</span>
+                <span style={{ color: "var(--muted-slate)" }}>MICRO-HAPTIC</span>
+              </div>
+              <AudioVisualizerBlock dna="dx" mode="fft-bars" height={180} />
+            </div>
+          </div>
         </div>
       </section>
 

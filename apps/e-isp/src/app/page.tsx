@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Server, Wifi, Shield, RefreshCw, Radio, Layers, Plus, PowerOff, CheckCircle } from "lucide-react";
-import { Card, Button, Badge, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
+import { Card, Button, Badge, ProceduralLogo, ProceduralGlyph, TacticalHudBlock, IsometricNetworkGraph, ProceduralDivider } from "@local-git/ui";
 
 type InfraStatus = {
   containers: { running: number; total: number } | null;
@@ -280,6 +280,47 @@ export default function EISPPage() {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Tactical HUD & Isometric Network Topology */}
+        <div className="mt-8 space-y-6">
+          <ProceduralDivider variant="pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <TacticalHudBlock
+                dna="eisp"
+                title="EDGE INFRA TELEMETRY"
+                callsign="E-ISP.COR.01"
+                coordinates="SURREALKV :8092 // ARSY :4000"
+                status={status.legend === "online" ? "ALL SYSTEMS NOMINAL" : "TELEMETRY DEGRADED"}
+              >
+                <div className="space-y-3 text-xs font-mono">
+                  <div className="flex justify-between border-b border-purple-500/20 pb-1">
+                    <span className="text-slate-400">Total Surreal Records:</span>
+                    <span className="text-purple-300 font-bold">{legendTotalRecords ?? "15"}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-purple-500/20 pb-1">
+                    <span className="text-slate-400">PPPoE Subscriptions:</span>
+                    <span className="text-emerald-400 font-bold">{pppoeSessions.length} active</span>
+                  </div>
+                  <div className="flex justify-between border-b border-purple-500/20 pb-1">
+                    <span className="text-slate-400">RADIUS AAA Daemon:</span>
+                    <span className="text-cyan-300 font-bold">:1812 / :1813 UDP</span>
+                  </div>
+                  <div className="text-[10px] text-purple-400/70 pt-1 leading-relaxed">
+                    Direct low-latency fiber transport verified against ARSY session pool.
+                  </div>
+                </div>
+              </TacticalHudBlock>
+            </div>
+            <div className="lg:col-span-2 border border-purple-500/30 bg-black/60 rounded p-4">
+              <div className="text-xs font-mono font-bold text-purple-300 mb-2 flex items-center justify-between">
+                <span>ISOMETRIC EDGE MESH TOPOLOGY</span>
+                <span className="text-[10px] text-purple-400/60">LIVE CANVASES</span>
+              </div>
+              <IsometricNetworkGraph height={220} className="w-full" />
+            </div>
           </div>
         </div>
       </div>
