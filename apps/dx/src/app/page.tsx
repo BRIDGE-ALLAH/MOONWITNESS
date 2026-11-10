@@ -11,7 +11,7 @@ import {
   Sun, Moon, Compass, Star
 } from "lucide-react";
 import { defaultBrandingConfig } from "@/config/branding";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, TerminalWindow, EcosystemBridgeGrid, EcosystemSiteHeader, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
 
 export default function LandingPage() {
   const [sfx, setSfx] = useState(true);
@@ -303,7 +303,7 @@ export default function LandingPage() {
 
       {/* TOP NAV */}
       <EcosystemSiteHeader
-        logoMark={<span>#1</span>}
+        logoMark={<ProceduralLogo dna="dx" size={28} />}
         title={`${defaultBrandingConfig.prefix}${defaultBrandingConfig.suffix}`}
         subtitle="STORY RIOT // CREATIVE CHAOS // DEVELOPER BUSINESS"
         rightSlot={

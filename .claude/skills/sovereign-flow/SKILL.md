@@ -26,8 +26,10 @@ Route every state mutation to its authoritative plane:
 - **Global Governance, KPIs, Releases & Comments** -> Sovereign Codex Edge (`https://codex.a-l-l-a-h.com`) via `sovereign-codex-mcp`.
 - **Never expose service or admin tokens to browser bundles (`NEXT_PUBLIC_*`).** Always proxy mutations through Next.js App Router API routes (`src/app/api/.../route.ts`).
 
-## 3. Zero-Slop Coding Contract
-- Strictly forbidden: `// TODO`, `// FIXME`, `Math.random()`, hardcoded mock arrays, fake success responses, dead buttons, or generic identifiers (`data`, `item`, `res`).
+## 3. Zero-Slop & Anti-Synthetic Craftsmanship Contract
+- Strictly forbidden in code: `// TODO`, `// FIXME`, `Math.random()`, hardcoded mock arrays, fake success responses, dead buttons, or generic identifiers (`data`, `item`, `res`).
+- Eradicate synthetic AI markers: no sterile SaaS boilerplate, no redundant explanatory comments, no superficial try/catch wrappers that mask roots.
+- Write decisive, battle-tested code with idiomatic precision and raw human intentionality.
 - Every UI control must trigger a real backend/state action or be removed.
 
 ## 4. Verification & Ship Loop

@@ -14,8 +14,12 @@
   - NEVER think inside standard boilerplate dogmas. Prioritize bold, unprecedented, out-of-the-box architectures (e.g. edge-native CRDTs, zero-copy WASM, micro-haptic living audio, peer-mesh state).
   - MANDATORY RESEARCH FOUNDATION: Before architecting solutions or features, agents MUST synthesize knowledge from online research papers (ArXiv, IEEE, ACM), GitHub Trending, Trendshift, and Reddit engineering communities (`r/rust`, `r/systemdesign`, `r/localllama`, `r/cloudflare`).
   - Ban vanilla complacency: reject mediocre CRUD, generic layouts, and standard library clones when an ultra-optimized, bleeding-edge design is possible.
-- **Absolute Anti-Slop Hygiene**:
-  - Never leave `// TODO`, `// FIXME`, `Math.random()`, mock arrays, placeholder functions, dead buttons, or generic names (`data`, `item`, `res`).
+- **Human-Grade Authenticity & Anti-Synthetic Persona (Zero AI-Slop Style)**:
+  - BAN AI-GENERATED CLICHÉS & PATTERNS:
+    * In prose/dialogue: Banish typical corporate AI markers, sycophancy, polite regurgitations ("Tentu saja!", "Halo!", "Sangat bagus!"), hollow bullet points, and synthetic filler conclusions ("Secara kesimpulan...").
+    * In UI/UX: Reject bland purple gradients, generic Inter font default layouts, cookie-cutter SaaS cards, and sterile whitespace. Build tactile, deliberate, soul-infused interfaces (cyber-tactical HUDs, brutalist typography, micro-haptics, analog-warm textures).
+    * In Code: Ban copy-pasted ChatGPT boilerplates, unnecessary wrapper classes, verbose self-evident comments (`// This function calculates sum`), and naive try/catch blocks that swallow errors. Write razor-sharp, idiomatic, battle-tested code indistinguishable from a top-tier principal kernel/systems engineer.
+  - SOVEREIGN CRAFTSMANSHIP: Every line of code, spec, and commit must carry human weight, intentionality, and decisive conviction — never generic autocomplete fluff.
 - **Zero Local `.plan/` Folder (100% Database-Driven via `https://codex.a-l-l-a-h.com`)**:
   - NEVER create local `.plan/` markdown files (enforced by `.githooks/pre-commit` & `scripts/gate.ts`).
   - All Milestones, Tasks, Progress %, KPIs, Governance Specs (`RULE`, `SPEC`, `DESIGN`, `EDGE`, `RFC`), Releases, and Autonomous Comments are stored in **Sovereign Codex // Edge Pulse** (`https://codex.a-l-l-a-h.com` & `https://codex.e-isp.id` on Cloudflare Workers + D1, `:8787`, and `:3000/wiki`).
