@@ -1,7 +1,7 @@
 {
   "name": "@local-git/e-isp",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "scripts": {
     "dev": "dotenv -e ../../.env -- next dev --hostname 127.0.0.1 --port 3003",
     "build": "dotenv -e ../../.env -- next build",

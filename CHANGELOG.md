@@ -1,5 +1,23 @@
 # CHANGELOG — SOVEREIGN ECOSYSTEM
 
+## [v0.2.1] - 2026-11-10
+
+- feat(agi): modularize dx agi client into http and ws facades with clean barrel exports (347d711)
+- feat(agents): add universal token-frugal zero-slop agent & skill kit across all coding agents (4fa39c0)
+- feat(real-product): purge pseudo-random generators in moonwitness and e-isp with deterministic astronomy and sequence telemetry (bb9d4f2)
+- feat(dx): add in-browser legend baas surrealql query terminal (594201f)
+- feat(e-isp): integrate legend baas telemetry and proxy api (2fdf79a)
+- feat(governance): harden legend/arsy/radius mesh auth, upsert persistence, 5-stage gate and slsa release pipeline (b5769a9)
+- feat(legend): add dockerfile and register in compose mesh (92e277d)
+- feat(legend): scaffold rust surrealdb baas and stream arsy telemetry (c4512ba)
+- docs(readme): update sovereign monorepo architecture for 5 web nodes, ARSY, RADIUS, and enterprise CI gates (ede8eca)
+- feat(e-isp): integrate ARSY orchestrator & RADIUS PPPoE subscriber session telemetry and unify docker-compose (2c67b8b)
+- feat(enterprise): add turbo task graph, conventional commit guard, doctor diagnostics, dependabot, and security policy (b04f41d)
+- chore(ci): add sovereign quality gate, pre-commit hook, GitHub Actions CI/Release workflows, and sync services (2934059)
+- chore(release): v0.2.0 (d4ab1f9)
+- feat(arsy): integrate ARSY controller orchestrator service into monorepo (:4000) (e823e3d)
+- feat(moonwitness): interactive sacred scroll reader modal for canonical knowledge texts (1d37e75)
+
 ## [v0.2.0] - 2026-11-10
 
 - feat(arsy): integrate ARSY controller orchestrator service into monorepo (:4000) (e823e3d)
