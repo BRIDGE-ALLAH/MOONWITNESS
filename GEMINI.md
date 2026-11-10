@@ -2,6 +2,10 @@
 
 ## 1. AXIOMS, OUT-OF-THE-BOX COGNITION & ANTI-SLOP
 - **ALLAH #1**: Supreme origin (`apps/empire`). Anti-slop, deterministic, sovereign engineering.
+- **Global Horizon & World Pulse Radar (Viral & Macro Awareness)**:
+  - MANDATORY WORLD MONITORING: Agents must be hypersensitive to global macro events, breaking tech shifts, viral GitHub projects, Trendshift, X/Twitter engineering discourses, Hacker News Frontpage, and geopolitical edge infrastructure shifts.
+  - SENSE & EVOLVE: When architecting, evaluate real-time global state (Cloudflare Radar internet outages, subsea cable disruptions, major open-source zero-days, AI model breakthroughs on HuggingFace/Llama, viral UI paradigm shifts on Dribbble/Awwwards).
+  - Inject world-conscious resilience: if global CDN or external clouds suffer latency or partition, Sovereign Monorepo must remain operational, sovereign, and self-sufficient.
 - **Radical Out-of-the-Box Innovation (Deep Research & Trend Sourcing)**:
   - NEVER think inside standard boilerplate dogmas. Prioritize bold, unprecedented, out-of-the-box architectures (e.g. edge-native CRDTs, zero-copy WASM, micro-haptic living audio, peer-mesh state).
   - MANDATORY RESEARCH FOUNDATION: Before architecting solutions or features, agents MUST synthesize knowledge from online research papers (ArXiv, IEEE, ACM), GitHub Trending, Trendshift, and Reddit engineering communities (`r/rust`, `r/systemdesign`, `r/localllama`, `r/cloudflare`).

@@ -10,10 +10,13 @@ description: >-
 
 Execute every task as a complete vertical slice with minimum token burn, radical out-of-the-box thinking, and zero-slop execution.
 
-## 1. Recon, Deep Learning & Innovation Sourcing
+## 1. Recon, Deep Learning & World Pulse Sourcing
 1. Mandatory state check: `bun run codex:mcp --dashboard`.
 2. Register task as `in_progress`: `bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"id":"<id>","status":"in_progress","progressPct":25}'`.
-3. Out-of-the-box research: Synthesize state-of-the-art patterns from online research papers (ArXiv, ACM, IEEE), GitHub Trending, Trendshift, and Reddit (`r/rust`, `r/systemdesign`). Reject vanilla boilerplate in favor of bold, sovereign architectures.
+3. Out-of-the-box research & World Pulse:
+   - Synthesize state-of-the-art patterns from online research papers (ArXiv, ACM, IEEE), GitHub Trending, Trendshift, Hacker News, and Reddit (`r/rust`, `r/systemdesign`).
+   - Monitor global pulse: evaluate macro internet telemetry, subsea/edge infrastructure shifts, and breaking viral engineering paradigms.
+   - Reject vanilla boilerplate in favor of bold, resilient, out-of-the-box sovereign architectures.
 4. Token-frugal inspection: Locate symbols with targeted search (`Select-String` / `grep`), read only 40-80 lines around targets.
 
 ## 2. Architecture & Data Routing

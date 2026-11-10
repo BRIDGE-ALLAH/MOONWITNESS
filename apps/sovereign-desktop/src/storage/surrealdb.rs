@@ -5,6 +5,7 @@ use surrealdb::engine::local::Db;
 use surrealdb::opt::auth::Root;
 use std::sync::Arc;
 use tracing::{info, warn};
+use std::collections::BTreeMap;
 
 pub type SurrealLocal = Arc<Surreal<Db>>;
 
