@@ -171,6 +171,40 @@ async function handleMcpJsonRpc(request: Request, env?: Env): Promise<Response> 
                 required: ["body"],
               },
             },
+            {
+              name: "codex_upsert_release",
+              description:
+                "Publish or update an official release record, changelog, and direct download links (GitHub release mirror) in the independent Codex DB.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  tagName: { type: "string" },
+                  version: { type: "string" },
+                  title: { type: "string" },
+                  channel: { type: "string", enum: ["stable", "nightly", "daily"] },
+                  changelogMd: { type: "string" },
+                  githubReleaseUrl: { type: "string" },
+                  artifacts: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        name: { type: "string" },
+                        directUrl: { type: "string" },
+                        targetOs: { type: "string" },
+                      },
+                      required: ["name", "directUrl"],
+                    },
+                  },
+                },
+                required: ["tagName"],
+              },
+            },
+            {
+              name: "codex_get_releases",
+              description: "Fetch all official releases, changelog history, and direct binary download URLs from the independent Codex DB.",
+              inputSchema: { type: "object", properties: {} },
+            },
           ],
         },
       });
@@ -191,11 +225,23 @@ async function handleMcpJsonRpc(request: Request, env?: Env): Promise<Response> 
         });
       }
 
+      if (toolName === "codex_get_releases") {
+        const snapshot = await buildCodexDashboardSnapshot({ d1: env?.CODEX_DB });
+        return jsonResponse({
+          jsonrpc: "2.0",
+          id,
+          result: {
+            content: [{ type: "text", text: JSON.stringify(snapshot.releases, null, 2) }],
+          },
+        });
+      }
+
       const actionMap: Record<string, string> = {
         codex_upsert_milestone: "upsert_milestone",
         codex_upsert_task: "upsert_task",
         codex_upsert_doc: "upsert_doc",
         codex_post_comment: "post_comment",
+        codex_upsert_release: "upsert_release",
       };
 
       const mappedAction = actionMap[toolName];
@@ -214,7 +260,9 @@ async function handleMcpJsonRpc(request: Request, env?: Env): Promise<Response> 
 
       // Trigger Telegram notification for MCP executions
       let mcpMsg = `🤖 *SOVEREIGN MCP EXECUTION*\nTool: \`${toolName}\``;
-      if (outcome.task) {
+      if (outcome.release) {
+        mcpMsg = `🚀 *SOVEREIGN RELEASE PUBLISHED* (${outcome.release.tagName})\nVersion: *${outcome.release.version}* [${outcome.release.channel.toUpperCase()}]\nTitle: *${outcome.release.title}*\n📥 [GitHub Release](${outcome.release.githubReleaseUrl})\n\n${outcome.release.changelogMd.slice(0, 300)}`;
+      } else if (outcome.task) {
         mcpMsg += `\nTask: *${outcome.task.title}*\nStatus: \`${outcome.task.status.toUpperCase()}\` (${outcome.task.progressPct}%)`;
       } else if (outcome.milestone) {
         mcpMsg += `\nMilestone: *${outcome.milestone.title}* (${outcome.milestone.version})\nStatus: \`${outcome.milestone.status}\``;
@@ -248,20 +296,21 @@ async function handleMcpJsonRpc(request: Request, env?: Env): Promise<Response> 
 
 function renderStandaloneEdgeHtml(): string {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-dna="codex" data-mode="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SOVEREIGN CODEX // EDGE PULSE (:8787 / Cloudflare D1)</title>
   <style>
     :root {
-      --bg: #070709;
-      --panel: #0e0f14;
-      --panel2: #14161f;
-      --line: #232634;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --gold: #c9a227;
+      --bg: #030804;
+      --panel: #061108;
+      --panel2: #0b1a0e;
+      --line: #14331a;
+      --text: #e2fbe8;
+      --muted: #6e9a76;
+      --accent: #00ff66;
+      --gold: #00ff66;
       --green: #10b981;
       --red: #ef4444;
       --cyan: #06b6d4;
@@ -269,39 +318,56 @@ function renderStandaloneEdgeHtml(): string {
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: radial-gradient(circle at top, rgba(201, 162, 39, 0.1), transparent 45%), var(--bg);
+      background: #030804;
       color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
       line-height: 1.5;
+      overflow-x: hidden;
     }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    #living-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    .content-wrap {
+      position: relative;
+      z-index: 1;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
     header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(14, 15, 20, 0.9);
-      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--accent);
+      background: rgba(6, 17, 8, 0.92);
+      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 20;
-      padding: 14px 24px;
+      padding: 16px 24px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
+      box-shadow: 0 0 20px rgba(0,255,102,0.12);
     }
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 3px 10px;
-      border-radius: 999px;
+      padding: 4px 12px;
+      border-radius: 2px;
       font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       border: 1px solid var(--line);
       background: var(--panel2);
     }
-    .badge.gold { border-color: rgba(201, 162, 39, 0.5); color: var(--gold); background: rgba(201, 162, 39, 0.12); }
+    .badge.gold { border-color: var(--accent); color: var(--accent); background: rgba(0, 255, 102, 0.1); }
     .badge.green { border-color: rgba(16, 185, 129, 0.5); color: var(--green); background: rgba(16, 185, 129, 0.12); }
     .badge.red { border-color: rgba(239, 68, 68, 0.5); color: var(--red); background: rgba(239, 68, 68, 0.12); }
     .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
@@ -312,27 +378,43 @@ function renderStandaloneEdgeHtml(): string {
       margin-bottom: 24px;
     }
     .card {
-      background: var(--panel);
+      background: rgba(6, 17, 8, 0.85);
       border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: 2px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+      transition: all 0.2s ease;
     }
-    .card.gold { border-color: rgba(201, 162, 39, 0.45); }
+    .card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(0,255,102,0.2), 3px 3px 0 rgba(0,0,0,0.5);
+    }
+    .card.gold { border-color: var(--line); }
     .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     button {
       background: var(--panel2);
       color: var(--text);
       border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 8px 14px;
-      font-size: 12px;
-      font-weight: 600;
+      border-radius: 2px;
+      padding: 8px 16px;
+      font-size: 11px;
+      font-family: inherit;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       cursor: pointer;
+      transition: all 0.15s;
+    }
+    button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
     button.active, button.primary {
-      background: var(--gold);
-      color: #070709;
-      border-color: var(--gold);
+      background: var(--accent);
+      color: #030804;
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(0,255,102,0.3);
     }
     input, select, textarea {
       background: var(--bg);
@@ -361,6 +443,8 @@ function renderStandaloneEdgeHtml(): string {
   </style>
 </head>
 <body>
+  <canvas id="living-canvas"></canvas>
+  <div class="content-wrap">
   <header>
     <div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -373,7 +457,7 @@ function renderStandaloneEdgeHtml(): string {
       </div>
     </div>
     <div style="display:flex;gap:8px;align-items:center;">
-      <a href="http://127.0.0.1:3000/wiki" style="color:var(--gold);font-size:12px;text-decoration:none;border:1px solid rgba(201,162,39,0.4);padding:6px 12px;border-radius:6px;">↗ DX WIKI (:3000/wiki)</a>
+      <a href="http://127.0.0.1:3000/wiki" style="color:var(--accent);font-size:12px;text-decoration:none;border:1px solid var(--line);padding:6px 12px;border-radius:2px;background:var(--panel2);">↗ DX WIKI (:3000/wiki)</a>
       <button onclick="loadDashboard()">↻ REFRESH</button>
     </div>
   </header>
@@ -392,8 +476,33 @@ function renderStandaloneEdgeHtml(): string {
 
     <div id="view-container"></div>
   </div>
+  </div>
 
   <script>
+    // Procedural Living Canvas for Codex Edge
+    const canvas = document.getElementById('living-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+      let t = 0;
+      function loop() {
+        t += 0.02;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(0, 255, 102, 0.035)';
+        ctx.font = '10px monospace';
+        for (let col = 0; col < w; col += 60) {
+          const rowY = (t * 70 + col * 14) % h;
+          ctx.fillText('0x' + Math.floor(Math.sin(t + col) * 99 + 100).toString(16), col, rowY);
+        }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
     let currentTab = 'status';
     let dashboard = null;
 
@@ -569,18 +678,35 @@ function renderStandaloneEdgeHtml(): string {
           </div>
         \`;
       } else if (currentTab === 'releases') {
-        box.innerHTML = \`
+        const releasesList = dashboard.releases || [];
+        box.innerHTML = `
           <div class="grid-2">
-            \${dashboard.releases.map(r => \`
+            \${releasesList.map(r => \`
               <div class="card gold">
-                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                  <span class="badge gold mono">\${r.version}</span>
-                  <span class="mono" style="font-size:12px;color:var(--muted);">\${r.date}</span>
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;align-items:center;">
+                  <span class="badge gold mono">\${r.tagName || r.version}</span>
+                  <span class="badge \${r.channel === 'stable' ? 'green' : 'cyan'}">\${(r.channel || 'STABLE').toUpperCase()}</span>
                 </div>
-                <div style="font-weight:700;margin-bottom:8px;">\${r.headline}</div>
-                <ul style="margin:0;padding-left:18px;font-size:13px;color:var(--muted);">
-                  \${r.highlights.map(h => \`<li>\${h}</li>\`).join('')}
-                </ul>
+                <div style="font-weight:700;font-size:15px;margin-bottom:6px;">\${r.title || r.headline || 'Official Sovereign Monorepo Release'}</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:10px;" class="mono">Published: \${(r.publishedAt || r.date || '').slice(0, 10)}</div>
+                <div style="background:var(--bg);padding:10px;border-radius:6px;margin-bottom:12px;font-size:12px;white-space:pre-wrap;color:var(--muted);font-family:inherit;">
+                  \${r.changelogMd || (r.highlights ? r.highlights.join('\\n') : '')}
+                </div>
+                \${r.artifacts && r.artifacts.length > 0 ? \`
+                  <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px;">DIRECT DOWNLOADS (GITHUB MIRROR):</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+                    \${r.artifacts.map(a => \`
+                      <a href="\${a.directUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:rgba(217,119,6,0.15);border:1px solid var(--gold);color:var(--gold);padding:6px 10px;border-radius:4px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px;">
+                        ⬇ \${a.name} [\${(a.targetOs || 'any').toUpperCase()}]
+                      </a>
+                    \`).join('')}
+                  </div>
+                \` : ''}
+                \${r.githubReleaseUrl ? \`
+                  <a href="\${r.githubReleaseUrl}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--cyan);text-decoration:none;display:inline-block;">
+                    ↗ View Full Release on GitHub
+                  </a>
+                \` : ''}
               </div>
             \`).join('')}
           </div>
