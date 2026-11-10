@@ -1,143 +1,17 @@
-﻿# Sovereign Desktop - Master TODO
-
-**Status**: Active Development
-**Target**: Production-ready offline-first Windows desktop app
-**Quality Gate**: \un run gate\ must pass (zero-slop, types, tests, secrets, rust)
-
----
-
-## Phase 0: Foundation & Configuration (Mostly Done)
-
-- [x] Tauri v2 config with MSIX bundle, sidecars, CSP, allowlist
-- [x] Cargo.toml with all deps (tauri, surrealdb, git2, webauthn, windows, crypto)
-- [x] Embedded SurrealDB with migrations (9 tables, CRDT sync_operations)
-- [x] SidecarManager with port registry, health checks, circuit breaker
-- [x] SyncEngine with CRDT (LWW, OR-Set, RGA) + reconciliation loop
-- [x] LicenseManager with RSA-PSS, hw fingerprint (TPM/SMBIOS/MachineGuid)
-- [x] Windows Credential Manager wrapper (PAT, JWT keys, WebAuthn)
-- [x] Auth commands: Windows Hello, PAT, JWT refresh, license verify, init_app
-- [x] React + TanStack Router + role-based routes
-- [x] Layout with collapsible sidebar, sync badge, theme toggle
-- [x] LoginPage with Windows Hello + PAT
-
----
-
-## Phase 1: Core Backend Commands (In Progress)
-
-### 1.1 Git Commands (src/commands/git.rs)
-- [x] git_list_repos() - List registered repos from SurrealDB
-- [x] git_register_repo(path, name, remote_url?) - Add repo to registry
-- [x] git_open_repo(path) - Validate repo, return status (branch, ahead/behind, dirty)
-- [x] git_log(repo_path, limit?, offset?) - Paginated commit history via git-engine
-- [x] git_diff(repo_path, commit_sha?) - Diff vs HEAD or between commits
-- [x] git_branch_list(repo_path) - Local + remote branches
-- [x] git_branch_create(repo_path, name, start_point?) - Create branch
-- [x] git_branch_delete(repo_path, name, force?) - Delete branch
-- [x] git_checkout(repo_path, target) - Switch branch/commit
-- [x] git_status(repo_path) - Working tree status (staged/unstaged/untracked)
-- [x] git_add(repo_path, paths[]) - Stage files
-- [x] git_commit(repo_path, message, sign?) - Create commit
-- [x] git_push(repo_path, remote?, branch?, force?) - Push via git-engine
-- [x] git_pull(repo_path, remote?, branch?) - Pull via git-engine
-- [x] git_fetch(repo_path, remote?) - Fetch remotes
-- [x] git_remote_list(repo_path) - List remotes with URLs
-- [x] git_remote_add(repo_path, name, url) - Add remote
-- [x] git_stash_list(repo_path) - List stashes
-- [x] git_stash_push/pop/drop(repo_path, message?) - Stash operations
-- [x] git_blame(repo_path, file, start_line, end_line) - Line annotations
-- [x] git_show(repo_path, commit_sha) - Commit details + diff
-
-### 1.2 Service/Mesh Commands (src/commands/mesh.rs)
-- [x] mesh_get_all_health() - HealthStatus[] for all 5 sidecars
-- [x] mesh_start_service(name) - Spawn sidecar with config
-- [x] mesh_stop_service(name) - Graceful shutdown
-- [x] mesh_restart_service(name) - Restart with circuit breaker
-- [x] mesh_get_logs(name, lines?, follow?) - Tail stdout/stderr
-- [x] mesh_get_config(name) - Current runtime config from service_config table
-- [x] mesh_update_config(name, config_obj) - Update + restart sidecar
-- [x] mesh_get_port_map() - All reserved ports + actual bindings
-- [x] mesh_export_diagnostics() - ZIP bundle: logs, config, health, system info
-- [x] mesh_status() - HealthStatus[] for all sidecars
-- [x] mesh_start(name) - Spawn sidecar with config
-- [x] mesh_stop(name) - Graceful shutdown
-- [x] mesh_restart(name) - Restart with circuit breaker
-- [x] mesh_logs(name, lines?, follow?) - Tail stdout/stderr
-- [x] mesh_health(name) - Single service health check
-- [x] mesh_get_config(name) - Current runtime config from service_config table
-- [x] mesh_update_config(name, config_obj) - Update + restart sidecar
-- [x] mesh_get_port_map() - All reserved ports + actual bindings
-- [x] mesh_export_diagnostics() - ZIP bundle: logs, config, health, system info
-
-### 1.3 SurrealQL Commands (src/commands/surreal.rs)
-- [ ] surreal_query(sql, params?) - Execute query against embedded DB
-- [ ] surreal_explain(sql) - Query plan
-- [ ] surreal_schema(table?) - Table definitions, indexes, fields
-- [ ] surreal_live_query(sql) - Subscribe to live results (WebSocket)
-- [ ] surreal_export_table(table, format?) - JSON/CSV export
-- [ ] surreal_import_table(table, data, format?) - Import with conflict resolution
-- [x] surreal_query(sql, params?) - Execute query
-- [x] surreal_create(table, data) - Create record
-- [x] surreal_read(table, id) - Read record
-- [x] surreal_update(table, id, data) - Update record
-- [x] surreal_delete(table, id) - Delete record
-- [x] surreal_health() - Health check
-- [ ] surreal_explain(sql) - Query plan
-- [ ] surreal_schema(table?) - Table definitions, indexes, fields
-- [ ] surreal_live_query(sql) - Subscribe to live results (WebSocket)
-- [ ] surreal_export_table(table, format?) - JSON/CSV export
-- [ ] surreal_import_table(table, data, format?) - Import with conflict resolution
-
-### 1.4 PPPoE/RADIUS Commands (src/commands/pppoe.rs)
-- [ ] pppoe_list_sessions(filter?) - Active sessions from legend/pocketbase
-- [ ] pppoe_get_session(session_id) - Session details + traffic counters
-- [ ] pppoe_disconnect_session(session_id) - Terminate via arsy
-- [ ] pppoe_radius_logs(filter?) - Paginated RADIUS packet log
-- [ ] pppoe_nas_list() - NAS devices from arsy
-- [ ] pppoe_nas_config(nas_id) - NAS config (IP, secret, ports)
-- [ ] pppoe_nas_update(nas_id, config) - Update NAS config
-- [x] pppoe_list(filter?) - List PPPoE sessions (placeholder)
-- [x] pppoe_create(data) - Create session (placeholder)
-- [x] pppoe_delete(id) - Delete session (placeholder)
-- [x] pppoe_stats() - Stats (placeholder)
-- [ ] pppoe_list_sessions(filter?) - Active sessions from legend/pocketbase
-- [ ] pppoe_get_session(session_id) - Session details + traffic counters
-- [ ] pppoe_disconnect_session(session_id) - Terminate via arsy
-- [ ] pppoe_radius_logs(filter?) - Paginated RADIUS packet log
-- [ ] pppoe_nas_list() - NAS devices from arsy
-- [ ] pppoe_nas_config(nas_id) - NAS config (IP, secret, ports)
-- [ ] pppoe_nas_update(nas_id, config) - Update NAS config
-
 ### 1.5 Tenant Commands (src/commands/tenant.rs)
-- [ ] tenant_list(filter?) - Paginated tenant list
-- [ ] tenant_get(id) - Tenant details + usage + API keys
-- [ ] tenant_create(name, slug, plan) - Create tenant
-- [ ] tenant_update(id, patch) - Update tenant (plan, limits)
-- [ ] tenant_delete(id) - Soft delete (mark inactive)
-- [ ] tenant_api_keys(id) - List API keys for tenant
-- [ ] tenant_api_key_create(id, name, permissions, expires_at?) - Generate key
-- [ ] tenant_api_key_revoke(id, key_id) - Revoke key
-- [ ] tenant_usage(id, period?) - Usage metrics (API calls, bandwidth, sessions)
-- [ ] tenant_billing_sync(id) - Trigger billing sync to remote
-- [x] tenant_list() - List tenants (placeholder)
-- [x] tenant_create(data) - Create tenant (placeholder)
-- [x] tenant_update(id, data) - Update tenant (placeholder)
-- [x] tenant_delete(id) - Delete tenant (placeholder)
-- [x] tenant_usage(id) - Usage metrics (placeholder)
-- [x] api_key_create(tenant_id, data) - Create API key (placeholder)
-- [x] api_key_list(tenant_id) - List API keys (placeholder)
-- [x] api_key_revoke(tenant_id, key_id) - Revoke key (placeholder)
-- [ ] tenant_list(filter?) - Paginated tenant list
-- [ ] tenant_get(id) - Tenant details + usage + API keys
-- [ ] tenant_create(name, slug, plan) - Create tenant with SurrealDB
-- [ ] tenant_update(id, patch) - Update tenant (plan, limits)
-- [ ] tenant_delete(id) - Soft delete (mark inactive)
-- [ ] tenant_api_keys(id) - List API keys for tenant
-- [ ] tenant_api_key_create(id, name, permissions, expires_at?) - Generate key
-- [ ] tenant_api_key_revoke(id, key_id) - Revoke key
-- [ ] tenant_usage(id, period?) - Usage metrics (API calls, bandwidth, sessions)
-- [ ] tenant_billing_sync(id) - Trigger billing sync to remote
-
-### 1.6 Diagnostics Commands (src/commands/diagnostics.rs)
+- [x] tenant_list(filter?) - Paginated tenant list
+- [x] tenant_get(id) - Tenant details + usage + API keys
+- [x] tenant_create(name, slug, plan) - Create tenant
+- [x] tenant_update(id, patch) - Update tenant (plan, limits)
+- [x] tenant_delete(id) - Soft delete (mark inactive)
+- [x] tenant_api_keys(id) - List API keys for tenant
+- [x] tenant_api_key_create(id, name, permissions, expires_at?) - Generate key
+- [x] tenant_api_key_revoke(id, key_id) - Revoke key
+- [x] tenant_usage(id, period?) - Usage metrics (API calls, bandwidth, sessions)
+- [x] tenant_billing_sync(id) - Trigger billing sync to remote
+- [x] api_key_create(tenant_id, name) - Create API key (alias)
+- [x] api_key_list(tenant_id) - List API keys (alias)
+- [x] api_key_revoke(key_id) - Revoke key (alias)### 1.6 Diagnostics Commands (src/commands/diagnostics.rs)
 - [ ] diag_system_info() - OS, CPU, RAM, disk, network interfaces
 - [ ] diag_network_trace(target, type?) - Ping, traceroute, DNS, TCP connect
 - [ ] diag_sidecar_logs(name, since?) - Structured logs from sidecar
@@ -460,3 +334,4 @@ When CI fails:
 
 *Last Updated: 2026-11-10*
 *Next Review: After Phase 1 completion*
+

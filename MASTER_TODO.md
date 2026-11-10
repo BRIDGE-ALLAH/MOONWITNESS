@@ -166,12 +166,11 @@
 - [ ] P2 quota_alert_config(alert: QuotaAlert) -> Result<()> - v1.0
 
 ### 2.7 Tauri Commands - Tenant (src/commands/tenant.rs) Support (read) + Customer (own)
-- [ ] P1 tenant_view(tenant_id: String) -> Result<TenantSnapshot> - RBAC: Support sees all, Customer sees own
-- [ ] P1 tenant_api_keys(tenant_id: String) -> Result<Vec<ApiKey>> - Customer: own only; Support: read-only
-- [ ] P1 tenant_usage(tenant_id: String, range: DateRange) -> Result<UsageStats>
+- [x] P1 tenant_view(tenant_id: String) -> Result<TenantSnapshot> - RBAC: Support sees all, Customer sees own
+- [x] P1 tenant_api_keys(tenant_id: String) -> Result<Vec<ApiKey>> - Customer: own only; Support: read-only
+- [x] P1 tenant_usage(tenant_id: String, range: DateRange) -> Result<UsageStats>
 - [ ] P2 tenant_plan_change(tenant_id: String, plan: String) -> Result<()> - Customer only, v1.0
-- [ ] P2 tenant_webhook(tenant_id: String, webhook: Webhook) -> Result<()> - Customer only, v1.0
-
+- [ ] 
 ### 2.8 Tauri Commands - Diagnostics (src/commands/diagnostics.rs) Support Only
 - [ ] P1 diagnostic_bundle() -> Result<PathBuf> - zip: logs, config, sysinfo, sidecar metrics
 - [ ] P2 session_replay(ticket_id: String) -> Result<ReplayData> - v1.0 (rr integration)
@@ -352,3 +351,4 @@ Phase 0 (Scaffold)
 ---
 
 *Generated from DESKTOP_APP_DESIGN.md - executable, zero-slop, offline-first.*
+

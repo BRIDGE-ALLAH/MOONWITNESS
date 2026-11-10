@@ -18,6 +18,10 @@ pub const MESH: [(&str, &str); 9] = [
 ];
 
 pub const CODEX_URL: &str = "https://codex.a-l-l-a-h.com/api/codex";
+pub const LEGEND_QUERY_URL: &str = "http://127.0.0.1:8092/api/v1/query";
+pub const LEGEND_ADMIN_TOKEN: &str =
+    "43a5c8d8b0df0ba76ff5f45bd03bbe185c306cde2fe2c4ba7a8244aee87f494d";
+
 const BODY_CAP: usize = 6_000;
 
 #[derive(Serialize, Clone)]
@@ -32,6 +36,7 @@ pub struct NodePulse {
 pub fn catalog() -> &'static str {
     "mesh_probe(input: none) -> live health + latency of the 9 sovereign mesh nodes\n\
      codex_dashboard(input: none) -> live KPIs, milestones and open tasks from Sovereign Codex edge\n\
+     surrealql_exec(input: SurrealQL query string) -> executes high-operational query against Legend BaaS (:8092)\n\
      system_vitals(input: none) -> CPU, memory, process count of this machine\n\
      memory_recall(input: keyword string) -> past RockSoul runs whose goal or answer match\n\
      http_get(input: absolute http(s) URL) -> status + first 6KB of the response body"
@@ -142,6 +147,47 @@ async fn http_get(client: &reqwest::Client, url: &str) -> Result<Value, String> 
     Ok(json!({ "status": status, "body": clipped, "truncated": body.len() > clipped.len() }))
 }
 
+async fn surrealql(client: &reqwest::Client, query: &str) -> Result<Value, String> {
+    let clean_query = query.trim().trim_matches('"');
+    let resp = client
+        .post(LEGEND_QUERY_URL)
+        .header("Authorization", format!("Bearer {LEGEND_ADMIN_TOKEN}"))
+        .header("Content-Type", "application/json")
+        .json(&json!({ "query": clean_query }))
+        .timeout(Duration::from_secs(10))
+        .send()
+        .await
+        .map_err(|e| format!("Legend :8092 unreachable: {e}"))?;
+    let status = resp.status();
+    let body: Value = resp
+        .json()
+        .await
+        .map_err(|e| format!("SurrealQL response invalid: {e}"))?;
+    if !status.is_success() {
+        return Err(format!("SurrealQL HTTP {status}: {body}"));
+    }
+    Ok(body)
+}
+
+async fn surrealql(client: &reqwest::Client, query: &str) -> Result<Value, String> {
+    let clean_query = query.trim().trim_matches('"');
+    let resp = client
+        .post(LEGEND_QUERY_URL)
+        .header("Authorization", format!("Bearer {LEGEND_ADMIN_TOKEN}"))
+        .header("Content-Type", "application/json")
+        .json(&json!({ "query": clean_query }))
+        .timeout(Duration::from_secs(10))
+        .send()
+        .await
+        .map_err(|e| format!("Legend :8092 unreachable: {e}"))?;
+    let status = resp.status();
+    let body: Value = resp.json().await.map_err(|e| format!("SurrealQL response invalid: {e}"))?;
+    if !status.is_success() {
+        return Err(format!("SurrealQL HTTP {status}: {body}"));
+    }
+    Ok(body)
+}
+
 pub async fn execute(
     client: &reqwest::Client,
     memory: &Memory,
@@ -155,11 +201,28 @@ pub async fn execute(
             Ok(json!({ "online": online, "total": pulses.len(), "nodes": pulses }))
         }
         "codex_dashboard" => codex(client).await,
+        "surrealql_exec" => surrealql(client, input).await,
         "system_vitals" => tokio::task::spawn_blocking(vitals)
             .await
             .map_err(|e| e.to_string()),
         "memory_recall" => Ok(json!(memory.recall(input, 5))),
         "http_get" => http_get(client, input).await,
         unknown => Err(format!("unknown tool `{unknown}`")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio;
+    #[tokio::test]
+    async fn test_surrealql_exec() {
+        let client = reqwest::Client::new();
+        let memory = Memory::open(std::env::temp_dir().join("rocksoul-test-surreal")).expect("mem");
+        let query = "SELECT count() FROM pppoe_sessions";
+        let result = execute(&client, &memory, "surrealql_exec", query).await;
+        assert!(result.is_ok(), "surrealql_exec failed: {:?}", result.err());
+        let value = result.unwrap();
+        assert!(value.is_object() || value.is_array(), "unexpected result type");
     }
 }
