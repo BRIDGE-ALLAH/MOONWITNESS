@@ -1,26 +1,26 @@
 {
-    "version":  "0.1.0",
-    "name":  "@local-git/rid",
-    "scripts":  {
-                    "check":  "tsc --noEmit",
-                    "build":  "next build",
-                    "dev":  "next dev -p 3004",
-                    "start":  "next start -p 3004"
-                },
-    "devDependencies":  {
-                            "@types/react-dom":  "^19.0.0",
-                            "@types/react":  "^19.0.0",
-                            "typescript":  "^5.9.0",
-                            "@types/node":  "^22.0.0"
-                        },
-    "dependencies":  {
-                         "react-dom":  "^19.0.0",
-                         "@local-git/ui":  "workspace:*",
-                         "lucide-react":  "^0.468.0",
-                         "next":  "15.1.0",
-                         "@local-git/contracts":  "workspace:*",
-                         "react":  "^19.0.0",
-                         "clsx":  "^2.1.1"
-                     },
-    "private":  true
+  "version": "0.2.0",
+  "name": "@local-git/rid",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "next build",
+    "dev": "next dev -p 3004",
+    "start": "next start -p 3004"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^19.0.0",
+    "@types/react": "^19.0.0",
+    "typescript": "^5.9.0",
+    "@types/node": "^22.0.0"
+  },
+  "dependencies": {
+    "react-dom": "^19.0.0",
+    "@local-git/ui": "workspace:*",
+    "lucide-react": "^0.468.0",
+    "next": "15.1.0",
+    "@local-git/contracts": "workspace:*",
+    "react": "^19.0.0",
+    "clsx": "^2.1.1"
+  },
+  "private": true
 }

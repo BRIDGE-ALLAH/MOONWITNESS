@@ -1,7 +1,7 @@
 {
   "name": "local-git-hq",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "packageManager": "bun@1.3.0",
   "workspaces": [
     "apps/*",
@@ -23,6 +23,11 @@
     "build:all": "bun --filter @local-git/dx build && bun --filter @local-git/empire build && bun --filter @local-git/moonwitness build && bun --filter @local-git/e-isp build && bun --filter @local-git/rid build && bun --filter @local-git/arsy build",
     "check": "bun --filter @local-git/ui check && bun --filter @local-git/dx check && bun --filter @local-git/empire check && bun --filter @local-git/moonwitness check && bun --filter @local-git/e-isp check && bun --filter @local-git/rid check && bun --filter @local-git/engine check && bun --filter @local-git/arsy check",
     "test": "bun --filter @local-git/engine test",
+    "gate": "bun run scripts/gate.ts",
+    "release:patch": "bun run scripts/release.ts patch --tag",
+    "release:minor": "bun run scripts/release.ts minor --tag",
+    "release:major": "bun run scripts/release.ts major --tag",
+    "hooks:install": "git config core.hooksPath .githooks",
     "infra:up": "docker compose up -d --build pocketbase git-engine",
     "infra:down": "docker compose down",
     "backup": "bash ./scripts/backup.sh"
