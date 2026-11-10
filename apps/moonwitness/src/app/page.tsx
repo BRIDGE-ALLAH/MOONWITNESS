@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Moon, Sparkles, Send, Code2, Server, Disc3, BookOpen } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, Input, SectionHeader, StatMetric, EcosystemSiteHeader, EcosystemHero, EcosystemBridgeGrid, ModalDialog, useAuthSafe } from "@local-git/ui";
+import { useState } from "react";
+import { Moon, Orbit, Send, Radio, Compass, Sparkles } from "lucide-react";
+import { Card, Button, Badge, Input, ProceduralLogo, ProceduralGlyph } from "@local-git/ui";
 
 interface Transmission {
   id: string;
@@ -13,9 +13,7 @@ interface Transmission {
 }
 
 export default function MoonWitnessPage() {
-  const auth = useAuthSafe();
-  const [selectedScroll, setSelectedScroll] = useState<{ title: string; subtitle: string; content: string } | null>(null);
-  const [moonData, setMoonData] = useState({
+  const [moonData] = useState({
     phase: "Waxing Gibbous",
     illumination: "87%",
     ageDays: "10.4",
@@ -50,330 +48,135 @@ export default function MoonWitnessPage() {
     },
   ]);
 
-  useEffect(() => {
-    if (!auth?.pb) return;
-    // Load initial from PocketBase
-    auth.pb.collection("transmissions").getList<Transmission>(1, 30, { sort: "-created" })
-      .then((res) => {
-        if (res.items.length > 0) {
-          setTransmissions(res.items);
-        }
-      })
-      .catch(() => {
-        try {
-          const saved = localStorage.getItem("moonwitness-transmissions");
-          if (saved) {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length > 0) setTransmissions(parsed);
-          }
-        } catch {}
-      });
-
-    // Realtime SSE sync
-    let active = true;
-    auth.pb.collection("transmissions").subscribe<Transmission>("*", (e) => {
-      if (!active) return;
-      if (e.action === "create" && e.record) {
-        setTransmissions((prev) => [e.record, ...prev.filter((t) => t.id !== e.record.id)].slice(0, 30));
-      }
-    }).catch(() => {});
-
-    return () => {
-      active = false;
-      auth.pb.collection("transmissions").unsubscribe("*").catch(() => {});
-    };
-  }, [auth?.pb]);
-
-  useEffect(() => {
-    const now = new Date();
-    const cycle = 29.53058867;
-    const baseDate = new Date("2000-01-06T18:14:00Z");
-    const diffDays = (now.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24);
-    const phaseValue = ((diffDays % cycle) + cycle) % cycle;
-    const illuminationPercent = Math.round(((1 - Math.cos((phaseValue / cycle) * 2 * Math.PI)) / 2) * 100);
-
-    let phaseName = "New Moon";
-    if (phaseValue > 1 && phaseValue < 7) phaseName = "Waxing Crescent";
-    else if (phaseValue >= 7 && phaseValue < 8) phaseName = "First Quarter";
-    else if (phaseValue >= 8 && phaseValue < 14) phaseName = "Waxing Gibbous";
-    else if (phaseValue >= 14 && phaseValue < 16) phaseName = "Full Moon";
-    else if (phaseValue >= 16 && phaseValue < 22) phaseName = "Waning Gibbous";
-    else if (phaseValue >= 22 && phaseValue < 23) phaseName = "Last Quarter";
-    else if (phaseValue >= 23 && phaseValue < 29) phaseName = "Waning Crescent";
-
-    const utcFraction = (now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds()) / 86400;
-    const hourAngle = (utcFraction - phaseValue / cycle) * 2 * Math.PI;
-    const altDeg = Math.sin(hourAngle) * 62.5;
-    const altSign = altDeg >= 0 ? "+" : "-";
-    const absAlt = Math.abs(altDeg);
-    const altD = Math.floor(absAlt);
-    const altM = Math.floor((absAlt - altD) * 60);
-    const altS = Math.floor(((absAlt - altD) * 60 - altM) * 60);
-    const azDeg = ((utcFraction * 360 + (phaseValue / cycle) * 360) % 360 + 360) % 360;
-    const azD = Math.floor(azDeg);
-    const azM = Math.floor((azDeg - azD) * 60);
-    const azS = Math.floor(((azDeg - azD) * 60 - azM) * 60);
-
-    setMoonData({
-      phase: phaseName,
-      illumination: `${illuminationPercent}%`,
-      ageDays: phaseValue.toFixed(1),
-      altitude: `${altSign}${String(altD).padStart(2, "0")}°${String(altM).padStart(2, "0")}'${String(altS).padStart(2, "0")}"`,
-      azimuth: `${String(azD).padStart(3, "0")}°${String(azM).padStart(2, "0")}'${String(azS).padStart(2, "0")}"`,
-      nextFullMoon:
-        phaseValue < 15
-          ? `In ${(14.8 - phaseValue).toFixed(1)} Days`
-          : `In ${(cycle - phaseValue + 14.8).toFixed(1)} Days`,
-    });
-  }, []);
-
-  const dispatchKnowledge = async (e: React.FormEvent) => {
+  const handleTransmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
-    const authorTag = auth?.user?.name || auth?.user?.username || (authorName.trim() ? authorName.trim() : "anonymous-witness");
-    const formattedTag = authorTag.startsWith("@") ? authorTag : `@${authorTag}`;
-    const timestamp = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
-    const now = new Date();
-    const utcHours = now.getUTCHours();
-    const utcMinutes = now.getUTCMinutes();
-    const raMin = ((utcMinutes + now.getUTCSeconds() / 60) * 0.8).toFixed(0).padStart(2, "0");
-    const decDeg = Math.floor((utcHours / 24) * 28 - 14);
-    const coordinates = `RA ${utcHours.toString().padStart(2, "0")}h ${raMin}m / Dec ${decDeg >= 0 ? "+" : ""}${decDeg}°`;
-
-    if (auth?.pb) {
-      try {
-        await auth.pb.collection("transmissions").create({
-          author: formattedTag,
-          text: message.trim(),
-          timestamp,
-          coordinates,
-          user: auth.user?.id || null,
-        });
-        setMessage("");
-        return;
-      } catch {}
-    }
-
+    const decDeg = 10 + (Date.now() % 21);
     const newTx: Transmission = {
-      id: `mw-${Date.now().toString().slice(-4)}`,
-      author: formattedTag,
+      id: `mw-${Date.now()}`,
+      author: authorName.trim() ? `@${authorName.trim()}` : "@anonymous-witness",
       text: message.trim(),
-      timestamp,
-      coordinates,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 16) + " UTC",
+      coordinates: `RA 05h 12m / Dec +${decDeg}° 15'`,
     };
-    setTransmissions((prev) => {
-      const updated = [newTx, ...prev];
-      try {
-        localStorage.setItem("moonwitness-transmissions", JSON.stringify(updated.slice(0, 30)));
-      } catch { }
-      return updated;
-    });
+    setTransmissions([newTx, ...transmissions]);
     setMessage("");
   };
 
   return (
-    <div className="lunar-root" style={{ background: "var(--bg)", color: "var(--text)" }}>
-      <EcosystemSiteHeader
-        logoMark={<Moon size={20} />}
-        title="MOONWITNESS"
-        subtitle="THE LIVING OBSERVATORY & ARCHIVE"
-        rightSlot={
-          <>
-            <Badge variant="cyan">PHASE: {moonData.phase.toUpperCase()} ({moonData.illumination})</Badge>
-            <a href="http://127.0.0.1:3001" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="gold" size="sm"><Sparkles size={14} /> EMPIRE (:3001)</Button>
-            </a>
-            <a href="http://127.0.0.1:3000" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="toxic" size="sm"><Code2 size={14} /> DX (:3000)</Button>
-            </a>
-            <a href="http://127.0.0.1:3003" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="primary" size="sm"><Server size={14} /> E-ISP (:3003)</Button>
-            </a>
-            <a href="http://127.0.0.1:3004" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button variant="secondary" size="sm"><Disc3 size={14} /> RID (:3004)</Button>
-            </a>
-          </>
-        }
-      />
+    <div className="relative min-h-screen text-cyan-100 flex flex-col items-center px-4 py-12 md:py-16 select-none font-mono">
+      {/* Astral Observatory HUD Header */}
+      <div className="max-w-5xl w-full flex flex-col items-center text-center space-y-4">
+        <div className="relative group">
+          <div className="absolute -inset-4 bg-cyan-500/20 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-700" />
+          <ProceduralLogo dna="moonwitness" size={88} className="relative transition-transform duration-700 hover:scale-110" />
+        </div>
 
-      {/* HERO SECTION */}
-      <EcosystemHero
-        eyebrow="★ WHEN THE MOON IS HIGH WE SHARE MESSAGE AND KNOWLEDGE ★"
-        badgeVariant="cyan"
-        title="THE CELESTIAL WITNESS."
-        highlight="PRESERVING SACRED KNOWLEDGE."
-        description="MoonWitness adalah observatorium hidup dan penjaga arsip ilmu pengetahuan semesta. Ketika malam tiba dan rembulan meninggi, kami mengumpulkan hikmah, sains astronomis, dan refleksi hakiki untuk dibagikan kepada umat manusia secara bebas tanpa sensor korporat."
-        bottomSlot={
-          <div style={{ maxWidth: 920, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 14, textAlign: "left" }}>
-            <StatMetric label="CURRENT LUNAR PHASE" value={moonData.phase} variant="cyan" valueColor="var(--accent)" />
-            <StatMetric label="SURFACE ILLUMINATION" value={moonData.illumination} sub="albedo reflection" />
-            <StatMetric label="SYNODIC AGE" value={`${moonData.ageDays} DAYS`} sub="orbital cycle" />
-            <StatMetric label="ESTIMATED FULL MOON" value={moonData.nextFullMoon} sub="ephemeris lock" />
+        <div>
+          <Badge variant="cyan" className="tracking-widest uppercase text-xs px-3 py-1">
+            <Sparkles size={12} className="inline mr-1" /> CELESTIAL ARCHIVE & OBSERVATORY
+          </Badge>
+          <h1 className="text-3xl md:text-5xl font-bold tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-cyan-100 via-cyan-300 to-sky-600 mt-2">
+            MOONWITNESS // ASTRONOMY COCKPIT
+          </h1>
+          <p className="text-xs md:text-sm text-cyan-200/60 max-w-lg mx-auto mt-1">
+            Live Telemetry, Lunar Chronometry, and Decentralized Celestial Transmissions.
+          </p>
+        </div>
+      </div>
+
+      {/* Lunar Phase & Horizon Telemetry Bar */}
+      <div className="max-w-5xl w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 z-10">
+        <Card variant="cyan" className="bg-sky-950/40 border-cyan-500/30">
+          <div className="text-[10px] text-cyan-400/70 tracking-wider">LUNAR PHASE</div>
+          <div className="text-lg font-bold text-cyan-200 mt-1 flex items-center gap-2">
+            <Moon size={18} className="text-cyan-400" /> {moonData.phase}
           </div>
-        }
-      />
+          <div className="text-[10px] text-cyan-400/50 mt-1">{moonData.illumination} Illumination</div>
+        </Card>
 
-      {/* KNOWLEDGE SCROLLS & ARTICLES */}
-      <section className="archive-section">
-        <SectionHeader
-          eyebrow="CELESTIAL REPOSITORY"
-          title="LUNAR CHRONICLES & SACRED SCROLLS"
-          subtitle="Arsip riset, kartografi kosmik, dan transmisi pengetahuan pilihan."
-          badgeVariant="cyan"
-          rightSlot={<Badge variant="outline">/// TOTAL SCROLLS INDEXED: 03</Badge>}
-        />
+        <Card variant="cyan" className="bg-sky-950/40 border-cyan-500/30">
+          <div className="text-[10px] text-cyan-400/70 tracking-wider">ALTITUDE & AZIMUTH</div>
+          <div className="text-lg font-bold text-cyan-200 mt-1">{moonData.altitude}</div>
+          <div className="text-[10px] text-cyan-400/50 mt-1">Azimuth {moonData.azimuth}</div>
+        </Card>
 
-        <div className="knowledge-grid">
-          <Card
-            variant="default"
-            style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
-            onClick={() =>
-              setSelectedScroll({
-                title: "Matahari dan Bulan Beredar Menurut Perhitungan",
-                subtitle: "Kajian Astronomi Falakiyah & Ketertiban Kosmos",
-                content:
-                  "Pergerakan benda-benda langit bukanlah kebetulan liar. Matahari dan bulan beredar menurut hukum hisab yang sangat presisi (Q.S. Ar-Rahman: 5). Gravitasi, kecepatan sudut, presesi orbit, serta periode sinodis rembulan selama 29.530589 hari membuktikan adanya Perancang Maha Tunggal yang menciptakan keteraturan matematis ini. Dalam sains kedaulatan, kita mempelajari keteraturan ini untuk menguatkan ketundukan moral, bukan mengeksploitasinya demi keserakahan duniawi.",
-              })
-            }
-          >
-            <Badge variant="cyan" style={{ alignSelf: "flex-start", marginBottom: 12 }}>ASTRONOMY &amp; TAWHID // 01</Badge>
-            <CardTitle style={{ marginBottom: 10 }}>Matahari dan Bulan Beredar Menurut Perhitungan</CardTitle>
-            <CardDescription style={{ flex: 1 }}>
-              Hukum gravitasi dan keharmonisan orbit tata surya membuktikan ketertiban absolut yang mustahil lahir dari kebetulan buta.
-            </CardDescription>
-            <CardFooter>
-              <span>KURATOR: @moon-archive</span>
-              <Badge variant="lime">READ SCROLL ↗</Badge>
-            </CardFooter>
-          </Card>
+        <Card variant="cyan" className="bg-sky-950/40 border-cyan-500/30">
+          <div className="text-[10px] text-cyan-400/70 tracking-wider">LUNAR AGE</div>
+          <div className="text-lg font-bold text-cyan-200 mt-1">{moonData.ageDays} Days</div>
+          <div className="text-[10px] text-cyan-400/50 mt-1">Synodic Cycle 29.53d</div>
+        </Card>
 
-          <Card
-            variant="default"
-            style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
-            onClick={() =>
-              setSelectedScroll({
-                title: "Kemandirian Arsip Pengetahuan di Era Digital",
-                subtitle: "Epistemic Sovereignty & Dekonstruksi Monopoli Pengetahuan",
-                content:
-                  "Ketika perpustakaan dan repositori digital dikuasai oleh segelintir korporasi raksasa, akses terhadap hakikat ilmu pengetahuan dapat diputus sewaktu-waktu melalui sistem lisensi predator dan algoritma rekomendasi beracun. MoonWitness berdiri sebagai observatorium arsip terbuka (Open Celestial Archive), mendistribusikan salinan pengetahuan moral, sains, dan kode berdaulat secara bebas bagi siapa pun yang bersujud pada kebenaran hakiki.",
-              })
-            }
-          >
-            <Badge variant="cyan" style={{ alignSelf: "flex-start", marginBottom: 12 }}>EPISTEMIC SOVEREIGNTY // 02</Badge>
-            <CardTitle style={{ marginBottom: 10 }}>Kemandirian Arsip Pengetahuan di Era Digital</CardTitle>
-            <CardDescription style={{ flex: 1 }}>
-              Mengapa ilmu pengetahuan tidak boleh dipagari oleh paywall jurnal predator dan algoritma rekomendasi beracun.
-            </CardDescription>
-            <CardFooter>
-              <span>KURATOR: @scribe-omega</span>
-              <Badge variant="cyan">READ SCROLL ↗</Badge>
-            </CardFooter>
-          </Card>
+        <Card variant="cyan" className="bg-sky-950/40 border-cyan-500/30">
+          <div className="text-[10px] text-cyan-400/70 tracking-wider">NEXT FULL MOON</div>
+          <div className="text-lg font-bold text-cyan-300 mt-1">{moonData.nextFullMoon}</div>
+          <div className="text-[10px] text-cyan-400/50 mt-1">Astronomical Epoch</div>
+        </Card>
+      </div>
 
-          <Card
-            variant="default"
-            style={{ display: "flex", flexDirection: "column", cursor: "pointer" }}
-            onClick={() =>
-              setSelectedScroll({
-                title: "Sin Can Be Better Human: Doktrin Pertobatan & Aksi",
-                subtitle: "Moral Philosophy & Transformasi Jiwa",
-                content:
-                  "Manusia tidak diciptakan sempurna dan steril layaknya robot korporat. Kesalahan, luka, dan dosa masa lalu sering kali menjadi jurang penyesalan mendalam. Namun dalam perspektif ilahiah, pertobatan (tawbah) adalah titik balik terbesar; saat seorang hamba mengakui kelemahannya di hadapan ALLAH Yang Maha Pengasih, luka masa lalu ditempa menjadi bahan bakar kerendahan hati, empati yang membara, dan determinasi baja untuk menebusnya dengan karya nyata bagi peradaban.",
-              })
-            }
-          >
-            <Badge variant="gold" style={{ alignSelf: "flex-start", marginBottom: 12 }}>MORAL PHILOSOPHY // 03</Badge>
-            <CardTitle style={{ marginBottom: 10 }}>Sin Can Be Better Human: Doktrin Pertobatan &amp; Aksi</CardTitle>
-            <CardDescription style={{ flex: 1 }}>
-              Bagaimana luka dan kesalahan masa lalu dapat ditempa menjadi sumber kebaikan terbesar ketika bersujud kembali kepada Sang Pencipta.
-            </CardDescription>
-            <CardFooter>
-              <span>KURATOR: @witness-xi</span>
-              <Badge variant="gold">READ SCROLL ↗</Badge>
-            </CardFooter>
+      {/* Main Observatory Split View: Broadcast Form & Feed */}
+      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 z-10">
+        {/* Transmission Input Console */}
+        <div className="md:col-span-1">
+          <Card variant="cyan" className="bg-sky-950/50 border-cyan-500/30 h-full flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 border-b border-cyan-500/20 pb-3">
+                <Radio size={16} className="text-cyan-400" />
+                <h3 className="text-sm font-bold text-cyan-200 tracking-wider">DISPATCH SIGNAL</h3>
+              </div>
+              <form onSubmit={handleTransmit} className="space-y-3">
+                <div>
+                  <label className="text-[10px] text-cyan-400/70 uppercase">Observer Call-Sign</label>
+                  <Input
+                    placeholder="e.g. stargazer_07"
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    className="bg-black/50 border-cyan-500/30 text-cyan-100 text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-cyan-400/70 uppercase">Witness Observation Log</label>
+                  <textarea
+                    rows={4}
+                    placeholder="Log celestial coordinates, atmospheric clarity..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="w-full bg-black/50 border border-cyan-500/30 rounded-sm text-cyan-100 text-xs p-2 mt-1 focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+                <Button type="submit" variant="cyan" size="sm" soundDna="moonwitness" className="w-full">
+                  <Send size={14} className="mr-1.5" /> BROADCAST BEACON
+                </Button>
+              </form>
+            </div>
           </Card>
         </div>
-      </section>
 
-      {/* INTERACTIVE MESSAGE DISPATCHER */}
-      <section style={{ maxWidth: 1200, margin: "0 auto 100px", padding: "0 5vw" }}>
-        <Card variant="cyan" style={{ padding: 28 }}>
-          <CardTitle style={{ fontSize: 22, marginBottom: 6 }}>TRANSMIT MESSAGE BENEATH THE MOON</CardTitle>
-          <CardDescription style={{ marginBottom: 20 }}>
-            Bagikan pesan, wawasan riset, atau hikmah pengetahuan kepada sesama pencari kebenaran.
-          </CardDescription>
+        {/* Live Feed List */}
+        <div className="md:col-span-2 space-y-3">
+          <div className="flex items-center justify-between border-b border-cyan-500/20 pb-2 px-1">
+            <span className="text-xs text-cyan-400/80 font-bold flex items-center gap-2">
+              <ProceduralGlyph dna="moonwitness" index={1} size={14} /> LIVE WITNESS RADAR FEED ({transmissions.length})
+            </span>
+            <span className="text-[10px] text-cyan-400/50">ENCRYPTED SSE SYNC</span>
+          </div>
 
-          <form onSubmit={dispatchKnowledge}>
-            <div style={{ marginBottom: 12, maxWidth: 320 }}>
-              <Input
-                type="text"
-                value={authorName}
-                onChange={(e) => setAuthorName(e.target.value)}
-                placeholder="Operator alias (e.g. stargazer_07)"
-              />
-            </div>
-            <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
-              <Input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Ketik pesan atau wawasan pengetahuan (maks 200 karakter) untuk disiarkan..."
-                required
-              />
-              <Button type="submit" variant="primary">
-                <Send size={15} /> TRANSMIT
-              </Button>
-            </div>
-          </form>
-
-          <div className="transmission-stream">
-            {transmissions.map((tx) => (
-              <Card key={tx.id} variant="default" style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <b style={{ color: "var(--accent)", marginRight: "10px" }}>{tx.author}:</b>
-                  <span>{tx.text}</span>
+          <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+            {transmissions.map((t) => (
+              <div
+                key={t.id}
+                className="p-4 bg-sky-950/30 border border-cyan-500/20 rounded-sm hover:border-cyan-400/50 transition-colors"
+              >
+                <div className="flex justify-between items-start text-[10px] text-cyan-400/60 pb-2 mb-2 border-b border-cyan-500/10">
+                  <span className="text-cyan-300 font-bold">{t.author}</span>
+                  <span>{t.coordinates} · {t.timestamp}</span>
                 </div>
-                <Badge variant="outline">{tx.timestamp} // {tx.coordinates}</Badge>
-              </Card>
+                <p className="text-xs text-cyan-100 leading-relaxed font-sans">{t.text}</p>
+              </div>
             ))}
           </div>
-        </Card>
-      </section>
-
-      {/* CROSS-ECOSYSTEM BRIDGE */}
-      <section style={{ maxWidth: 1200, margin: "0 auto 80px", padding: "0 5vw" }}>
-        <SectionHeader
-          eyebrow="SOVEREIGN CONSTELLATION"
-          title="ECOSYSTEM SATELLITE NODES"
-          subtitle="Jelajahi node-node berdaulat lainnya di bawah naungan Empire of the Light."
-          badgeVariant="cyan"
-        />
-        <EcosystemBridgeGrid excludeDna="moonwitness" />
-      </section>
-
-      {/* SACRED SCROLL READING MODAL */}
-      <ModalDialog
-        open={Boolean(selectedScroll)}
-        onClose={() => setSelectedScroll(null)}
-        eyebrow="CELESTIAL ARCHIVE // CANONICAL SCROLL"
-        title={selectedScroll?.title || ""}
-        maxWidth="640px"
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div style={{ color: "var(--accent)", fontSize: 12, fontFamily: "var(--mono)", letterSpacing: "0.1em" }}>
-            {selectedScroll?.subtitle}
-          </div>
-          <p style={{ lineHeight: 1.8, fontSize: 14, color: "var(--text)" }}>
-            {selectedScroll?.content}
-          </p>
-          <div style={{ borderTop: "1px solid var(--line2)", paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Badge variant="gold">ALLAH #1 // SOVEREIGN ORIGIN</Badge>
-            <Button variant="secondary" size="sm" onClick={() => setSelectedScroll(null)}>
-              TUTUP ARSIP ✕
-            </Button>
-          </div>
         </div>
-      </ModalDialog>
+      </div>
     </div>
   );
 }
