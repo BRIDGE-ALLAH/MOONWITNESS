@@ -153,6 +153,13 @@ pub fn run() {
             commands::pppoe::pppoe_create,
             commands::pppoe::pppoe_delete,
             commands::pppoe::pppoe_stats,
+            commands::pppoe::pppoe_list_sessions,
+            commands::pppoe::pppoe_get_session,
+            commands::pppoe::pppoe_disconnect_session,
+            commands::pppoe::pppoe_radius_logs,
+            commands::pppoe::pppoe_nas_list,
+            commands::pppoe::pppoe_nas_config,
+            commands::pppoe::pppoe_nas_update,
             // Tenant commands
             commands::tenant::tenant_list,
             commands::tenant::tenant_create,
