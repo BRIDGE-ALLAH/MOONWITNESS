@@ -3,9 +3,12 @@ use serde::{Deserialize, Serialize};
 use tauri::command;
 use crate::state::AppState;
 use tauri::State;
-use surrealdb::sql::{Value, Object, Thing};
+use surrealdb::sql::{Value, Thing};
 use chrono::Utc;
-use std::process::Command;
+use std::collections::BTreeMap;
+use std::os::windows::ffi::OsStrExt;
+use windows::Win32::Storage::FileSystem::GetDiskFreeSpaceExW;
+use windows::Win32::Foundation::HANDLE;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DiagnosticResult {
@@ -73,12 +76,11 @@ pub async fn diagnostics_run(
 
     // Store in database
     let db = &state.db;
-    let record = Object::from_iter(vec![
-        ("results".to_string(), Value::from(serde_json::to_value(&results).unwrap())),
-        ("overall".to_string(), Value::from(overall)),
-        ("started_at".to_string(), Value::from(started_at.clone())),
-        ("completed_at".to_string(), Value::from(completed_at.clone())),
-    ]);
+    let mut record = BTreeMap::new();
+    record.insert("results".to_string(), Value::from(serde_json::to_value(&results).unwrap()));
+    record.insert("overall".to_string(), Value::from(overall));
+    record.insert("started_at".to_string(), Value::from(started_at.clone()));
+    record.insert("completed_at".to_string(), Value::from(completed_at.clone()));
     let _ = db.create("diagnostics_runs").content(Value::from(record)).await;
 
     Ok(DiagnosticsRun {
@@ -143,8 +145,10 @@ async fn check_disk_space() -> DiagnosticResult {
 
 async fn check_memory() -> DiagnosticResult {
     let start = std::time::Instant::now();
-    let total_mem = sysinfo::System::new_all().total_memory();
-    let used_mem = sysinfo::System::new_all().used_memory();
+    let mut sys = sysinfo::System::new_all();
+    sys.refresh_all();
+    let total_mem = sys.total_memory();
+    let used_mem = sys.used_memory();
     let free_gb = (total_mem - used_mem) / (1024 * 1024 * 1024);
     DiagnosticResult {
         id: uuid::Uuid::new_v4().to_string(),
@@ -224,11 +228,6 @@ async fn check_git_repos(db: &crate::storage::surrealdb::SurrealLocal) -> Diagno
 }
 
 fn get_free_space(path: &std::path::Path) -> Option<u64> {
-    use std::ffi::OsStr;
-    use std::os::windows::ffi::OsStrExt;
-    use windows::Win32::Storage::FileSystem::GetDiskFreeSpaceExW;
-    use windows::Win32::Foundation::HANDLE;
-
     let wide_path: Vec<u16> = path.as_os_str().encode_utf16().chain(std::iter::once(0)).collect();
     let mut free_bytes: u64 = 0;
     let mut total_bytes: u64 = 0;

@@ -3,7 +3,8 @@ use serde::{Deserialize, Serialize};
 use tauri::command;
 use crate::state::AppState;
 use tauri::State;
-use surrealdb::sql::{Value, Object, Thing};
+use surrealdb::sql::{Value, Thing};
+use std::collections::BTreeMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Setting {
@@ -32,10 +33,9 @@ pub async fn settings_set(
     state: State<'_, AppState>,
 ) -> Result<Setting, String> {
     let db = &state.db;
-    let record = Object::from_iter(vec![
-        ("key".to_string(), Value::from(key.clone())),
-        ("value".to_string(), Value::from(value.clone())),
-    ]);
+    let mut record = BTreeMap::new();
+    record.insert("key".to_string(), Value::from(key.clone()));
+    record.insert("value".to_string(), Value::from(value.clone()));
     let created: Vec<Value> = db.create("settings").content(Value::from(record)).await.map_err(|e| e.to_string())?;
     let setting = created.first().ok_or_else(|| "No setting created".to_string())?;
     Ok(Setting {

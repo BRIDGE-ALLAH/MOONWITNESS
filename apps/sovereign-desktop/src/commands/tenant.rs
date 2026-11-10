@@ -3,10 +3,12 @@ use serde::{Deserialize, Serialize};
 use tauri::command;
 use crate::state::AppState;
 use tauri::State;
-use surrealdb::sql::{Value, Object, Thing};
+use surrealdb::sql::{Value, Thing};
 use chrono::Utc;
 use ring::rand::SecureRandom;
 use base64::Engine;
+use sha2::Digest;
+use std::collections::BTreeMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Tenant {
@@ -57,13 +59,12 @@ pub async fn tenant_create(
     state: State<'_, AppState>,
 ) -> Result<Tenant, String> {
     let db = &state.db;
-    let record = surrealdb::sql::Object::from_iter(vec![
-        ("name".to_string(), Value::from(name.clone())),
-        ("slug".to_string(), Value::from(slug.clone())),
-        ("plan".to_string(), Value::from(plan.clone())),
-        ("usage".to_string(), Value::from(serde_json::json!({"api_calls": 0, "storage_mb": 0, "bandwidth_gb": 0}))),
-        ("created_at".to_string(), Value::from(Utc::now().to_rfc3339())),
-    ]);
+    let mut record = BTreeMap::new();
+    record.insert("name".to_string(), Value::from(name.clone()));
+    record.insert("slug".to_string(), Value::from(slug.clone()));
+    record.insert("plan".to_string(), Value::from(plan.clone()));
+    record.insert("usage".to_string(), Value::from(serde_json::json!({"api_calls": 0, "storage_mb": 0, "bandwidth_gb": 0})));
+    record.insert("created_at".to_string(), Value::from(Utc::now().to_rfc3339()));
     let created: Vec<Value> = db.create("tenants").content(Value::from(record)).await.map_err(|e| e.to_string())?;
     let tenant = created.first().ok_or_else(|| "No tenant created".to_string())?;
     Ok(Tenant {
@@ -85,7 +86,7 @@ pub async fn tenant_update(
 ) -> Result<Tenant, String> {
     let db = &state.db;
     let thing: Thing = format!("tenants:{}", id).parse().map_err(|e| e.to_string())?;
-    let mut data = Object::new();
+    let mut data = BTreeMap::new();
     if let Some(n) = name { data.insert("name".to_string(), Value::from(n)); }
     if let Some(p) = plan { data.insert("plan".to_string(), Value::from(p)); }
     let updated: Option<Value> = db.update(thing).content(Value::from(data)).await.map_err(|e| e.to_string())?;
@@ -120,7 +121,7 @@ pub async fn tenant_usage(
     let thing: Thing = format!("tenants:{}", id).parse().map_err(|e| e.to_string())?;
     let tenant: Option<Value> = db.select(thing).await.map_err(|e| e.to_string())?;
     let tenant = tenant.ok_or_else(|| "Tenant not found".to_string())?;
-    let usage = tenant.get("usage").cloned().unwrap_or(Value::Null);
+    let usage = tenant.get("usage").cloned().unwrap_or(Value::None);
     Ok(TenantUsage {
         tenant_id: id,
         api_calls: usage.get("api_calls").and_then(|v| v.as_int()).unwrap_or(0),
@@ -148,15 +149,14 @@ pub async fn api_key_create(
 
     let expires_at = expires_days.map(|days| Utc::now() + chrono::Duration::days(days));
 
-    let record = surrealdb::sql::Object::from_iter(vec![
-        ("tenant_id".to_string(), Value::from(format!("tenants:{}", tenant_id))),
-        ("name".to_string(), Value::from(name.clone())),
-        ("key_hash".to_string(), Value::from(key_hash.clone())),
-        ("permissions".to_string(), Value::from(permissions.clone())),
-        ("expires_at".to_string(), expires_at.map(|dt| Value::from(dt.to_rfc3339())).unwrap_or(Value::Null)),
-        ("last_used".to_string(), Value::Null),
-        ("created_at".to_string(), Value::from(Utc::now().to_rfc3339())),
-    ]);
+    let mut record = BTreeMap::new();
+    record.insert("tenant_id".to_string(), Value::from(format!("tenants:{}", tenant_id)));
+    record.insert("name".to_string(), Value::from(name.clone()));
+    record.insert("key_hash".to_string(), Value::from(key_hash.clone()));
+    record.insert("permissions".to_string(), Value::from(permissions.clone()));
+    record.insert("expires_at".to_string(), expires_at.map(|dt| Value::from(dt.to_rfc3339())).unwrap_or(Value::None));
+    record.insert("last_used".to_string(), Value::None);
+    record.insert("created_at".to_string(), Value::from(Utc::now().to_rfc3339()));
     let created: Vec<Value> = db.create("api_keys").content(Value::from(record)).await.map_err(|e| e.to_string())?;
     let key = created.first().ok_or_else(|| "No API key created".to_string())?;
     Ok(ApiKey {
