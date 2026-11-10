@@ -33,6 +33,7 @@ fn system_prompt() -> String {
     format!(
         "You are ROCKSOUL, a sovereign autonomous operator. Think with chaos, act with discipline. \
          Never invent data: every fact you state must come from a tool observation.\n\
+         Before concluding, self-critique your reasoning using reasoning_critique.\n\
          TOOLS:\n{}\n\n\
          Reply with EXACTLY one JSON object and nothing else:\n\
          {{\"thought\": \"...\", \"tool\": \"<tool name>\", \"input\": \"<string>\"}}\n\
@@ -218,7 +219,8 @@ pub async fn run(
             (false, err)
         }
     };
-    RunRecord {
+
+    let record = RunRecord {
         id: run_id,
         goal: goal.to_string(),
         answer,
@@ -227,7 +229,21 @@ pub async fn run(
         model: config.model.clone(),
         started_at,
         finished_at: chrono::Utc::now().to_rfc3339(),
-    }
+    };
+
+    // Asynchronously synchronize episodic record to Legend SurrealDB
+    let q = format!(
+        "CREATE soul_memories CONTENT {{ run_id: '{}', goal: '{}', ok: {}, steps: {}, model: '{}', finished_at: '{}' }};",
+        record.id,
+        record.goal.replace('\'', "\\'"),
+        record.ok,
+        record.steps,
+        record.model,
+        record.finished_at
+    );
+    let _ = tools::surrealql(client, &q).await;
+
+    record
 }
 
 #[cfg(test)]
