@@ -40,6 +40,7 @@ export interface AuthContextValue {
   logout: () => void;
   loginWithPassword: (identity: string, pass: string) => Promise<EcosystemUser>;
   registerWithPassword: (email: string, pass: string, username?: string, name?: string) => Promise<EcosystemUser>;
+  lastEvent: { collection: string; action: string; timestamp: number } | null;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -51,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
   const [token, setToken] = useState<string | null>(() => pb.authStore.token || null);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [lastEvent, setLastEvent] = useState<{ collection: string; action: string; timestamp: number } | null>(null);
 
   useEffect(() => {
     const unsub = pb.authStore.onChange((nextTok, nextRecord) => {
@@ -58,6 +60,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser((nextRecord as EcosystemUser | null) || null);
     }, true);
     return () => unsub();
+  }, [pb]);
+
+  useEffect(() => {
+    let active = true;
+    const collections = ["transmissions", "soul_patches", "repositories"];
+    collections.forEach((col) => {
+      pb.collection(col).subscribe("*", (e) => {
+        if (!active) return;
+        setLastEvent({ collection: col, action: e.action, timestamp: Date.now() });
+      }).catch(() => {});
+    });
+    return () => {
+      active = false;
+      collections.forEach((col) => {
+        pb.collection(col).unsubscribe("*").catch(() => {});
+      });
+    };
   }, [pb]);
 
   const openLoginModal = useCallback(() => setLoginModalOpen(true), []);
@@ -109,6 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     loginWithPassword,
     registerWithPassword,
+    lastEvent,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

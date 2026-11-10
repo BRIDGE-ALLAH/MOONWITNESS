@@ -58,6 +58,24 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
         <span style={{ color: "var(--muted)" }}>
           [{SKINS[skinId]?.label || "GRUNGE"} · {mode.toUpperCase()}]
         </span>
+        {auth?.lastEvent && (
+          <span
+            style={{
+              padding: "2px 6px",
+              background: "rgba(0, 255, 102, 0.15)",
+              border: "1px solid #00ff66",
+              color: "#00ff66",
+              borderRadius: "var(--radius, 0px)",
+              fontSize: "9px",
+              fontWeight: 800,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            ● LIVE: {auth.lastEvent.collection.toUpperCase()} {auth.lastEvent.action.toUpperCase()}
+          </span>
+        )}
       </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", maxWidth: "100%", overflowX: "auto" }}>

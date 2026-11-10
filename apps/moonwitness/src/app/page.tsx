@@ -50,16 +50,38 @@ export default function MoonWitnessPage() {
   ]);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("moonwitness-transmissions");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setTransmissions(parsed);
+    if (!auth?.pb) return;
+    // Load initial from PocketBase
+    auth.pb.collection("transmissions").getList<Transmission>(1, 30, { sort: "-created" })
+      .then((res) => {
+        if (res.items.length > 0) {
+          setTransmissions(res.items);
         }
+      })
+      .catch(() => {
+        try {
+          const saved = localStorage.getItem("moonwitness-transmissions");
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) setTransmissions(parsed);
+          }
+        } catch {}
+      });
+
+    // Realtime SSE sync
+    let active = true;
+    auth.pb.collection("transmissions").subscribe<Transmission>("*", (e) => {
+      if (!active) return;
+      if (e.action === "create" && e.record) {
+        setTransmissions((prev) => [e.record, ...prev.filter((t) => t.id !== e.record.id)].slice(0, 30));
       }
-    } catch { }
-  }, []);
+    }).catch(() => {});
+
+    return () => {
+      active = false;
+      auth.pb.collection("transmissions").unsubscribe("*").catch(() => {});
+    };
+  }, [auth?.pb]);
 
   useEffect(() => {
     const now = new Date();
@@ -91,16 +113,34 @@ export default function MoonWitnessPage() {
     });
   }, []);
 
-  const dispatchKnowledge = (e: React.FormEvent) => {
+  const dispatchKnowledge = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
     const authorTag = auth?.user?.name || auth?.user?.username || (authorName.trim() ? authorName.trim() : "anonymous-witness");
+    const formattedTag = authorTag.startsWith("@") ? authorTag : `@${authorTag}`;
+    const timestamp = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
+    const coordinates = `RA 05h ${(Math.random() * 50).toFixed(0).padStart(2, "0")}m / Dec +${(Math.random() * 20).toFixed(0)}°`;
+
+    if (auth?.pb) {
+      try {
+        await auth.pb.collection("transmissions").create({
+          author: formattedTag,
+          text: message.trim(),
+          timestamp,
+          coordinates,
+          user: auth.user?.id || null,
+        });
+        setMessage("");
+        return;
+      } catch {}
+    }
+
     const newTx: Transmission = {
       id: `mw-${Date.now().toString().slice(-4)}`,
-      author: authorTag.startsWith("@") ? authorTag : `@${authorTag}`,
+      author: formattedTag,
       text: message.trim(),
-      timestamp: new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC",
-      coordinates: `RA 05h ${(Math.random() * 50).toFixed(0).padStart(2, "0")}m / Dec +${(Math.random() * 20).toFixed(0)}°`,
+      timestamp,
+      coordinates,
     };
     setTransmissions((prev) => {
       const updated = [newTx, ...prev];
