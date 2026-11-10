@@ -11,21 +11,8 @@ permissions:
 
 jobs:
   build-desktop:
-    name: Build & Release Sovereign Desktop
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: 'windows-latest'
-            args: ''
-            target: 'x86_64-pc-windows-msvc'
-            artifact_name: 'Sovereign-Desktop-Setup.exe'
-          - platform: 'ubuntu-22.04'
-            args: ''
-            target: 'x86_64-unknown-linux-gnu'
-            artifact_name: 'sovereign-desktop.AppImage'
-
-    runs-on: ${{ matrix.platform }}
+    name: Build & Release Sovereign Windows Desktop
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Repository
@@ -39,13 +26,7 @@ jobs:
       - name: Install Rust Stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
-
-      - name: Install Linux Dependencies
-        if: matrix.platform == 'ubuntu-22.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+          targets: x86_64-pc-windows-msvc
 
       - name: Install Node & Workspace Dependencies
         run: bun install
@@ -67,8 +48,6 @@ jobs:
           fail_on_unmatched_files: false
           files: |
             apps/sovereign-desktop/target/release/sovereign-desktop.exe
-            apps/sovereign-desktop/target/release/sovereign-desktop
             target/release/sovereign-desktop.exe
-            target/release/sovereign-desktop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
