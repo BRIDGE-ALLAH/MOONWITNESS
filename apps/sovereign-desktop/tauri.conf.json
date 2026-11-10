@@ -31,7 +31,13 @@
     "active": true,
     "targets": ["msi"],
     "publisher": "CN=Sovereign",
-    "externalBin": []
+    "externalBin": [
+      "bin/git-engine.exe",
+      "bin/arsy.exe",
+      "bin/legend.exe",
+      "bin/pocketbase.exe",
+      "bin/radius.exe"
+    ]
   },
   "plugins": {
     "fs": {
