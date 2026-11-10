@@ -132,6 +132,10 @@ pub fn run() {
             commands::mesh::mesh_restart,
             commands::mesh::mesh_logs,
             commands::mesh::mesh_health,
+            commands::mesh::mesh_get_config,
+            commands::mesh::mesh_update_config,
+            commands::mesh::mesh_get_port_map,
+            commands::mesh::mesh_export_diagnostics,
             // SurrealDB commands
             commands::surreal::surreal_query,
             commands::surreal::surreal_create,

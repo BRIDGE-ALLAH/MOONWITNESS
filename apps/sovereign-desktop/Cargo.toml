@@ -87,6 +87,9 @@ dirs = "5"
 # System info for diagnostics
 sysinfo = "0.30"
 
+# ZIP for diagnostic bundles
+zip = "0.6"
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 

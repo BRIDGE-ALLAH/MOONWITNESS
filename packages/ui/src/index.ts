@@ -15,3 +15,8 @@ export * from "./engine/audio/sound-engine";
 export * from "./engine/audio/use-dna-sound";
 export * from "./engine/living-canvas/living-surface";
 export * from "./assets/procedural-logo";
+
+// Block-Level Design System & Procedural Vectors (M1)
+export * from "./blocks";
+export * from "./vectors";
+

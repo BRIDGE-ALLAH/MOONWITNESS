@@ -2,7 +2,7 @@
 
 **Status**: Active Development
 **Target**: Production-ready offline-first Windows desktop app
-**Quality Gate**: un run gate must pass (zero-slop, types, tests, secrets, rust)
+**Quality Gate**: \un run gate\ must pass (zero-slop, types, tests, secrets, rust)
 
 ---
 
@@ -25,54 +25,27 @@
 ## Phase 1: Core Backend Commands (In Progress)
 
 ### 1.1 Git Commands (src/commands/git.rs)
-- [ ] git_list_repos() - List registered repos from SurrealDB
-- [ ] git_register_repo(path, name, remote_url?) - Add repo to registry
-- [ ] git_open_repo(path) - Validate repo, return status (branch, ahead/behind, dirty)
-- [ ] git_log(repo_path, limit?, offset?) - Paginated commit history via git-engine
-- [ ] git_diff(repo_path, commit_sha?) - Diff vs HEAD or between commits
-- [ ] git_branch_list(repo_path) - Local + remote branches
-- [ ] git_branch_create(repo_path, name, start_point?) - Create branch
-- [ ] git_branch_delete(repo_path, name, force?) - Delete branch
-- [ ] git_checkout(repo_path, target) - Switch branch/commit
-- [ ] git_status(repo_path) - Working tree status (staged/unstaged/untracked)
-- [ ] git_add(repo_path, paths[]) - Stage files
-- [ ] git_commit(repo_path, message, sign?) - Create commit
-- [ ] git_push(repo_path, remote?, branch?, force?) - Push via git-engine
-- [ ] git_pull(repo_path, remote?, branch?) - Pull via git-engine
-- [ ] git_fetch(repo_path, remote?) - Fetch remotes
-- [ ] git_remote_list(repo_path) - List remotes with URLs
-- [ ] git_remote_add(repo_path, name, url) - Add remote
-- [ ] git_stash_list(repo_path) - List stashes
-- [ ] git_stash_push/pop/drop(repo_path, message?) - Stash operations
-- [ ] git_blame(repo_path, file, start_line, end_line) - Line annotations
-- [ ] git_show(repo_path, commit_sha) - Commit details + diff
-- [x] git_repo_init(path, name) - Initialize new git repository
-- [x] git_repo_open(path) - Open existing repository
-- [x] git_repo_list() - List registered repos (placeholder)
-- [x] git_repo_remove(id) - Remove repo from registry (placeholder)
-- [x] git_commit_create(repo_path, message, files[]) - Create commit with staged files
-- [x] git_branch_list(repo_path) - List local + remote branches
-- [x] git_branch_create(repo_path, branch_name, from_commit?) - Create branch
-- [x] git_branch_delete(repo_path, branch_name) - Delete branch
-- [x] git_status(repo_path) - Working tree status
-- [x] git_diff(repo_path, file, staged) - Diff vs HEAD or index
-- [x] git_log(repo_path, limit) - Paginated commit history
+- [x] git_list_repos() - List registered repos from SurrealDB
+- [x] git_register_repo(path, name, remote_url?) - Add repo to registry
+- [x] git_open_repo(path) - Validate repo, return status (branch, ahead/behind, dirty)
+- [x] git_log(repo_path, limit?, offset?) - Paginated commit history via git-engine
+- [x] git_diff(repo_path, commit_sha?) - Diff vs HEAD or between commits
+- [x] git_branch_list(repo_path) - Local + remote branches
+- [x] git_branch_create(repo_path, name, start_point?) - Create branch
+- [x] git_branch_delete(repo_path, name, force?) - Delete branch
+- [x] git_checkout(repo_path, target) - Switch branch/commit
+- [x] git_status(repo_path) - Working tree status (staged/unstaged/untracked)
+- [x] git_add(repo_path, paths[]) - Stage files
+- [x] git_commit(repo_path, message, sign?) - Create commit
+- [x] git_push(repo_path, remote?, branch?, force?) - Push via git-engine
+- [x] git_pull(repo_path, remote?, branch?) - Pull via git-engine
+- [x] git_fetch(repo_path, remote?) - Fetch remotes
 - [x] git_remote_list(repo_path) - List remotes with URLs
 - [x] git_remote_add(repo_path, name, url) - Add remote
-- [x] git_remote_remove(repo_path, name) - Remove remote
-- [x] git_fetch(repo_path, remote) - Fetch remotes
-- [x] git_pull(repo_path, remote, branch) - Pull from remote
-- [x] git_push(repo_path, remote, branch) - Push to remote
 - [x] git_stash_list(repo_path) - List stashes
-- [x] git_stash_create(repo_path, message) - Create stash
-- [x] git_stash_pop(repo_path, index) - Pop stash
-- [x] git_stash_drop(repo_path, index) - Drop stash
-- [ ] git_checkout(repo_path, target) - Switch branch/commit
-- [ ] git_add(repo_path, paths[]) - Stage files
-- [ ] git_blame(repo_path, file, start_line, end_line) - Line annotations
-- [ ] git_show(repo_path, commit_sha) - Commit details + diff
-- [ ] git_register_repo(path, name, remote_url?) - Register repo in SurrealDB
-- [ ] git_list_repos() - List registered repos from SurrealDB
+- [x] git_stash_push/pop/drop(repo_path, message?) - Stash operations
+- [x] git_blame(repo_path, file, start_line, end_line) - Line annotations
+- [x] git_show(repo_path, commit_sha) - Commit details + diff
 
 ### 1.2 Service/Mesh Commands (src/commands/mesh.rs)
 - [ ] mesh_get_all_health() - HealthStatus[] for all 5 sidecars
