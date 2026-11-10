@@ -23,8 +23,14 @@ jobs:
         with:
           bun-version-file: package.json
       - run: bun install --frozen-lockfile
-      - name: Zero-Slop AST & Manifest Sync Gate
+      - name: Zero-Slop AST, 16-Manifest Sync & Agent Parity Gate
         run: bun run scripts/gate.ts --hygiene-only
+      - name: Autonomous Route, Auth & Test Coverage Radar
+        run: |
+          echo "### 🛰️ Sovereign Autonomous Radar Report" >> "$GITHUB_STEP_SUMMARY"
+          echo '```text' >> "$GITHUB_STEP_SUMMARY"
+          bun run radar | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
       - run: bun run check
       - run: bun run test
       - run: bun run build:all

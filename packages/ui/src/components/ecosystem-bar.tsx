@@ -32,7 +32,8 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
   const skinId = ctx?.theme.skin || "grunge";
 
   return (
-    <div
+    <nav
+      aria-label="Sovereign Ecosystem Global Navigation"
       style={{
         background: "var(--panel, #070707)",
         color: "var(--text, #fff)",
@@ -57,6 +58,18 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
         </span>
         <span style={{ color: "var(--muted)" }}>
           [{SKINS[skinId]?.label || "GRUNGE"} · {mode.toUpperCase()}]
+        </span>
+        <span
+          title="Sovereign Data Planes: PocketBase (:8091) · ARSY (:4000) · Legend SurrealDB (:8092)"
+          style={{
+            padding: "2px 6px",
+            border: "1px solid var(--line2, #333)",
+            color: "var(--muted)",
+            fontSize: "9px",
+            fontWeight: 700,
+          }}
+        >
+          MESH: PB:8091 · ARSY:4000 · LEGEND:8092
         </span>
         {auth?.lastEvent && (
           <span
@@ -85,6 +98,8 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
             <a
               key={node.dna}
               href={node.url}
+              aria-current={isCurrent ? "page" : undefined}
+              title={`${node.short} — ${node.tag} (${node.port})`}
               style={{
                 textDecoration: "none",
                 padding: "3px 8px",
@@ -183,7 +198,7 @@ export function EcosystemTopBar({ currentDna }: { currentDna?: AppDnaId }) {
           </button>
         )}
       </div>
-    </div>
+    </nav>
   );
 }
 

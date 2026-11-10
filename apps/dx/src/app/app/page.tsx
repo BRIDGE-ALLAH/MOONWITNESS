@@ -628,13 +628,40 @@ export default function AppPage() {
                 </div>
 
                 <div style={{ display: "grid", gap: 16 }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                    <span style={{ fontSize: "10px", fontWeight: 800, color: "var(--muted)", letterSpacing: "0.08em" }}>
+                      PRESETS:
+                    </span>
+                    {[
+                      { label: "PPPoE Sessions", sql: "SELECT * FROM pppoe_sessions ORDER BY updated_at DESC LIMIT 25;" },
+                      { label: "Session Count", sql: "SELECT count() AS total FROM pppoe_sessions GROUP ALL;" },
+                      { label: "DB Schema Info", sql: "INFO FOR DB;" },
+                      { label: "Telemetry Events", sql: "SELECT * FROM telemetry_events ORDER BY updated_at DESC LIMIT 25;" },
+                    ].map((preset) => (
+                      <Button
+                        key={preset.label}
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setLegendQuery(preset.sql)}
+                      >
+                        {preset.label}
+                      </Button>
+                    ))}
+                  </div>
                   <div>
                     <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "1px", color: "var(--muted)", display: "block", marginBottom: 6 }}>
-                      SURREALQL STATEMENT:
+                      SURREALQL STATEMENT (CTRL+ENTER TO EXECUTE):
                     </label>
                     <Textarea
                       value={legendQuery}
                       onChange={(e) => setLegendQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                          e.preventDefault();
+                          runLegendQuery();
+                        }
+                      }}
                       rows={4}
                       style={{ fontFamily: "monospace", fontSize: "13px" }}
                     />
@@ -670,6 +697,7 @@ export default function AppPage() {
               <div className="space-y-2 mt-3 font-mono text-xs">
                 <div className="flex justify-between border-b border-[#222] pb-1.5"><span className="text-gray-400">CONTROL PLANE</span><Badge variant="cyan">POCKETBASE :8091</Badge></div>
                 <div className="flex justify-between border-b border-[#222] pb-1.5"><span className="text-gray-400">DATA PLANE</span><Badge variant="lime">NATIVE GIT :3200</Badge></div>
+                <div className="flex justify-between border-b border-[#222] pb-1.5"><span className="text-gray-400">OPERATIONAL BAAS</span><Badge variant="gold">LEGEND :8092</Badge></div>
                 <div className="flex justify-between"><span className="text-gray-400">CONTAINER PAAS</span><Badge variant="toxic">DOCKER READY</Badge></div>
               </div>
             </Card>

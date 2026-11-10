@@ -10,5 +10,4 @@ Key invariants:
 1. Zero `// TODO`, `// FIXME`, `Math.random()`, mock arrays, or placeholder handlers.
 2. Read targeted line ranges; never dump full large files into context.
 3. Keep `LEGEND_SERVICE_TOKEN`, `LEGEND_ADMIN_TOKEN`, and `ARSY_SERVICE_TOKEN` server-side only.
-4. Run `bun run gate` before every commit.
-
+4. Use `bun run autofix`, `bun run radar`, `bun run gate`, `bun run smoke`, `bun run autopilot`, and `bun run release:auto` for closed-loop governance.

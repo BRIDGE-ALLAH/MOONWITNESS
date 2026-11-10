@@ -24,6 +24,7 @@ const PACKAGE_FILES = [
   "apps/rid/package.json",
   "services/git-engine/package.json",
   "services/arsy/package.json",
+  ".agents/plugins/sovereign-kit/plugin.json",
 ];
 
 const CARGO_CRATES = [

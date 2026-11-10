@@ -1,14 +1,13 @@
 {
   "name": "sovereign-kit",
   "displayName": "Sovereign Monorepo Agent Kit",
-  "version": "0.2.0",
-  "description": "Token-frugal, zero-slop multi-agent workflow, SurrealDB Legend BaaS ops, mesh self-healing, and SLSA release governance for the Sovereign Monorepo.",
+  "version": "0.3.0",
+  "description": "Token-frugal, zero-slop multi-agent workflow, SurrealDB Legend BaaS ops, mesh self-healing, closed-loop autopilot, and SLSA release governance for the Sovereign Monorepo.",
   "author": "BRIDGE-ALLAH",
   "repository": "https://github.com/BRIDGE-ALLAH/MOONWITNESS.git",
   "suggestedPrompts": [
-    "Run mesh doctor and verify all 9 nodes and 5 quality gates",
+    "Run bun run autopilot --doctor --smoke to self-heal, radar-scan, gate, and E2E verify all 9 nodes",
     "Implement a vertical-slice telemetry feature persisted in Legend BaaS (:8092)",
-    "Audit the monorepo for zero-slop compliance and ship a patch release"
+    "Audit the monorepo with zero-slop-auditor and ship an autonomous release via release:auto"
   ]
 }
-

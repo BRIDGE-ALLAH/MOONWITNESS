@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "⚡ [PRE-PUSH] Verifying Sovereign Hygiene, 16-Manifest Sync & Agent Parity..."
+bun run scripts/gate.ts --hygiene-only
+
