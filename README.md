@@ -1,89 +1,69 @@
 # 🌌 A-L-L-A-H.COM // EMPIRE OF THE LIGHT
-## THE UNIFIED TRINITY: SACRED ORIGIN × MOONWITNESS CREATIVE × DX ENGINE
+## THE SOVEREIGN 5-NODE ECOSYSTEM & BARE-METAL INFRASTRUCTURE
 
-```
-       [ SUMBER UTAMA: A-L-L-A-H.COM // EMPIRE OF THE LIGHT ]
-          (Sovereign Origin, Imperium Lumen, Absolute Truth)
-                                │
-                                ▼
-       [ CREATIVE PRESENCE: MOONWITNESS LIVING OBSERVATORY ]
-          (Lunar Chronicles, Research, Astronomical Archive)
-                                │
-                                ▼
-       [ PRODUK & OPERASIONAL: DX DEVELOPER eXPERIENCE ]
-          (Bare-Metal Git Engine, PocketBase BaaS, Riot OS)
-```
-
-> **"SATU KESATUAN: BERSUMBER DARI YANG MAHA UTAMA (ALLAH #1), DIABADIKAN OLEH MOONWITNESS, DIBANGUN DENGAN KECEPATAN DAN KEDAULATAN DX."**
-> 
+> **"SATU KESATUAN: BERSUMBER DARI YANG MAHA UTAMA (ALLAH #1), DIABADIKAN OLEH MOONWITNESS, DIJAHIT DENGAN JIWA ROOT ID, DITOPANG OLEH FABRIC E-ISP, DAN DIBANGUN DENGAN KECEPATAN DX."**
+>
 > **"SIN CAN BE BETTER HUMAN"** — *Luka, dosa, dan kegagalan adalah bahan bakar transformasi. Bersujud hanya kepada ALLAH, pantang tunduk pada tirani dunia.*
 
 ---
 
-## 🎮 VISUAL & AUDIO DNA: PLAYSTATION CINEMATIC × ROCKSOUL MANGA
-- **PlayStation Retro Game Feel:** Sintesis Web Audio ambient pad chords PSX BIOS, Arcade HUD bars (HP/MP 100%), Memory Card 01 save slot blocks, controller button glyphs (`▲ ✖ ◼ ●`).
-- **Rocksoul Grunge Riot:** Tipografi neobrutalisme brutal (toxic pink, acid yellow, neon lime, cyber cyan), Xerox halftones, cassette tape deck, sticker punk.
-- **Manga Action Speedlines & Comic Full Artwork:** Conic radial speedlines, screen tones, Japanese onomatopoeia stamps (`ドドドド!`, `バァァァン!`, `ゴゴゴゴ...`, `スッ...`), speech bubbles, and narrative chronicles.
+## ⚡ HIERARKI 5 NODE & INFRASTRUKTUR BERDAULAT
 
----
-
-## ⚡ HIERARKI KESATUAN EKOSISTEM
-
-| Lapisan | Entitas | Peran & Tanggung Jawab |
+| Port | Workspace / Node | DNA & Peran Utama |
 |---|---|---|
-| **SUMBER UTAMA** | **ALLAH** (`A-L-L-A-H.COM`) | **Empire of the Light (Imperium Lumen)**. Fondasi spiritual, etis, dan kebenaran mutlak. Menolak tirani dan ilusi korporat modern. |
-| **CREATIVE PRESENCE** | **MoonWitness** | **Living Universe & Lunar Chronicles**. Observatorium kosmik, kurasi ilmu pengetahuan, riset mendalam, dan estetika naratif semesta. |
-| **PRODUK & SENJATA** | **DX** | **Developer eXperience Warzone**. Mesin bare-metal Git Smart HTTP, PocketBase SQLite BaaS, container mesh, dan cockpit berkecepatan tinggi. |
+| `:3001` | `apps/empire` | **A-L-L-A-H.COM // Empire of the Light** — Poros ketauhidan tertinggi, sumber moral, tanpa berhala korporat. |
+| `:3002` | `apps/moonwitness` | **MoonWitness Observatory** — *"When the moon is high we share message and knowledge"*. Ephemeris astronomis, arsip naskah suci, dan transmisi pengetahuan real-time. |
+| `:3000` | `apps/dx` | **DX // Story Riot · Creative Chaos · Developer Business** — Cockpit developer neobrutalis, PlayStation HUD, In-Browser Git Commit Inspector, Docker PaaS Hub, dan Anarchy Weapons Lab. |
+| `:3003` | `apps/e-isp` | **E-ISP // Edge-Infra Scale Platform** — Sovereign Tri-Cloud Fabric, RTT Latency Probe, dan dashboard telemetri sesi PPPoE / RADIUS AAA. |
+| `:3004` | `apps/rid` | **RID // Root ID** — *"Ur Identity Its Not Rock But Soul · Skang And Roll · Patch It"*. Identitas jiwa berdaulat dan Web Audio 2-Tone Skang Synthesizer. |
+| `:3200` | `services/git-engine` | **Bare-Metal Native Git Engine** — Subprocess `git-http-backend` native di atas Bun runtime dengan autentikasi HMAC-SHA256 PAT. |
+| `:4000` | `services/arsy` | **ARSY Orchestrator** — Control plane orkestrasi node controller dan manajemen sesi pelanggan PPPoE/ISP. |
+| `:1812` | `services/radius` | **Rust RADIUS AAA Server** — High-concurrency UDP RADIUS Authentication (`:1812`) & Accounting (`:1813`) dalam bahasa Rust. |
+| `:8091` | `services/pocketbase` | **PocketBase SQLite BaaS** — Single-binary control plane untuk identitas terpusat (`AuthProvider`), migrasi otomatis, dan real-time SSE event mesh. |
 
 ---
 
-## 🚀 FITUR & CAPABILITIES INTI
+## 🎨 SHARED DESIGN SYSTEM (`@local-git/ui`)
 
-1. **Bare-Metal Native Git Engine (:3200)** — Subprocess `git-http-backend` native di atas runtime Bun. Bare repository tersimpan langsung di storage lokal.
-2. **PocketBase SQLite BaaS (:8091)** — Single-binary Go/SQLite control plane untuk autentikasi user, hashing PAT, dan metadata repositori.
-3. **Cockpit UI Next.js 16 (:3000)** — Tampilan neobrutalisme / riot cyber-punk ergonomis dengan zero-telemetry dan zero-slop.
-4. **Anarchy Weapons Lab**:
-   - *Airdrop Git:* P2P Mesh sync laptop-ke-laptop via mDNS.
-   - *Dead Man's Nuke:* Panic switch pemusnah data ke white noise saat inspeksi paksa.
-   - *Commit Stream Escrow:* Smart bounty otomatis via git trailer parser.
-   - *Keystroke Biometric Cadence:* Verifikasi ritme jari manusia penangkal bot AI spam.
+Seluruh 5 aplikasi web dikendalikan oleh satu mesin desain terpusat di `packages/ui`:
+- **5 DNA Presets**: `dx`, `empire`, `moonwitness`, `eisp`, `rid`.
+- **6 Dual-Mode Skins (Dark & Light)**: `grunge`, `sacred`, `celestial`, `steel`, `phantom`, `acid`.
+- **Universal TopBar & Auth**: Login/Register lintas situs dengan sesi PocketBase terpadu dan indikator `● LIVE` saat terjadi aktivitas real-time di jaringan.
 
 ---
 
-## 🛠️ INSTRUKSI CEPAT
-
-```powershell
-# 1. Bangkitkan cluster infrastruktur lokal (PocketBase BaaS + Git Engine)
-bun infra:up
-
-# 2. Jalankan seluruh ekosistem (DX, Empire, MoonWitness, Git Engine)
-bun run dev:all
-
-# Atau jalankan per-site:
-bun run dev:dx        # DX (:3000)
-bun run dev:empire    # A-L-L-A-H.COM // Empire of the Light (:3001)
-bun run dev:moon      # MoonWitness Observatory (:3002)
-```
-
-### 🌐 PORTAL 3 KESATUAN EKOSISTEM
-- ⚡ **DX (Story Riot � Creative Chaos � Developer Business):** [http://127.0.0.1:3000](http://127.0.0.1:3000)
-  - Cockpit Dashboard: [http://127.0.0.1:3000/app](http://127.0.0.1:3000/app)
-  - Native Git Gateway: `http://127.0.0.1:3200`
-- 👑 **Empire of the Light (A-L-L-A-H.COM Origin):** [http://127.0.0.1:3001](http://127.0.0.1:3001)
-- ☾ **MoonWitness (Living Knowledge & Message Archive):** [http://127.0.0.1:3002](http://127.0.0.1:3002)
-- 🌐 **E-ISP (Edge-Infra Scale Platform):** Sovereign Cloud Fabric (Edge + Compute + Storage Mesh)
-- 💾 **PocketBase BaaS Control Deck:** [http://127.0.0.1:8091/_/](http://127.0.0.1:8091/_/)
-
----
-
-## 💣 CLONE COMMAND
+## 🚀 QUICK START & ENTERPRISE COMMANDS
 
 ```bash
-git clone http://127.0.0.1:3200/git/<username>/<repo-slug>.git
-```
+# 1. Install seluruh workspace dependencies & aktifkan Git Hooks
+bun install
+bun run hooks:install
 
-*Gunakan Personal Access Token (PAT) dari cockpit sebagai password saat diminta otentikasi Git HTTP.*
+# 2. Nyalakan infrastruktur container (PocketBase, ARSY, RADIUS)
+bun run infra:up
+
+# 3. Jalankan seluruh 7 proses dev secara paralel
+bun run dev:all
+
+# 4. Jalankan diagnostik kesehatan seluruh node & port
+bun run doctor
+
+# 5. Jalankan Sovereign Quality Gate (Zero-Slop Hygiene + Typecheck 8 Package + Unit Tests)
+bun run gate
+
+# 6. Automasi SemVer Release, Changelog & Git Tagging
+bun run release:patch   # atau release:minor / release:major
+```
 
 ---
 
-*A-L-L-A-H.COM · EMPIRE OF THE LIGHT · MOONWITNESS · DX ✳ 2026*
+## 🔒 ENTERPRISE GOVERNANCE & CI/CD
+
+- **Pre-Commit & Commit-Msg Hooks (`.githooks/`)**: Memblokir commit jika ditemukan `// TODO` / `// FIXME`, error TypeScript, kegagalan unit test, atau format pesan commit non-konvensional.
+- **GitHub Actions (`.github/workflows/`)**:
+  - `ci.yml`: Menjalankan `bun run gate` dan `bun run build:all` di setiap Push & Pull Request.
+  - `release.yml`: Menerbitkan GitHub Release otomatis dengan catatan `CHANGELOG.md` setiap kali tag `v*.*.*` di-push.
+
+---
+
+*A-L-L-A-H.COM · EMPIRE OF THE LIGHT · MOONWITNESS · DX · E-ISP · RID ✳ 2026*
