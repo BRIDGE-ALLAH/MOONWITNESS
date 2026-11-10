@@ -140,7 +140,7 @@ pub async fn get_jwt() -> Result<String, String> {
 }
 
 /// Internal function to get JWT for use by other command modules
-pub async fn get_jwt_internal(_state: &crate::state::AppState) -> Result<String> {
+pub async fn get_jwt_internal(_state: &crate::state::AppState) -> Result<String, String> {
     let jwt = generate_jwt(UserInfo {
         id: "user-1".to_string(),
         name: "Windows User".to_string(),
