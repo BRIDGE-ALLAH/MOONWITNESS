@@ -58,7 +58,7 @@ export default function MoonWitnessPage() {
           setTransmissions(parsed);
         }
       }
-    } catch {}
+    } catch { }
   }, []);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function MoonWitnessPage() {
       const updated = [newTx, ...prev];
       try {
         localStorage.setItem("moonwitness-transmissions", JSON.stringify(updated.slice(0, 30)));
-      } catch {}
+      } catch { }
       return updated;
     });
     setMessage("");
@@ -225,7 +225,7 @@ export default function MoonWitnessPage() {
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Ketik pesan atau wawasan pengetahuan untuk disiarkan..."
+                placeholder="Ketik pesan atau wawasan pengetahuan (maks 200 karakter) untuk disiarkan..."
                 required
               />
               <Button type="submit" variant="primary">
