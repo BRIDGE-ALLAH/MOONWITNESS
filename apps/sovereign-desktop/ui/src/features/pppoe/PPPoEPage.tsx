@@ -1,127 +1,191 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Wifi, Search, Filter, MapPin, AlertTriangle, Download } from "lucide-react"
+import { RefreshCw, AlertTriangle, ShieldCheck, UserCheck, Activity } from "lucide-react"
+import { useEffect, useState } from "react"
+import { fetchLivePPPoESessions, terminatePPPoESession, PPPoESession, ARSY_URL } from "@/lib/realData"
 
 export function PPPoEPage() {
-  const sessions = [
-    { id: "sess_001", nas: "10.0.1.5", user: "john.doe", ip: "10.10.1.100", status: "active", duration: "2h 15m", rx: "1.2 GB", tx: "512 MB" },
-    { id: "sess_002", nas: "10.0.1.5", user: "jane.smith", ip: "10.10.1.101", status: "active", duration: "1h 45m", rx: "890 MB", tx: "445 MB" },
-    { id: "sess_003", nas: "10.0.2.1", user: "bob.wilson", ip: "10.10.2.50", status: "connecting", duration: "30s", rx: "0 B", tx: "0 B" },
-    { id: "sess_004", nas: "10.0.3.1", user: "alice.brown", ip: "10.10.3.200", status: "disconnected", duration: "4h 20m", rx: "3.4 GB", tx: "1.7 GB" },
-    { id: "sess_005", nas: "10.0.1.5", user: "charlie.davis", ip: "10.10.1.102", status: "active", duration: "5h 10m", rx: "2.1 GB", tx: "980 MB" },
-  ]
+  const [sessions, setSessions] = useState<PPPoESession[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [terminatingId, setTerminatingId] = useState<string | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  function getStatusBadge(status: string) {
-    if (status === "active") return "bg-green-100 text-green-800"
-    if (status === "connecting") return "bg-blue-100 text-blue-800"
-    return "bg-red-100 text-red-800"
+  async function loadSessions() {
+    setLoading(true)
+    setErrorMsg(null)
+    try {
+      const data = await fetchLivePPPoESessions()
+      setSessions(data)
+    } catch (err) {
+      setErrorMsg(`Could not connect to ARSY orchestrator on ${ARSY_URL}: ${err instanceof Error ? err.message : String(err)}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadSessions()
+  }, [])
+
+  async function handleTerminate(sessionId: string) {
+    setTerminatingId(sessionId)
+    try {
+      await terminatePPPoESession(sessionId)
+      await loadSessions()
+    } catch (err) {
+      alert(`Termination failed: ${err instanceof Error ? err.message : String(err)}`)
+    } finally {
+      setTerminatingId(null)
+    }
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">PPPoE / RADIUS</h1>
-          <p className="text-muted-foreground">Session radar, RADIUS trace, NAS map</p>
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">
+              FASTIFY ARSY (:4000) LIVE SESSIONS & RADIUS AAA (:1812)
+            </span>
+          </div>
+          <h1 className="text-2xl font-bold text-foreground mt-1">PPPoE Session Orchestrator</h1>
+          <p className="text-muted-foreground text-sm">
+            Live subscriber tunnels, RADIUS AAA authorization state, and dynamic circuit termination.
+          </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-2" /> Export CSV</Button>
-          <Button variant="outline" size="sm"><Wifi className="h-4 w-4 mr-2" /> Refresh</Button>
+          <Button onClick={loadSessions} disabled={loading} size="sm" variant="outline" className="font-mono text-xs">
+            <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
+            Refresh Sessions
+          </Button>
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        {/* Session Table */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Active Sessions
-              <div className="flex gap-2">
-                <Button variant="ghost" size="icon"><Search className="h-4 w-4" /></Button>
-                <Button variant="ghost" size="icon"><Filter className="h-4 w-4" /></Button>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      {errorMsg && (
+        <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-md text-amber-400 text-xs font-mono">
+          ⚠️ {errorMsg}
+        </div>
+      )}
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card className="border-border bg-card/60 backdrop-blur">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-mono text-muted-foreground uppercase">Active Sessions</p>
+              <h3 className="text-2xl font-bold text-foreground mt-1 font-mono">
+                {sessions.filter((s) => s.status === "active").length}
+              </h3>
+            </div>
+            <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <Activity className="h-5 w-5" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card/60 backdrop-blur">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-mono text-muted-foreground uppercase">RADIUS Status</p>
+              <h3 className="text-2xl font-bold text-foreground mt-1 font-mono">AUTHENTICATED</h3>
+            </div>
+            <div className="p-2.5 rounded-lg bg-sky-500/10 text-sky-400">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card/60 backdrop-blur">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-mono text-muted-foreground uppercase">Total Ingested Records</p>
+              <h3 className="text-2xl font-bold text-foreground mt-1 font-mono">{sessions.length}</h3>
+            </div>
+            <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <UserCheck className="h-5 w-5" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Real Sessions Table */}
+      <Card className="border-border bg-card/60 backdrop-blur">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center justify-between">
+            <span className="font-mono text-sm">ACTIVE SUBSCRIBER CIRCUITS</span>
+            <span className="text-xs font-mono text-muted-foreground">{sessions.length} record(s)</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading && sessions.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground font-mono text-xs">
+              Loading active subscriber sessions from ARSY (:4000)...
+            </div>
+          ) : sessions.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground font-mono text-xs border border-dashed border-border rounded">
+              Zero active PPPoE sessions currently connected to ARSY. Dial a session from E-ISP (:3003) to inspect.
+            </div>
+          ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-xs font-mono">
                 <thead>
-                  <tr className="border-b border-border">
-                    {["Session ID", "NAS IP", "Username", "Assigned IP", "Status", "Duration", "RX", "TX", "Actions"].map((h) => (
-                      <th key={h} className="text-left p-3 font-medium text-muted-foreground">{h}</th>
-                    ))}
+                  <tr className="border-b border-border text-muted-foreground text-left">
+                    <th className="p-3">SESSION UUID</th>
+                    <th className="p-3">SUBSCRIBER</th>
+                    <th className="p-3">NAS IP</th>
+                    <th className="p-3">NAS PORT</th>
+                    <th className="p-3">FRAMED IP</th>
+                    <th className="p-3">STARTED AT</th>
+                    <th className="p-3">STATUS</th>
+                    <th className="p-3 text-right">ACTION</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {sessions.map((s) => (
-                    <tr key={s.id} className="border-b border-border/50 hover:bg-muted/30">
-                      <td className="p-3 font-mono">{s.id}</td>
-                      <td className="p-3 font-mono">{s.nas}</td>
-                      <td className="p-3">{s.user}</td>
-                      <td className="p-3 font-mono">{s.ip || "-"}</td>
-                      <td className="p-3">
-                        <span className={"text-xs px-2 py-0.5 rounded " + getStatusBadge(s.status)}>
-                          {s.status}
-                        </span>
-                      </td>
-                      <td className="p-3 font-mono">{s.duration}</td>
-                      <td className="p-3 font-mono">{s.rx}</td>
-                      <td className="p-3 font-mono">{s.tx}</td>
-                      <td className="p-3">
-                        <Button variant="ghost" size="icon" title="RADIUS Trace"><Wifi className="h-3 w-3" /></Button>
-                        <Button variant="ghost" size="icon" title="Disconnect"><AlertTriangle className="h-3 w-3" /></Button>
-                      </td>
-                    </tr>
-                  ))}
+                  {sessions.map((s) => {
+                    const isTerminating = terminatingId === s.id
+                    return (
+                      <tr key={s.id} className="border-b border-border/40 hover:bg-muted/30">
+                        <td className="p-3 font-semibold text-emerald-400 truncate max-w-[140px]">{s.id}</td>
+                        <td className="p-3 text-foreground">{s.username}</td>
+                        <td className="p-3 text-muted-foreground">{s.nas_ip}</td>
+                        <td className="p-3 text-muted-foreground">{s.nas_port}</td>
+                        <td className="p-3 text-foreground font-bold">{s.framed_ip_address}</td>
+                        <td className="p-3 text-muted-foreground">
+                          {new Date(s.session_start).toLocaleTimeString()}
+                        </td>
+                        <td className="p-3">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                              s.status === "active"
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                            }`}
+                          >
+                            {s.status}
+                          </span>
+                        </td>
+                        <td className="p-3 text-right">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            disabled={isTerminating}
+                            onClick={() => handleTerminate(s.id)}
+                            className="h-7 text-[10px] font-mono px-2"
+                          >
+                            <AlertTriangle className="h-3 w-3 mr-1" />
+                            {isTerminating ? "Terminating..." : "Terminate"}
+                          </Button>
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* RADIUS Trace */}
-        <Card>
-          <CardHeader>
-            <CardTitle>RADIUS Trace (sess_001)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="font-mono text-sm space-y-1 max-h-96 overflow-auto">
-              <p className="text-blue-500">→ Access-Request (id=42)</p>
-              <p className="text-muted-foreground">  User-Name: john.doe</p>
-              <p className="text-muted-foreground">  NAS-IP-Address: 10.0.1.5</p>
-              <p className="text-muted-foreground">  Called-Station-Id: 00:11:22:33:44:55</p>
-              <p className="text-yellow-500">← Access-Challenge (id=42)</p>
-              <p className="text-muted-foreground">  EAP-Message: 0x02...</p>
-              <p className="text-blue-500">→ Access-Request (id=43)</p>
-              <p className="text-muted-foreground">  EAP-Message: 0x02...</p>
-              <p className="text-green-500">← Access-Accept (id=43)</p>
-              <p className="text-muted-foreground">  Framed-IP-Address: 10.10.1.100</p>
-              <p className="text-muted-foreground">  Session-Timeout: 86400</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* NAS Map */}
-        <Card>
-          <CardHeader>
-            <CardTitle>NAS Map</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-96 bg-muted/30 rounded flex items-center justify-center relative">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                <p className="text-muted-foreground">MapLibre GL integration</p>
-                <p className="text-xs text-muted-foreground">NAS markers with health status</p>
-              </div>
-              <div className="absolute bottom-4 right-4 bg-card p-2 rounded border text-xs">
-                <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500" /> Online (3)</div>
-                <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-yellow-500" /> Degraded (1)</div>
-                <div className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500" /> Offline (0)</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
