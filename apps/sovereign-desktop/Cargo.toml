@@ -23,7 +23,7 @@ tokio = { version = "1", features = ["full", "rt-multi-thread", "macros", "time"
 git2 = "0.18"
 
 # Authentication
-webauthn-rs = "0.7"
+webauthn-rs = "0.6"
 jsonwebtoken = "9"
 
 # TLS/Certificates
