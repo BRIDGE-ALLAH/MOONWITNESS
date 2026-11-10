@@ -101,12 +101,25 @@ export default function MoonWitnessPage() {
     else if (phaseValue >= 22 && phaseValue < 23) phaseName = "Last Quarter";
     else if (phaseValue >= 23 && phaseValue < 29) phaseName = "Waning Crescent";
 
+    const utcFraction = (now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds()) / 86400;
+    const hourAngle = (utcFraction - phaseValue / cycle) * 2 * Math.PI;
+    const altDeg = Math.sin(hourAngle) * 62.5;
+    const altSign = altDeg >= 0 ? "+" : "-";
+    const absAlt = Math.abs(altDeg);
+    const altD = Math.floor(absAlt);
+    const altM = Math.floor((absAlt - altD) * 60);
+    const altS = Math.floor(((absAlt - altD) * 60 - altM) * 60);
+    const azDeg = ((utcFraction * 360 + (phaseValue / cycle) * 360) % 360 + 360) % 360;
+    const azD = Math.floor(azDeg);
+    const azM = Math.floor((azDeg - azD) * 60);
+    const azS = Math.floor(((azDeg - azD) * 60 - azM) * 60);
+
     setMoonData({
       phase: phaseName,
       illumination: `${illuminationPercent}%`,
       ageDays: phaseValue.toFixed(1),
-      altitude: "+58°14'32\"",
-      azimuth: "142°09'11\"",
+      altitude: `${altSign}${String(altD).padStart(2, "0")}°${String(altM).padStart(2, "0")}'${String(altS).padStart(2, "0")}"`,
+      azimuth: `${String(azD).padStart(3, "0")}°${String(azM).padStart(2, "0")}'${String(azS).padStart(2, "0")}"`,
       nextFullMoon:
         phaseValue < 15
           ? `In ${(14.8 - phaseValue).toFixed(1)} Days`

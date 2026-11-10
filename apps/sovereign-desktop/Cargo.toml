@@ -1,0 +1,80 @@
+[package]
+name = "sovereign-desktop"
+version = "0.1.0"
+description = "Sovereign Desktop - Offline-first Windows control surface"
+authors = ["Sovereign Team"]
+edition = "2021"
+license = "MIT"
+
+[workspace]
+members = []
+
+[dependencies]
+# Tauri v2
+tauri = { version = "2", features = ["macros", "async-runtime", "shell", "fs", "dialog", "notification", "clipboard", "process", "updater"] }
+
+# Database - Embedded SurrealDB
+surrealdb = { version = "2.0", features = ["kv", "surrealkv"] }
+
+# Async runtime
+tokio = { version = "1", features = ["full", "rt-multi-thread", "macros", "time", "sync"] }
+
+# Git operations - libgit2
+git2 = "0.18"
+
+# Authentication
+webauthn-rs = "0.7"
+jsonwebtoken = "9"
+
+# TLS/Certificates
+rcgen = "0.11"
+
+# Windows APIs
+winreg = "0.11"
+windows = { version = "0.58", features = [
+    "Win32_Security_Credentials",
+    "Win32_System_WinRT",
+    "Win32_UI_Shell",
+    "Win32_Foundation",
+    "Win32_System_Threading",
+    "Win32_System_Process_Information"
+] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_bytes = "0.11"
+
+# Error handling
+anyhow = "1"
+thiserror = "1"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
+
+# Crypto
+ring = "0.17"
+rsa = { version = "0.9", features = ["pkcs1", "pkcs8", "pss", "sha2"] }
+sha2 = "0.10"
+
+# CLI parsing (for license-gen)
+clap = { version = "4", features = ["derive", "env"] }
+
+# HTTP client for sync
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "websocket"] }
+
+# URL handling
+url = "2"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# UUID
+uuid = { version = "1", features = ["serde", "v4", "v7"] }
+
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }
+serial_test = "3"
+tempfile = "3"
+mockall = "0.12"

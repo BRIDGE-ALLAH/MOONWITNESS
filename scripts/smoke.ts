@@ -126,6 +126,38 @@ await assertStep("6. Git Engine & PocketBase Core Plane (:3200 & :8091)", async 
   return `Git Engine :3200 OK, PocketBase :8091 OK`;
 });
 
+await assertStep("7. RID Soul Patch Forge Persistence (:3004/api/legend/patches -> :8092)", async () => {
+  const patchId = `patch-smoke-${Date.now() % 100000}`;
+  const createRes = await fetch("http://127.0.0.1:3004/api/legend/patches", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: patchId,
+      title: "TAWHID_SOUL_RESONANCE",
+      chord: "D minor 9th // 2-Tone",
+      motto: "Soul Bows Only To ALLAH #1",
+      variant: "gold",
+      status: "stitched",
+    }),
+    signal: AbortSignal.timeout(3500),
+  });
+  if (!createRes.ok) {
+    throw new Error(`POST /api/legend/patches HTTP ${createRes.status}: ${await createRes.text()}`);
+  }
+  const listRes = await fetch("http://127.0.0.1:3004/api/legend/patches", {
+    signal: AbortSignal.timeout(3500),
+  });
+  if (!listRes.ok) {
+    throw new Error(`GET /api/legend/patches HTTP ${listRes.status}`);
+  }
+  const patches = (await listRes.json()) as Array<{ id?: string; title?: string }>;
+  const found = patches.some((p) => p.id === patchId);
+  if (!found) {
+    throw new Error(`Stitched patch ${patchId} not found in persisted soul_patches`);
+  }
+  return `verified ${patchId} persisted in SurrealDB (${patches.length} soul patches)`;
+});
+
 const failed = results.filter((r) => !r.ok);
 console.log("\n======================================================");
 if (failed.length > 0) {

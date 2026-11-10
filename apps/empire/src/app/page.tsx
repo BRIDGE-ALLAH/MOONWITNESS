@@ -1,9 +1,42 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Compass, Orbit, Code2, Server, Disc3 } from "lucide-react";
-import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader, EcosystemBridgeGrid, EcosystemSiteHeader, EcosystemHero } from "@local-git/ui";
+import { Card, CardTitle, CardDescription, CardFooter, Button, Badge, SectionHeader, StatMetric, EcosystemBridgeGrid, EcosystemSiteHeader, EcosystemHero } from "@local-git/ui";
 
 export default function AllahOriginPage() {
+  const [pulse, setPulse] = useState({
+    pocketbase: "CHECKING",
+    gitEngine: "CHECKING",
+    arsy: "CHECKING",
+    legend: "CHECKING",
+    legendVersion: "v0.3.0",
+  });
+
+  useEffect(() => {
+    Promise.allSettled([
+      fetch("http://127.0.0.1:8091/api/health"),
+      fetch("http://127.0.0.1:3200/api/v1/health"),
+      fetch("http://127.0.0.1:4000/health"),
+      fetch("http://127.0.0.1:8092/api/v1/meta"),
+    ]).then(async ([pb, git, arsy, leg]) => {
+      let legendVer = "SURREALDB";
+      if (leg.status === "fulfilled" && leg.value.ok) {
+        try {
+          const meta = (await leg.value.json()) as { version?: string };
+          if (meta.version) legendVer = `v${meta.version} // SURREALDB`;
+        } catch {}
+      }
+      setPulse({
+        pocketbase: pb.status === "fulfilled" && pb.value.ok ? "ONLINE" : "DEGRADED",
+        gitEngine: git.status === "fulfilled" && git.value.ok ? "ONLINE" : "DEGRADED",
+        arsy: arsy.status === "fulfilled" && arsy.value.ok ? "ONLINE" : "DEGRADED",
+        legend: leg.status === "fulfilled" && leg.value.ok ? "ONLINE" : "DEGRADED",
+        legendVersion: legendVer,
+      });
+    });
+  }, []);
+
   return (
     <div className="origin-root" style={{ background: "var(--bg)", color: "var(--text)" }}>
       <EcosystemSiteHeader
@@ -62,6 +95,34 @@ export default function AllahOriginPage() {
 
       {/* THE TRIPTYCH OF REALITY */}
       <section style={{ maxWidth: 1200, margin: "40px auto 80px", padding: "0 5vw" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 32 }}>
+          <StatMetric
+            label="IDENTITY & SSE PLANE"
+            value={pulse.pocketbase}
+            sub="POCKETBASE :8091"
+            variant="gold"
+            valueColor={pulse.pocketbase === "ONLINE" ? "#eab308" : "#ff0055"}
+          />
+          <StatMetric
+            label="SOVEREIGN CODE FORGE"
+            value={pulse.gitEngine}
+            sub="GIT ENGINE :3200"
+            valueColor={pulse.gitEngine === "ONLINE" ? "#00ff66" : "#ff0055"}
+          />
+          <StatMetric
+            label="NETWORK AAA CONTROLLER"
+            value={pulse.arsy}
+            sub="ARSY & RADIUS :4000"
+            valueColor={pulse.arsy === "ONLINE" ? "#00f0ff" : "#ff0055"}
+          />
+          <StatMetric
+            label="OPERATIONAL BAAS"
+            value={pulse.legend}
+            sub={`LEGEND :8092 // ${pulse.legendVersion}`}
+            variant="cyan"
+            valueColor={pulse.legend === "ONLINE" ? "#00f0ff" : "#ff0055"}
+          />
+        </div>
         <EcosystemBridgeGrid />
       </section>
 

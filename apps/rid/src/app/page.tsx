@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Music, Flame, Shield, Sparkles, HeartHandshake,
   Layers, Terminal, ArrowUpRight, Zap, Radio, Stamp,
@@ -105,20 +105,41 @@ export default function RootIdPage() {
     },
   ]);
 
-  const handleStitchPatch = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch("/api/legend/patches")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((persisted: SoulPatch[]) => {
+        if (Array.isArray(persisted) && persisted.length > 0) {
+          setPatches((prev) => {
+            const existingIds = new Set(persisted.map((p) => p.id));
+            return [...persisted, ...prev.filter((p) => !existingIds.has(p.id))];
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleStitchPatch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!patchName.trim()) return;
     playSkangChord(523.25); // High C triumph chord
     const newPatch: SoulPatch = {
-      id: `patch-${Date.now().toString().slice(-4)}`,
+      id: `patch-${Date.now().toString().slice(-6)}`,
       title: patchName.trim().toUpperCase().replace(/\s+/g, "_"),
       chord: patchChord,
       motto: "Live Rhythm, Stitched Under ALLAH #1",
       variant: patches.length % 2 === 0 ? "gold" : "toxic",
       status: "stitched",
     };
-    setPatches([newPatch, ...patches]);
+    setPatches((prev) => [newPatch, ...prev]);
     setPatchName("");
+    try {
+      await fetch("/api/legend/patches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPatch),
+      });
+    } catch {}
   };
 
   return (
