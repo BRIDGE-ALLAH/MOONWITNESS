@@ -184,7 +184,9 @@ pub async fn run(
                     input: Some(input),
                     output: observation.clone(),
                 });
-                messages.push(json!({"role": "user", "content": format!("OBSERVATION: {observation}")}));
+                messages.push(
+                    json!({"role": "user", "content": format!("OBSERVATION: {observation}")}),
+                );
             }
             Err(err) => {
                 emit(Step {

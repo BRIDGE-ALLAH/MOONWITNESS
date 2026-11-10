@@ -91,7 +91,9 @@ fn main() {
             let memory = Memory::open(root)?;
             let config = memory.load_config();
             app.manage(Core {
-                client: reqwest::Client::builder().user_agent("rocksoul/0.1").build()?,
+                client: reqwest::Client::builder()
+                    .user_agent("rocksoul/0.1")
+                    .build()?,
                 memory,
                 config: Mutex::new(config),
                 busy: Mutex::new(()),

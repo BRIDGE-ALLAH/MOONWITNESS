@@ -1,0 +1,5 @@
+/target
+/gen
+
+/ui/node_modules
+/ui/dist

@@ -4,7 +4,10 @@
   "productName": "RockSoul",
   "version": "0.1.0",
   "build": {
-    "frontendDist": "./ui"
+    "frontendDist": "./ui/dist",
+    "devUrl": "http://localhost:5280",
+    "beforeDevCommand": "bun run --cwd ui dev",
+    "beforeBuildCommand": "bun run --cwd ui build"
   },
   "app": {
     "windows": [
@@ -28,3 +31,4 @@
     "icon": ["icons/icon.ico"]
   }
 }
+

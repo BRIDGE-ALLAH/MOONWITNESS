@@ -38,29 +38,32 @@ pub fn catalog() -> &'static str {
 }
 
 pub async fn probe_mesh(client: &reqwest::Client) -> Vec<NodePulse> {
-    let probes = MESH.iter().map(|(id, url)| async move {
-        let started = Instant::now();
-        let outcome = client
-            .get(*url)
-            .timeout(Duration::from_millis(1500))
-            .send()
-            .await;
-        let latency_ms = started.elapsed().as_millis();
-        match outcome {
-            Ok(resp) => NodePulse {
-                id: id.to_string(),
-                url: url.to_string(),
-                online: resp.status().as_u16() < 500,
-                latency_ms,
-                status: resp.status().as_u16(),
-            },
-            Err(_) => NodePulse {
-                id: id.to_string(),
-                url: url.to_string(),
-                online: false,
-                latency_ms,
-                status: 0,
-            },
+    let probes = MESH.iter().map(|(id, url)| {
+        let client = client.clone();
+        async move {
+            let started = Instant::now();
+            let outcome = client
+                .get(*url)
+                .timeout(Duration::from_millis(1500))
+                .send()
+                .await;
+            let latency_ms = started.elapsed().as_millis();
+            match outcome {
+                Ok(resp) => NodePulse {
+                    id: id.to_string(),
+                    url: url.to_string(),
+                    online: resp.status().as_u16() < 500,
+                    latency_ms,
+                    status: resp.status().as_u16(),
+                },
+                Err(_) => NodePulse {
+                    id: id.to_string(),
+                    url: url.to_string(),
+                    online: false,
+                    latency_ms,
+                    status: 0,
+                },
+            }
         }
     });
     futures_join(probes).await
