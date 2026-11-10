@@ -137,6 +137,21 @@ app.delete('/api/v1/controllers/:id', {
   return reply.code(204).send();
 });
 
+const LEGEND_ENDPOINT = process.env.LEGEND_ENDPOINT || 'http://127.0.0.1:8092';
+
+async function syncToLegend(table: string, payload: Record<string, unknown>) {
+  try {
+    await fetch(`${LEGEND_ENDPOINT}/api/v1/records/${table}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ payload }),
+      signal: AbortSignal.timeout(1500)
+    });
+  } catch {
+    // Non-blocking fallback to local memory plane
+  }
+}
+
 // PPPoE Session endpoints (for RADIUS service)
 app.post('/api/v1/pppoe/sessions', {
   schema: {
@@ -150,6 +165,7 @@ app.post('/api/v1/pppoe/sessions', {
     last_update: new Date().toISOString()
   };
   pppoeSessions.set(session.id, session);
+  await syncToLegend('pppoe_sessions', session as unknown as Record<string, unknown>);
   return reply.code(201).send(session);
 });
 
@@ -174,6 +190,7 @@ app.post('/api/v1/pppoe/sessions/:id/terminate', {
   if (!session) return reply.code(404).send({ message: 'Session not found' });
   session.status = 'terminated';
   session.last_update = new Date().toISOString();
+  await syncToLegend('pppoe_sessions', session as unknown as Record<string, unknown>);
   return session;
 });
 
@@ -193,6 +210,7 @@ app.post('/api/v1/pppoe/sessions/:id/accounting', {
   if (accounting.framed_ipv6_prefix !== undefined) session.framed_ipv6_prefix = accounting.framed_ipv6_prefix;
   session.status = accounting.status;
   session.last_update = accounting.last_update;
+  await syncToLegend('pppoe_sessions', session as unknown as Record<string, unknown>);
   
   return session;
 });

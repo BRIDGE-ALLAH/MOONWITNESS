@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "concurrently -k -n DX,GIT -c blue,green \"bun run dev:dx\" \"bun run dev:git\"",
-    "dev:all": "concurrently -k -n DX,EMPIRE,MOON,EISP,RID,GIT,ARSY -c blue,yellow,cyan,magenta,red,green,yellow \"bun run dev:dx\" \"bun run dev:empire\" \"bun run dev:moon\" \"bun run dev:eisp\" \"bun run dev:rid\" \"bun run dev:git\" \"bun run dev:arsy\"",
+    "dev:all": "concurrently -k -n DX,EMPIRE,MOON,EISP,RID,GIT,ARSY,LEGEND -c blue,yellow,cyan,magenta,red,green,yellow,white \"bun run dev:dx\" \"bun run dev:empire\" \"bun run dev:moon\" \"bun run dev:eisp\" \"bun run dev:rid\" \"bun run dev:git\" \"bun run dev:arsy\" \"bun run dev:legend\"",
     "dev-all": "bun run dev:all",
     "dev:dx": "bun --filter @local-git/dx dev",
     "dev:empire": "bun --filter @local-git/empire dev",
@@ -19,6 +19,7 @@
     "dev:rid": "bun --filter @local-git/rid dev",
     "dev:git": "bun --filter @local-git/engine dev",
     "dev:arsy": "bun --filter @local-git/arsy dev",
+    "dev:legend": "cargo run --manifest-path services/legend/Cargo.toml",
     "build": "bun --filter @local-git/dx build",
     "build:all": "bun --filter @local-git/dx build && bun --filter @local-git/empire build && bun --filter @local-git/moonwitness build && bun --filter @local-git/e-isp build && bun --filter @local-git/rid build && bun --filter @local-git/arsy build",
     "check": "bun --filter @local-git/ui check && bun --filter @local-git/dx check && bun --filter @local-git/empire check && bun --filter @local-git/moonwitness check && bun --filter @local-git/e-isp check && bun --filter @local-git/rid check && bun --filter @local-git/engine check && bun --filter @local-git/arsy check",

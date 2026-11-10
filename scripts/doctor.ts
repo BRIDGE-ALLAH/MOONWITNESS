@@ -42,6 +42,7 @@ const ENDPOINTS = [
   { name: "Git Engine API   (:3200)", url: "http://127.0.0.1:3200/api/v1/health" },
   { name: "ARSY Orchestrator(:4000)", url: "http://127.0.0.1:4000/health" },
   { name: "PocketBase BaaS  (:8091)", url: "http://127.0.0.1:8091/api/health" },
+  { name: "Legend BaaS (RS) (:8092)", url: "http://127.0.0.1:8092/health" },
 ];
 
 console.log("\n[3] LIVE MESH TELEMETRY:");
