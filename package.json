@@ -1,7 +1,7 @@
 {
   "name": "local-git-hq",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.4.1",
   "packageManager": "bun@1.4.4",
   "workspaces": [
     "apps/*",
@@ -36,6 +36,7 @@
     "doctor": "bun run scripts/doctor.ts",
     "codex:edge": "bun run services/codex-edge/src/worker.ts",
     "codex:mcp": "bun run scripts/codex-mcp.ts",
+    "codex:daily": "bun run scripts/codex-daily.ts",
     "release:auto": "bun run scripts/release.ts auto --tag",
     "release:patch": "bun run scripts/release.ts patch --tag",
     "release:minor": "bun run scripts/release.ts minor --tag",

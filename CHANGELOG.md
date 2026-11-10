@@ -1,5 +1,19 @@
 # CHANGELOG — SOVEREIGN ECOSYSTEM
 
+## [v0.4.1] - 2026-11-10
+
+- feat(desktop): complete sovereign desktop tauri backend, crdt engine and codex edge integration (87e2ff3)
+- feat(ui): integrate living canvas and tactical hud primitives into codex edge and desktop ui (57d5c0f)
+- feat(ui): ultra-deep living dna engine, procedural typography, audio synth and vector assets (ab6832d)
+- chore(codex): support TELEGRAM_GROUP_ID fallback in worker (a636231)
+- feat(codex): wire Telegram notification dispatcher to Cloudflare Edge MCP & UI actions (63e17bb)
+- feat(desktop): configure Tauri v2 dependencies and add dynamic Codex Edge badges (2658db7)
+- feat(sovereign-desktop): add DESIGN.md architecture spec and MASTER_TODO.md execution plan (3f9af58)
+- feat(agentic): wire all AI coding agents, rules, and MCP server to live codex.a-l-l-a-h.com Cloudflare D1 (225c24a)
+- chore(codex): bind custom domains codex.a-l-l-a-h.com and codex.e-isp.id (2137aba)
+- chore(wrangler): link provisioned Cloudflare D1 database ID 3dc374d8 (259a19b)
+- feat(codex): launch decoupled Sovereign Codex Edge Pulse (:8787 / Cloudflare D1), MCP Server, and Autonomous Comment Governor (9e91367)
+
 ## [v0.4.0] - 2026-11-10
 
 - feat(narration-dna-ui-ux): wire RID soul patch SurrealDB persistence, Empire live mesh pulse, and MoonWitness spherical math (48ec311)
