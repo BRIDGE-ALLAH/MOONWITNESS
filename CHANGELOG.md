@@ -1,5 +1,9 @@
 # CHANGELOG — SOVEREIGN ECOSYSTEM
 
+## [v0.4.4] - 2026-11-10
+
+- Maintenance release v0.4.4
+
 ## [v0.4.3] - 2026-11-10
 
 - feat(ui): integrate tactical hud, sacred cards, isometric graphs, audio visualizer and cosmic archives across frontends (276da9c)

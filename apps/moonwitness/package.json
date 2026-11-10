@@ -1,7 +1,7 @@
 {
   "name": "@local-git/moonwitness",
   "private": true,
-  "version": "0.4.3",
+  "version": "0.4.4",
   "scripts": {
     "dev": "dotenv -e ../../.env -- next dev --hostname 127.0.0.1 --port 3002",
     "build": "dotenv -e ../../.env -- next build",
