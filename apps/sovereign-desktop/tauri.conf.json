@@ -31,17 +31,15 @@
     "active": true,
     "targets": ["msi"],
     "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/256x256.png"
+      "icons/icon.svg"
     ],
     "publisher": "CN=Sovereign",
     "externalBin": [
-      "bin/git-engine.exe",
-      "bin/arsy.exe",
-      "bin/legend.exe",
-      "bin/pocketbase.exe",
-      "bin/radius.exe"
+      "git-engine.exe",
+      "arsy.exe",
+      "legend.exe",
+      "pocketbase.exe",
+      "radius.exe"
     ]
   },
   "plugins": {
@@ -56,11 +54,11 @@
     "shell": {
       "scope": {
         "allow": [
-          { "name": "git-engine", "cmd": "bin/git-engine.exe", "args": true },
-          { "name": "arsy", "cmd": "bin/arsy.exe", "args": true },
-          { "name": "legend", "cmd": "bin/legend.exe", "args": true },
-          { "name": "pocketbase", "cmd": "bin/pocketbase.exe", "args": true },
-          { "name": "radius", "cmd": "bin/radius.exe", "args": true }
+          { "name": "git-engine", "cmd": "git-engine.exe", "args": true },
+          { "name": "arsy", "cmd": "arsy.exe", "args": true },
+          { "name": "legend", "cmd": "legend.exe", "args": true },
+          { "name": "pocketbase", "cmd": "pocketbase.exe", "args": true },
+          { "name": "radius", "cmd": "radius.exe", "args": true }
         ]
       }
     },

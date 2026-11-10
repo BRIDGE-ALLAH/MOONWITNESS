@@ -25,8 +25,12 @@ export async function sendTelegramNotification(
   env: Env | undefined,
   message: string
 ): Promise<void> {
-  const token = env?.TELEGRAM_BOT_TOKEN || (typeof process !== "undefined" ? process.env?.TELEGRAM_BOT_TOKEN : undefined);
-  const chatId = env?.TELEGRAM_CHAT_ID || (typeof process !== "undefined" ? process.env?.TELEGRAM_CHAT_ID : undefined);
+  const token =
+    env?.TELEGRAM_BOT_TOKEN ||
+    (typeof process !== "undefined" ? process.env?.TELEGRAM_BOT_TOKEN : undefined);
+  const chatId =
+    env?.TELEGRAM_CHAT_ID ||
+    (typeof process !== "undefined" ? (process.env?.TELEGRAM_CHAT_ID || process.env?.TELEGRAM_GROUP_ID) : undefined);
   if (!token || !chatId) return;
 
   try {
