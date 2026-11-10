@@ -7,7 +7,6 @@ use crate::storage::credential::{store_credential, get_credential};
 use crate::license::validate::{validate_offline, generate_hw_fingerprint, LicenseManager, LicenseInfo};
 use crate::sync::engine::SyncEngine;
 use crate::storage::surrealdb::init_surrealdb;
-use std::path::PathBuf;
 use ring::rand::SecureRandom;
 use base64::Engine;
 
@@ -86,7 +85,7 @@ pub async fn auth_windows_hello_verify(
         name: "Windows User".to_string(),
         role: "developer".to_string(),
         tenant_id: None,
-    })?;
+    }).map_err(|e| e.to_string())?;
 
     Ok(AuthToken {
         token: jwt,
@@ -112,7 +111,7 @@ pub async fn auth_pat(pat: String) -> Result<AuthToken, String> {
         name: "PAT User".to_string(),
         role: "developer".to_string(),
         tenant_id: None,
-    })?;
+    }).map_err(|e| e.to_string())?;
 
     Ok(AuthToken {
         token: jwt,
@@ -135,7 +134,7 @@ pub async fn get_jwt() -> Result<String, String> {
         name: "Windows User".to_string(),
         role: "developer".to_string(),
         tenant_id: None,
-    })?;
+    }).map_err(|e| e.to_string())?;
 
     Ok(jwt)
 }
@@ -147,7 +146,7 @@ pub async fn get_jwt_internal(_state: &crate::state::AppState) -> Result<String>
         name: "Windows User".to_string(),
         role: "developer".to_string(),
         tenant_id: None,
-    })?;
+    }).map_err(|e| e.to_string())?;
 
     Ok(jwt)
 }
@@ -177,7 +176,7 @@ pub async fn refresh_token() -> Result<AuthToken, String> {
             name: "Windows User".to_string(),
             role: "developer".to_string(),
             tenant_id: None,
-        })?;
+        }).map_err(|e| e.to_string())?;
 
         return Ok(AuthToken {
             token: jwt,

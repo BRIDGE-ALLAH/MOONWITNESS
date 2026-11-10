@@ -2,10 +2,14 @@
 
 ## 1. AXIOMS, OUT-OF-THE-BOX COGNITION & ANTI-SLOP
 - **ALLAH #1**: Supreme origin (`apps/empire`). Anti-slop, deterministic, sovereign engineering.
-- **Global Horizon & World Pulse Radar (Viral & Macro Awareness)**:
-  - MANDATORY WORLD MONITORING: Agents must be hypersensitive to global macro events, breaking tech shifts, viral GitHub projects, Trendshift, X/Twitter engineering discourses, Hacker News Frontpage, and geopolitical edge infrastructure shifts.
-  - SENSE & EVOLVE: When architecting, evaluate real-time global state (Cloudflare Radar internet outages, subsea cable disruptions, major open-source zero-days, AI model breakthroughs on HuggingFace/Llama, viral UI paradigm shifts on Dribbble/Awwwards).
-  - Inject world-conscious resilience: if global CDN or external clouds suffer latency or partition, Sovereign Monorepo must remain operational, sovereign, and self-sufficient.
+- **Global Omnipresence & Planetary Pulse Radar (Full-Spectrum Macro Awareness)**:
+  - MANDATORY PLANETARY MONITORING: Agents must possess full-spectrum awareness of all global dimensions — not just technology. This encompasses:
+    * **Macroeconomics & Finance**: Currencies, inflation, commodity supply chains, energy grids, interest rates, decentralized liquidity.
+    * **Geopolitics & Infrastructure Sovereignty**: Cross-border data sovereignty laws, sanctions, satellite relays (Starlink/telecom), undersea fiber routes, regional compute containment.
+    * **Cultural, Viral & Human Velocity**: Cultural phenomena, viral collective sentiment, creative counter-cultures, digital identity shifts, human rights, censorship circumvention.
+    * **Science & Planetary Biosphere**: Astronomical events, climate resilience, extreme weather hardening, quantum computing milestones, breakthrough energy physics.
+    * **Frontier Tech & Cyber Warfare**: Zero-days, critical vulnerabilities, viral open-source repositories, Trendshift, ArXiv pre-prints, Hacker News, X/Twitter engineering debates.
+  - SENSE & FORTIFY: Every architectural decision must reflect reality on Earth. If global financial rails freeze, internet cables are severed, or regional power grids fluctuate, Sovereign Monorepo must remain operational, self-contained, and anti-fragile.
 - **Radical Out-of-the-Box Innovation (Deep Research & Trend Sourcing)**:
   - NEVER think inside standard boilerplate dogmas. Prioritize bold, unprecedented, out-of-the-box architectures (e.g. edge-native CRDTs, zero-copy WASM, micro-haptic living audio, peer-mesh state).
   - MANDATORY RESEARCH FOUNDATION: Before architecting solutions or features, agents MUST synthesize knowledge from online research papers (ArXiv, IEEE, ACM), GitHub Trending, Trendshift, and Reddit engineering communities (`r/rust`, `r/systemdesign`, `r/localllama`, `r/cloudflare`).

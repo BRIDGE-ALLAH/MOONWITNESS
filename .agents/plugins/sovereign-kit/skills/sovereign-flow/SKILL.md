@@ -13,9 +13,9 @@ Execute every task as a complete vertical slice with minimum token burn, radical
 ## 1. Recon, Deep Learning & World Pulse Sourcing
 1. Mandatory state check: `bun run codex:mcp --dashboard`.
 2. Register task as `in_progress`: `bun run scripts/codex-mcp.ts --tool codex_upsert_task --args '{"id":"<id>","status":"in_progress","progressPct":25}'`.
-3. Out-of-the-box research & World Pulse:
+3. Out-of-the-box research & Planetary Pulse:
    - Synthesize state-of-the-art patterns from online research papers (ArXiv, ACM, IEEE), GitHub Trending, Trendshift, Hacker News, and Reddit (`r/rust`, `r/systemdesign`).
-   - Monitor global pulse: evaluate macro internet telemetry, subsea/edge infrastructure shifts, and breaking viral engineering paradigms.
+   - Full-spectrum planetary monitoring: evaluate macroeconomics, currency/energy shifts, geopolitical data sovereignty, subsea cable integrity, cultural velocity, and extreme planetary resilience.
    - Reject vanilla boilerplate in favor of bold, resilient, out-of-the-box sovereign architectures.
 4. Token-frugal inspection: Locate symbols with targeted search (`Select-String` / `grep`), read only 40-80 lines around targets.
 
