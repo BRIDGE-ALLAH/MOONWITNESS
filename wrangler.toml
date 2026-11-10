@@ -1,0 +1,21 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "sovereign-codex-edge"
+main = "services/codex-edge/src/worker.ts"
+compatibility_date = "2025-05-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[vars]
+SOVEREIGN_VERSION = "0.4.0"
+CODEX_ORIGIN_BRAND = "ALLAH.COM // SOVEREIGN MONOREPO"
+INDEPENDENT_EDGE_MODE = "true"
+
+# Cloudflare D1 Serverless SQLite Binding (stays 100% online when project nodes are down)
+[[d1_databases]]
+binding = "CODEX_DB"
+database_name = "sovereign-codex-db"
+database_id = "00000000-0000-0000-0000-000000000001"
+migrations_dir = "services/codex-edge"
+
+[observability]
+enabled = true

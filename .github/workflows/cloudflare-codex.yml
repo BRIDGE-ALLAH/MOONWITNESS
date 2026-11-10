@@ -1,0 +1,42 @@
+name: Cloudflare Edge Codex Deploy
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "services/codex-edge/**"
+      - "wrangler.toml"
+      - ".github/workflows/cloudflare-codex.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy-edge-pulse:
+    name: Verify & Deploy Sovereign Codex // Edge Pulse (Cloudflare Workers + D1)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Verify Standalone MCP Server & Codex Snapshot
+        run: |
+          bun run scripts/codex-mcp.ts --dashboard | head -n 35
+
+      - name: Deploy to Cloudflare Workers + D1 (if CLOUDFLARE_API_TOKEN configured)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            bunx wrangler deploy --config wrangler.toml
+          else
+            echo "CLOUDFLARE_API_TOKEN not set in repository secrets; standalone Edge verification succeeded."
+          fi

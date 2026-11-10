@@ -158,6 +158,88 @@ await assertStep("7. RID Soul Patch Forge Persistence (:3004/api/legend/patches 
   return `verified ${patchId} persisted in SurrealDB (${patches.length} soul patches)`;
 });
 
+await assertStep("8. Sovereign Codex DB Tasks, KPIs & Autonomous Comment Triage (:3000/api/wiki)", async () => {
+  const taskId = `task-smoke-${Date.now() % 100000}`;
+  const createRes = await fetch("http://127.0.0.1:3000/api/wiki", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "upsert_task",
+      id: taskId,
+      title: "Verify Sovereign Codex & Kanban Persistence",
+      domain: "EDGE_MCP",
+      priority: "HIGH",
+      status: "done",
+      progressPct: 100,
+    }),
+    signal: AbortSignal.timeout(3500),
+  });
+  if (!createRes.ok) {
+    throw new Error(`POST /api/wiki HTTP ${createRes.status}: ${await createRes.text()}`);
+  }
+
+  const commentRes = await fetch("http://127.0.0.1:3000/api/wiki", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "post_comment",
+      author: "smoke-verifier@edge.net",
+      sentiment: "QUESTION",
+      targetType: "milestone",
+      targetId: "m5-v050",
+      body: "Verify autonomous triage response on Sovereign Codex.",
+    }),
+    signal: AbortSignal.timeout(3500),
+  });
+  if (!commentRes.ok) {
+    throw new Error(`POST /api/wiki (comment) HTTP ${commentRes.status}`);
+  }
+
+  const getRes = await fetch("http://127.0.0.1:3000/api/wiki", {
+    signal: AbortSignal.timeout(3500),
+  });
+  if (!getRes.ok) {
+    throw new Error(`GET /api/wiki HTTP ${getRes.status}`);
+  }
+  const overview = (await getRes.json()) as {
+    version?: string;
+    localPlanFolderEliminated?: boolean;
+    tasks?: Array<{ id?: string }>;
+    milestones?: unknown[];
+    comments?: Array<{ autonomousReply?: string }>;
+  };
+  const found = overview.tasks?.some((t) => t.id === taskId);
+  if (!found) {
+    throw new Error(`Task ${taskId} not found in /api/wiki tasks`);
+  }
+  if (!overview.localPlanFolderEliminated) {
+    throw new Error(`Expected .plan folder to be eliminated`);
+  }
+  return `version=${overview.version}, milestones=${overview.milestones?.length ?? 0}, tasks=${overview.tasks?.length ?? 0}, comments=${overview.comments?.length ?? 0}`;
+});
+
+await assertStep("9. Standalone Independent Edge Pulse & MCP Server (:8787/mcp)", async () => {
+  const rpcRes = await fetch("http://127.0.0.1:8787/mcp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/list",
+    }),
+    signal: AbortSignal.timeout(3000),
+  });
+  if (!rpcRes.ok) {
+    throw new Error(`POST :8787/mcp HTTP ${rpcRes.status}`);
+  }
+  const rpcBody = (await rpcRes.json()) as { result?: { tools?: Array<{ name: string }> } };
+  const tools = rpcBody.result?.tools ?? [];
+  if (tools.length < 5) {
+    throw new Error(`Expected 5 MCP tools on :8787/mcp, got ${tools.length}`);
+  }
+  return `independent :8787 ONLINE, MCP tools=${tools.map((t) => t.name).join(",")}`;
+});
+
 const failed = results.filter((r) => !r.ok);
 console.log("\n======================================================");
 if (failed.length > 0) {

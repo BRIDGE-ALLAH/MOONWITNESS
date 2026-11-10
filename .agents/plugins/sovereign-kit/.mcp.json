@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "sovereign-codex-mcp": {
+      "command": "bun",
+      "args": ["run", "scripts/codex-mcp.ts"],
+      "description": "Independent database-driven Sovereign Codex MCP Server (KPIs, Milestones, Tasks, Progress %, Docs, Releases, and Autonomous Comment Triage). Works even when origin project nodes are offline."
+    }
+  }
+}
