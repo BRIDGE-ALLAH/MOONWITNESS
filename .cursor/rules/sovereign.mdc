@@ -1,0 +1,13 @@
+---
+description: Universal zero-slop, token-frugal rules for the Sovereign Monorepo
+globs: **/*
+alwaysApply: true
+---
+
+See `AGENTS.md` at repository root for full topology, port map, data plane boundaries (PocketBase `:8091` vs Legend Rust SurrealDB `:8092`), and the mandatory 5-stage `bun run gate`.
+
+Key invariants:
+1. Zero `// TODO`, `// FIXME`, `Math.random()`, mock arrays, or placeholder handlers.
+2. Read targeted line ranges; never dump full large files into context.
+3. Keep `LEGEND_SERVICE_TOKEN`, `LEGEND_ADMIN_TOKEN`, and `ARSY_SERVICE_TOKEN` server-side only.
+4. Run `bun run gate` before every commit.
