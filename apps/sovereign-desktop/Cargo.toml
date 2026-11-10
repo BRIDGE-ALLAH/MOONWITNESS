@@ -11,10 +11,10 @@ members = []
 
 [dependencies]
 # Tauri v2
-tauri = { version = "2", features = ["macros", "async-runtime", "shell", "fs", "dialog", "notification", "clipboard", "process", "updater"] }
+tauri = { version = "2", features = ["tray-icon", "protocol-asset"] }
 
 # Database - Embedded SurrealDB
-surrealdb = { version = "2.0", features = ["kv", "surrealkv"] }
+surrealdb = { version = "2.1", features = ["kv-mem", "kv-surrealkv"] }
 
 # Async runtime
 tokio = { version = "1", features = ["full", "rt-multi-thread", "macros", "time", "sync"] }
@@ -37,7 +37,7 @@ windows = { version = "0.58", features = [
     "Win32_UI_Shell",
     "Win32_Foundation",
     "Win32_System_Threading",
-    "Win32_System_Process_Information"
+    "Win32_System_ProcessStatus"
 ] }
 
 # Serialization
@@ -55,14 +55,15 @@ tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"]
 
 # Crypto
 ring = "0.17"
-rsa = { version = "0.9", features = ["pkcs1", "pkcs8", "pss", "sha2"] }
+rsa = { version = "0.9", features = ["sha2"] }
 sha2 = "0.10"
 
 # CLI parsing (for license-gen)
 clap = { version = "4", features = ["derive", "env"] }
 
 # HTTP client for sync
-reqwest = { version = "0.12", features = ["json", "rustls-tls", "websocket"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream"] }
+tokio-tungstenite = "0.21"
 
 # URL handling
 url = "2"

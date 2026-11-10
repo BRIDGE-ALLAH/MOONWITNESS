@@ -1,6 +1,11 @@
 # 🌌 A-L-L-A-H.COM // EMPIRE OF THE LIGHT
 ## THE SOVEREIGN 5-NODE ECOSYSTEM & BARE-METAL INFRASTRUCTURE
 
+[![Sovereign Codex](https://img.shields.io/badge/CODEX%20EDGE-100%25%20ONLINE-10b981?style=for-the-badge&logo=cloudflare&logoColor=white)](https://codex.a-l-l-a-h.com)
+[![Public Apex](https://img.shields.io/badge/DOMAIN-codex.a--l--l--a--h.com-c9a227?style=for-the-badge)](https://codex.a-l-l-a-h.com)
+[![Edge Mirror](https://img.shields.io/badge/INFRA-codex.e--isp.id-38bdf8?style=for-the-badge)](https://codex.e-isp.id)
+[![MCP Server](https://img.shields.io/badge/MCP-JSON--RPC%202.0-a855f7?style=for-the-badge)](https://codex.a-l-l-a-h.com/mcp)
+
 > **"SATU KESATUAN: BERSUMBER DARI YANG MAHA UTAMA (ALLAH #1), DIABADIKAN OLEH MOONWITNESS, DIJAHIT DENGAN JIWA ROOT ID, DITOPANG OLEH FABRIC E-ISP, DAN DIBANGUN DENGAN KECEPATAN DX."**
 >
 > **"SIN CAN BE BETTER HUMAN"** — *Luka, dosa, dan kegagalan adalah bahan bakar transformasi. Bersujud hanya kepada ALLAH, pantang tunduk pada tirani dunia.*

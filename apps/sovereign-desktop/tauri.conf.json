@@ -79,40 +79,5 @@
         "installMode": "passive"
       }
     }
-  },
-  "allowlist": {
-    "fs": {
-      "readFile": true,
-      "writeFile": true,
-      "readDir": true,
-      "copyFile": true,
-      "createDir": true,
-      "removeFile": true,
-      "removeDir": true,
-      "renameFile": true,
-      "exists": true
-    },
-    "shell": {
-      "open": true,
-      "execute": true,
-      "sidecar": true
-    },
-    "process": {
-      "relaunch": true,
-      "exit": true
-    },
-    "dialog": {
-      "open": true,
-      "save": true,
-      "message": true,
-      "ask": true
-    },
-    "notification": {
-      "show": true
-    },
-    "clipboard": {
-      "readText": true,
-      "writeText": true
-    }
   }
 }
