@@ -9,6 +9,7 @@ type InfraStatus = {
   pocketbase: "online" | "offline" | "checking";
   git: "online" | "offline" | "checking";
   arsy: "online" | "offline" | "checking";
+  legend: "online" | "offline" | "checking";
 };
 
 type PppoeSession = {
@@ -35,6 +36,7 @@ export default function EISPPage() {
     pocketbase: "checking",
     git: "checking",
     arsy: "checking",
+    legend: "checking",
   });
   const [pppoeSessions, setPppoeSessions] = useState<PppoeSession[]>([]);
   const [controllers, setControllers] = useState<ArsyController[]>([]);
@@ -43,16 +45,18 @@ export default function EISPPage() {
 
   const loadArsyTelemetry = async () => {
     try {
-      const [hRes, sRes, cRes] = await Promise.all([
+      const [hRes, sRes, cRes, lRes] = await Promise.all([
         fetch("http://127.0.0.1:4000/health"),
         fetch("http://127.0.0.1:4000/api/v1/pppoe/sessions"),
         fetch("http://127.0.0.1:4000/api/v1/controllers"),
+        fetch("http://127.0.0.1:8092/health"),
       ]);
       if (hRes.ok) setStatus((s) => ({ ...s, arsy: "online" }));
       if (sRes.ok) setPppoeSessions(await sRes.json());
       if (cRes.ok) setControllers(await cRes.json());
+      setStatus((s) => ({ ...s, legend: lRes.ok ? "online" : "offline" }));
     } catch {
-      setStatus((s) => ({ ...s, arsy: "offline" }));
+      setStatus((s) => ({ ...s, arsy: "offline", legend: "offline" }));
     }
   };
 
@@ -178,6 +182,12 @@ export default function EISPPage() {
             value={status.arsy === "checking" ? "..." : status.arsy.toUpperCase()}
             sub=":4000 // PPPoE & RADIUS"
             valueColor={status.arsy === "online" ? "#00ff66" : "#ff0055"}
+          />
+          <StatMetric
+            label="LEGEND BAAS"
+            value={status.legend === "checking" ? "..." : status.legend.toUpperCase()}
+            sub=":8092 // SurrealDB Rust"
+            valueColor={status.legend === "online" ? "#00f0ff" : "#ff0055"}
           />
           <StatMetric label="PPPoE SESSIONS" value={pppoeSessions.length} sub="active subscribers" variant="neon" valueColor="#00f0ff" />
         </div>
