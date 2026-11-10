@@ -1,5 +1,11 @@
 # CHANGELOG — SOVEREIGN ECOSYSTEM
 
+## [v0.4.0] - 2026-11-10
+
+- feat(narration-dna-ui-ux): wire RID soul patch SurrealDB persistence, Empire live mesh pulse, and MoonWitness spherical math (48ec311)
+- feat(sovereign): upgrade autonomous agent/skill kit, 16-manifest gate parity, CI radar summary, and SurrealQL UX (1af496c)
+- feat(e2e): add live mesh smoke verifier, root env resolver, and E-ISP Legend stats proxy (78d5b45)
+
 ## [v0.3.0] - 2026-11-10
 
 - feat(automation): add autonomous autofix, feature radar, autopilot orchestrator, and legend stats endpoint (e6d6856)
