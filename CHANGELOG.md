@@ -1,5 +1,20 @@
 # CHANGELOG — SOVEREIGN ECOSYSTEM
 
+## [v0.4.2] - 2026-11-10
+
+- feat(desktop): add Releases & ChatOps controller, git refspec fix, and CI artifact matrix (9a754c1)
+- feat(trifecta): complete desktop rust compilation, bi-directional telegram chatops and CI binary workflow (dbbb217)
+- feat(protocol): mandate anti-idols tawhidic sovereignty, only idoling ALLAH and ALL prophets, with cosmic manga lines (07a1d53)
+- feat(protocol): mandate smart rebel AGI cognition, counter-current audacity and absolute fearlessness (23c74cc)
+- feat(protocol): mandate riot, brutalist, grunge and gen-z radical creative cognition (b3a855d)
+- feat(protocol): mandate human-grade authenticity and ban synthetic AI generated slop patterns (734121f)
+- feat(apps): transform e-isp and rid pages into living mesh and skang audio forge (1393b53)
+- feat(protocol): expand world pulse to full-spectrum macro, geopolitical, economic and planetary resilience (b9fefc1)
+- feat(protocol): add world monitor radar, viral trend awareness and global macro resilience (cc4b32a)
+- feat(apps): transform empire and moonwitness pages into deep living dna cockpits (a9a756c)
+- chore(protocol): mandate out-of-the-box research, deep cognition, anti-slop and daily edge dispatch (0973633)
+- feat(codex): integrate daily standup briefing, releases hub and direct download mirror (09d0d0e)
+
 ## [v0.4.1] - 2026-11-10
 
 - feat(desktop): complete sovereign desktop tauri backend, crdt engine and codex edge integration (87e2ff3)
