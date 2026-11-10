@@ -81,3 +81,4 @@ if (shouldTag) {
     console.error("⚠️ Could not auto-commit/tag:", (e as Error).message);
   }
 }
+

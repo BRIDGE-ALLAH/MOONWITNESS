@@ -1,3 +1,4 @@
 #!/bin/sh
 echo "⚡ [PRE-COMMIT] Running Sovereign Quality Gate..."
 bun run gate
+

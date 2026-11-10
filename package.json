@@ -24,6 +24,7 @@
     "check": "bun --filter @local-git/ui check && bun --filter @local-git/dx check && bun --filter @local-git/empire check && bun --filter @local-git/moonwitness check && bun --filter @local-git/e-isp check && bun --filter @local-git/rid check && bun --filter @local-git/engine check && bun --filter @local-git/arsy check",
     "test": "bun --filter @local-git/engine test",
     "gate": "bun run scripts/gate.ts",
+    "doctor": "bun run scripts/doctor.ts",
     "release:patch": "bun run scripts/release.ts patch --tag",
     "release:minor": "bun run scripts/release.ts minor --tag",
     "release:major": "bun run scripts/release.ts major --tag",
