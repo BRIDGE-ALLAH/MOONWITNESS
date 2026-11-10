@@ -2,10 +2,12 @@ import { mkdir } from "node:fs/promises";
 import { config, assertRuntimeConfig } from "./config";
 import { getAdmin, authenticateUserRequest } from "./pocketbase";
 import { createPersonalAccessToken, authenticatePersonalAccessToken, checkRepositoryAccess, parseBasicToken } from "./security";
-import { createRepository, findRepository, listRepositories } from "./repositories";
+import { createRepository, findRepository, listRepositories, getRepositoryCommits } from "./repositories";
 import { runGitHttpBackend } from "./git-http";
 import { listDockerContainers, controlDockerContainer } from "./docker";
 import { createTokenSchema } from "@local-git/contracts";
+
+import { listPersonalAccessTokens, revokePersonalAccessToken, unrevokePersonalAccessToken } from "./security";
 
 function json(data: unknown, status = 200, headers?: HeadersInit) {
   return Response.json(data, { status, headers });
@@ -42,6 +44,17 @@ async function handleApi(request: Request, url: URL): Promise<Response> {
     return json({ items: await listRepositories(user) });
   }
 
+  if (url.pathname.startsWith("/api/v1/repositories/") && url.pathname.endsWith("/commits") && request.method === "GET") {
+    const user = await requireUser(request);
+    if (!user) return json({ error: "Authentication required." }, 401);
+    const parts = url.pathname.split("/");
+    // /api/v1/repositories/:repoId/commits
+    const repoId = parts[4];
+    if (!repoId) return json({ error: "Repository ID required." }, 400);
+    const commits = await getRepositoryCommits(repoId);
+    return json({ items: commits });
+  }
+
   if (url.pathname === "/api/v1/repositories" && request.method === "POST") {
     const user = await requireUser(request);
     if (!user) return json({ error: "Authentication required." }, 401);
@@ -76,6 +89,43 @@ async function handleApi(request: Request, url: URL): Promise<Response> {
       revoked: false,
     });
     return json({ id: record.id, name: parsed.data.name, token: created.token, token_prefix: created.tokenPrefix }, 201);
+  }
+
+  // --- PERSONAL ACCESS TOKEN MANAGEMENT ---
+  if (url.pathname === "/api/v1/tokens" && request.method === "GET") {
+    const user = await requireUser(request);
+    if (!user) return json({ error: "Authentication required." }, 401);
+    const tokens = await listPersonalAccessTokens(user.id);
+    return json({ items: tokens });
+  }
+
+  if (url.pathname.startsWith("/api/v1/tokens/") && request.method === "DELETE") {
+    const user = await requireUser(request);
+    if (!user) return json({ error: "Authentication required." }, 401);
+    const tokenId = url.pathname.split("/").pop() ?? "";
+    if (!tokenId) return json({ error: "Token ID required." }, 400);
+    const ok = await revokePersonalAccessToken(user.id, tokenId);
+    if (!ok) return json({ error: "Token not found." }, 404);
+    return json({ ok: true, revoked: true });
+  }
+
+  if (url.pathname.startsWith("/api/v1/tokens/") && request.method === "PATCH") {
+    const user = await requireUser(request);
+    if (!user) return json({ error: "Authentication required." }, 401);
+    const tokenId = url.pathname.split("/").pop() ?? "";
+    if (!tokenId) return json({ error: "Token ID required." }, 400);
+    const body = await request.json().catch(() => null) as { action?: "revoke" | "unrevoke" } | null;
+    if (!body?.action || !["revoke", "unrevoke"].includes(body.action)) {
+      return json({ error: "Action 'revoke' or 'unrevoke' required." }, 400);
+    }
+    let ok = false;
+    if (body.action === "revoke") {
+      ok = await revokePersonalAccessToken(user.id, tokenId);
+    } else {
+      ok = await unrevokePersonalAccessToken(user.id, tokenId);
+    }
+    if (!ok) return json({ error: "Token not found or cannot be unrevoked (expired)." }, 404);
+    return json({ ok: true, action: body.action });
   }
 
   // --- DOCKER PAAS MANAGEMENT ENDPOINTS ---

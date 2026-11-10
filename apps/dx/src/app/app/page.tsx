@@ -38,6 +38,17 @@ type ContainerItem = {
 };
 
 type TokenResult = { id: string; name: string; token: string; token_prefix: string };
+
+type TokenListItem = {
+  id: string;
+  name: string;
+  token_prefix: string;
+  scopes: string[];
+  expires_at: string | null;
+  revoked: boolean;
+  created: string;
+};
+
 type UserRecord = RecordModel & { name?: string; username?: string; email?: string };
 
 async function engineRequest<T>(path: string, token: string, init: RequestInit = {}): Promise<T> {
@@ -60,7 +71,10 @@ function slugify(value: string) {
 
 export default function AppPage() {
   const [user, setUser] = useState<UserRecord | null>(pb.authStore.record as UserRecord | null);
-  const [activeTab, setActiveTab] = useState<"repos" | "paas">("repos");
+  const [activeTab, setActiveTab] = useState<"repos" | "paas" | "inspector">("repos");
+  const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
+  const [repoCommits, setRepoCommits] = useState<Array<{ hash: string; shortHash: string; author: string; email: string; date: string; subject: string }>>([]);
+  const [loadingCommits, setLoadingCommits] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,6 +98,8 @@ export default function AppPage() {
   const [tokenScopes, setTokenScopes] = useState(["repo:read", "repo:write"]);
   const [createdToken, setCreatedToken] = useState<TokenResult | null>(null);
   const [copied, setCopied] = useState(false);
+  const [tokens, setTokens] = useState<TokenListItem[]>([]);
+  const [tokensLoading, setTokensLoading] = useState(false);
 
   useEffect(() => pb.authStore.onChange((_token, record) => setUser(record as UserRecord | null), true), []);
 
@@ -100,6 +116,28 @@ export default function AppPage() {
       setLoading(false);
     }
   }, []);
+
+  const loadCommits = useCallback(async (repo: Repo) => {
+    if (!pb.authStore.token) return;
+    setLoadingCommits(true);
+    try {
+      const res = await engineRequest<{ items: Array<{ hash: string; shortHash: string; author: string; email: string; date: string; subject: string }> }>(
+        `/api/v1/repositories/${repo.id}/commits`,
+        pb.authStore.token
+      );
+      setRepoCommits(res.items || []);
+    } catch {
+      setRepoCommits([]);
+    } finally {
+      setLoadingCommits(false);
+    }
+  }, []);
+
+  const inspectRepo = (repo: Repo) => {
+    setSelectedRepo(repo);
+    setActiveTab("inspector");
+    void loadCommits(repo);
+  };
 
   const loadContainers = useCallback(async () => {
     if (!pb.authStore.token) return;
@@ -119,11 +157,12 @@ export default function AppPage() {
     if (user) {
       if (activeTab === "repos") void loadRepos();
       if (activeTab === "paas") void loadContainers();
+      if (activeTab === "inspector" && selectedRepo) void loadCommits(selectedRepo);
     } else {
       setRepos([]);
       setContainers([]);
     }
-  }, [user, activeTab, loadRepos, loadContainers]);
+  }, [user, activeTab, selectedRepo, loadRepos, loadContainers, loadCommits]);
 
   const handleContainerAction = async (containerId: string, action: "start" | "stop" | "restart" | "logs", containerName = "") => {
     if (!pb.authStore.token) return;
@@ -291,6 +330,9 @@ export default function AppPage() {
         <button className={`nav-item ${activeTab === "paas" ? "active" : ""}`} onClick={() => setActiveTab("paas")}>
           <Container size={17} /> Docker PaaS Hub <span className="nav-count" style={{ background: "var(--toxic)", color: "#fff" }}>{containers.length.toString().padStart(2, "0")}</span>
         </button>
+        <button className={`nav-item ${activeTab === "inspector" ? "active" : ""}`} onClick={() => { if (!selectedRepo && repos[0]) setSelectedRepo(repos[0]); setActiveTab("inspector"); }}>
+          <FolderGit2 size={17} /> Git Tree &amp; Diff <span className="nav-count" style={{ background: "var(--cyan)", color: "#000" }}>LOG</span>
+        </button>
         <button className="nav-item" onClick={() => setShowToken(true)}><KeyRound size={17} /> Access tokens</button>
         <Link href="/" className="nav-item" style={{ textDecoration: "none" }}><ArrowLeft size={17} /> Landing Page</Link>
         <div className="side-label side-label-spaced">SYSTEM</div>
@@ -375,7 +417,79 @@ export default function AppPage() {
             </>
           )}
 
-          {/* TAB 2: DOCKER PAAS HUB */}
+          {/* TAB 3: GIT TREE & COMMIT INSPECTOR */}
+          {activeTab === "inspector" && (
+            <>
+              <div className="stat-grid">
+                <StatMetric label="SELECTED REPO" value={selectedRepo?.slug || "NONE"} sub="ACTIVE REPOSITORY" icon={<FolderGit2 size={16} />} />
+                <StatMetric label="COMMITS" value={repoCommits.length.toString().padStart(2, "0")} sub="BARE-GIT LOGS" variant="neon" valueColor="#00ff66" icon={<GitCommitHorizontal size={16} />} />
+                <StatMetric label="HEAD BRANCH" value={selectedRepo?.default_branch || "main"} sub="DEFAULT TARGET" variant="cyan" valueColor="#00f0ff" icon={<GitBranch size={16} />} />
+                <StatMetric label="STORAGE KEY" value={selectedRepo?.id?.slice(0, 8) || "—"} sub="POCKETBASE MAPPING" variant="gold" valueColor="#eab308" icon={<HardDrive size={16} />} />
+              </div>
+
+              <section className="section-block">
+                <div className="section-heading">
+                  <div>
+                    <div className="eyebrow muted">IN-BROWSER GIT INSPECTOR / 01</div>
+                    <h2>Commit History &amp; Tree <span>{selectedRepo?.name}</span></h2>
+                  </div>
+                  <div className="section-tools" style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <Select
+                      value={selectedRepo?.id || ""}
+                      onChange={(e) => {
+                        const target = repos.find((r) => r.id === e.target.value);
+                        if (target) inspectRepo(target);
+                      }}
+                      style={{ maxWidth: 220 }}
+                    >
+                      {repos.map((r) => (
+                        <option key={r.id} value={r.id}>{r.name} ({r.slug})</option>
+                      ))}
+                    </Select>
+                    <button className="icon-button" onClick={() => selectedRepo && loadCommits(selectedRepo)} title="Refresh Commits">
+                      <RefreshCw size={16} className={loadingCommits ? "spin" : ""} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="repo-table">
+                  <div className="repo-table-head" style={{ gridTemplateColumns: "100px 1fr 180px 140px" }}>
+                    <span>COMMIT</span>
+                    <span>SUBJECT / MESSAGE</span>
+                    <span>AUTHOR</span>
+                    <span style={{ textAlign: "right" }}>DATE</span>
+                  </div>
+
+                  {loadingCommits ? (
+                    <EmptyState icon={<RefreshCw className="spin" size={20} />} title="READING BARE-GIT REPOSITORY..." />
+                  ) : repoCommits.length === 0 ? (
+                    <EmptyState
+                      icon={<GitCommitHorizontal size={24} />}
+                      title="NO COMMITS DETECTED"
+                      description="This repository is currently empty or has not received its first push."
+                    />
+                  ) : (
+                    repoCommits.map((c) => (
+                      <div className="repo-row" key={c.hash} style={{ gridTemplateColumns: "100px 1fr 180px 140px" }}>
+                        <div>
+                          <Badge variant="cyan">{c.shortHash}</Badge>
+                        </div>
+                        <div style={{ fontWeight: 700, color: "var(--text)" }}>
+                          {c.subject}
+                        </div>
+                        <div style={{ fontSize: "11px", color: "var(--muted)" }}>
+                          {c.author}
+                        </div>
+                        <div style={{ fontSize: "11px", color: "var(--accent)", textAlign: "right" }}>
+                          {new Date(c.date).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </section>
+            </>
+          )}
           {activeTab === "paas" && (
             <>
               <div className="stat-grid">

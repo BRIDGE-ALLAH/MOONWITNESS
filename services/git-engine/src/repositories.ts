@@ -82,6 +82,35 @@ export async function createRepository(user: AuthUser, input: unknown) {
   };
 }
 
+export async function getRepositoryCommits(repoId: string, limit = 20) {
+  const repositoryPath = join(config.dataDir, `${repoId}.git`);
+  try {
+    const { stdout } = await execFileAsync(
+      "git",
+      ["--git-dir", repositoryPath, "log", `-${limit}`, "--pretty=format:%H%x1f%an%x1f%ae%x1f%at%x1f%s"],
+      { timeout: 15_000 }
+    );
+    if (!stdout.trim()) return [];
+    return stdout
+      .trim()
+      .split("\n")
+      .map((line) => {
+        const [hash, author, email, timestamp, subject] = line.split("\x1f");
+        return {
+          hash,
+          shortHash: hash?.slice(0, 7) || "",
+          author: author || "Unknown",
+          email: email || "",
+          date: timestamp ? new Date(Number(timestamp) * 1000).toISOString() : new Date().toISOString(),
+          subject: subject || "No commit message",
+        };
+      });
+  } catch (err) {
+    // If empty repository with no commits yet
+    return [];
+  }
+}
+
 export async function findRepository(ownerUsername: string, slug: string) {
   const admin = await getAdmin();
   try {

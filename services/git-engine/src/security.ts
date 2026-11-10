@@ -8,6 +8,16 @@ export type GitToken = {
   id: string;
 };
 
+export type TokenRecord = {
+  id: string;
+  name: string;
+  token_prefix: string;
+  scopes: string[];
+  expires_at: string | null;
+  revoked: boolean;
+  created: string;
+};
+
 export function createPersonalAccessToken() {
   const token = `lgh_${randomBytes(32).toString("base64url")}`;
   return {
@@ -69,4 +79,48 @@ export function parseBasicToken(request: Request): { username: string; token: st
     if (separator < 1) return null;
     return { username: decoded.slice(0, separator), token: decoded.slice(separator + 1) };
   } catch { return null; }
+}
+
+export async function listPersonalAccessTokens(userId: string): Promise<TokenRecord[]> {
+  const admin = await getAdmin();
+  const records = await admin.collection("personal_access_tokens").getFullList({
+    filter: `owner = "${userId}"`,
+    sort: "-created",
+  });
+  return records.map((r: any) => ({
+    id: r.id,
+    name: r.name,
+    token_prefix: r.token_prefix,
+    scopes: Array.isArray(r.scopes) ? r.scopes.filter((s: unknown) => typeof s === "string") : [],
+    expires_at: r.expires_at ?? null,
+    revoked: Boolean(r.revoked),
+    created: r.created,
+  }));
+}
+
+export async function revokePersonalAccessToken(userId: string, tokenId: string): Promise<boolean> {
+  const admin = await getAdmin();
+  try {
+    const record = await admin.collection("personal_access_tokens").getFirstListItem(
+      `id = "${tokenId}" && owner = "${userId}"`
+    );
+    await admin.collection("personal_access_tokens").update(record.id, { revoked: true });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function unrevokePersonalAccessToken(userId: string, tokenId: string): Promise<boolean> {
+  const admin = await getAdmin();
+  try {
+    const record = await admin.collection("personal_access_tokens").getFirstListItem(
+      `id = "${tokenId}" && owner = "${userId}"`
+    );
+    if (record.expires_at && new Date(record.expires_at).getTime() <= Date.now()) return false;
+    await admin.collection("personal_access_tokens").update(record.id, { revoked: false });
+    return true;
+  } catch {
+    return false;
+  }
 }
