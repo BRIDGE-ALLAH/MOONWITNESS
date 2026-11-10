@@ -71,7 +71,10 @@ function slugify(value: string) {
 
 export default function AppPage() {
   const [user, setUser] = useState<UserRecord | null>(pb.authStore.record as UserRecord | null);
-  const [activeTab, setActiveTab] = useState<"repos" | "paas" | "inspector">("repos");
+  const [activeTab, setActiveTab] = useState<"repos" | "paas" | "inspector" | "legend">("repos");
+  const [legendQuery, setLegendQuery] = useState("SELECT * FROM pppoe_sessions ORDER BY updated_at DESC LIMIT 10;");
+  const [legendResult, setLegendResult] = useState<string>("");
+  const [legendLoading, setLegendLoading] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [repoCommits, setRepoCommits] = useState<Array<{ hash: string; shortHash: string; author: string; email: string; date: string; subject: string }>>([]);
   const [loadingCommits, setLoadingCommits] = useState(false);
@@ -137,6 +140,24 @@ export default function AppPage() {
     setSelectedRepo(repo);
     setActiveTab("inspector");
     void loadCommits(repo);
+  };
+
+  const runLegendQuery = async () => {
+    setLegendLoading(true);
+    setLegendResult("");
+    try {
+      const res = await fetch("/api/legend/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: legendQuery }),
+      });
+      const data = await res.json();
+      setLegendResult(JSON.stringify(data, null, 2));
+    } catch (err) {
+      setLegendResult(`Error: ${err instanceof Error ? err.message : "Execution failed"}`);
+    } finally {
+      setLegendLoading(false);
+    }
   };
 
   const loadContainers = useCallback(async () => {
@@ -348,6 +369,9 @@ export default function AppPage() {
         </button>
         <button className={`nav-item ${activeTab === "inspector" ? "active" : ""}`} onClick={() => { if (!selectedRepo && repos[0]) setSelectedRepo(repos[0]); setActiveTab("inspector"); }}>
           <FolderGit2 size={17} /> Git Tree &amp; Diff <span className="nav-count" style={{ background: "var(--cyan)", color: "#000" }}>LOG</span>
+        </button>
+        <button className={`nav-item ${activeTab === "legend" ? "active" : ""}`} onClick={() => { setActiveTab("legend"); if (!legendResult) runLegendQuery(); }}>
+          <Zap size={17} /> Legend BaaS SQL <span className="nav-count" style={{ background: "var(--neon-green)", color: "#000" }}>RUST</span>
         </button>
         <button className="nav-item" onClick={() => setShowToken(true)}><KeyRound size={17} /> Access tokens</button>
         <Link href="/" className="nav-item" style={{ textDecoration: "none" }}><ArrowLeft size={17} /> Landing Page</Link>
@@ -576,6 +600,56 @@ export default function AppPage() {
                       </div>
                     ))
                   )}
+                </div>
+              </section>
+            </>
+          )}
+
+          {activeTab === "legend" && (
+            <>
+              <div className="stat-grid">
+                <StatMetric label="DATABASE ENGINE" value="SURREALDB" sub="RUST EMBEDDED KV" variant="cyan" valueColor="#00f0ff" icon={<Zap size={16} />} />
+                <StatMetric label="NAMESPACE / DB" value="SOVEREIGN" sub="OPERATIONAL FABRIC" variant="neon" valueColor="#00ff66" icon={<Activity size={16} />} />
+                <StatMetric label="SERVICE PORT" value=":8092" sub="HIGH CADENCE BAAS" variant="gold" valueColor="#eab308" icon={<Server size={16} />} />
+                <StatMetric label="ACCESS LEVEL" value="ADMIN" sub="BEARER TOKEN GUARDED" icon={<ShieldCheck size={16} />} />
+              </div>
+
+              <section className="section-block">
+                <div className="section-heading">
+                  <div>
+                    <div className="eyebrow muted">SURREALQL LIVE QUERY / 01</div>
+                    <h2>Legend Operational Query Terminal</h2>
+                  </div>
+                  <div className="section-tools">
+                    <Button variant="primary" onClick={runLegendQuery} disabled={legendLoading}>
+                      <Play size={15} /> {legendLoading ? "Executing..." : "Execute SurrealQL"}
+                    </Button>
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gap: 16 }}>
+                  <div>
+                    <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "1px", color: "var(--muted)", display: "block", marginBottom: 6 }}>
+                      SURREALQL STATEMENT:
+                    </label>
+                    <Textarea
+                      value={legendQuery}
+                      onChange={(e) => setLegendQuery(e.target.value)}
+                      rows={4}
+                      style={{ fontFamily: "monospace", fontSize: "13px" }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "1px", color: "var(--muted)", display: "block", marginBottom: 6 }}>
+                      QUERY RESULT / OUTPUT:
+                    </label>
+                    <TerminalWindow title="STDOUT // LEGEND BAAS RESPONSE" variant="neon">
+                      <pre style={{ margin: 0, maxHeight: "320px", overflowY: "auto", color: "#00f0ff", whiteSpace: "pre-wrap", fontSize: "12px" }}>
+                        {legendResult || (legendLoading ? "Executing query..." : "Click 'Execute SurrealQL' to run query.")}
+                      </pre>
+                    </TerminalWindow>
+                  </div>
                 </div>
               </section>
             </>
