@@ -17,6 +17,32 @@ export interface Env {
   CODEX_DB?: D1DatabaseLike;
   LEGEND_SERVICE_TOKEN?: string;
   SOVEREIGN_VERSION?: string;
+  TELEGRAM_BOT_TOKEN?: string;
+  TELEGRAM_CHAT_ID?: string;
+}
+
+export async function sendTelegramNotification(
+  env: Env | undefined,
+  message: string
+): Promise<void> {
+  const token = env?.TELEGRAM_BOT_TOKEN || (typeof process !== "undefined" ? process.env?.TELEGRAM_BOT_TOKEN : undefined);
+  const chatId = env?.TELEGRAM_CHAT_ID || (typeof process !== "undefined" ? process.env?.TELEGRAM_CHAT_ID : undefined);
+  if (!token || !chatId) return;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: "Markdown",
+      }),
+      signal: AbortSignal.timeout(4000),
+    });
+  } catch {
+    // Non-blocking: background notification failure must not fail the primary codex request
+  }
 }
 
 const CORS_HEADERS: Record<string, string> = {
@@ -181,6 +207,15 @@ async function handleMcpJsonRpc(request: Request, env?: Env): Promise<Response> 
         { ...args, action: mappedAction },
         { d1: env?.CODEX_DB, legendToken: env?.LEGEND_SERVICE_TOKEN }
       );
+
+      // Trigger Telegram notification for MCP executions
+      let mcpMsg = `🤖 *SOVEREIGN MCP EXECUTION*\nTool: \`${toolName}\``;
+      if (outcome.task) {
+        mcpMsg += `\nTask: *${outcome.task.title}*\nStatus: \`${outcome.task.status.toUpperCase()}\` (${outcome.task.progressPct}%)`;
+      } else if (outcome.milestone) {
+        mcpMsg += `\nMilestone: *${outcome.milestone.title}* (${outcome.milestone.version})\nStatus: \`${outcome.milestone.status}\``;
+      }
+      await sendTelegramNotification(env, mcpMsg);
       return jsonResponse({
         jsonrpc: "2.0",
         id,
@@ -590,6 +625,19 @@ export async function handleCodexEdgeRequest(request: Request, env?: Env): Promi
           d1: env?.CODEX_DB,
           legendToken: env?.LEGEND_SERVICE_TOKEN,
         });
+
+        // Trigger Telegram Dispatcher on Codex mutation
+        const action = typeof body.action === "string" ? body.action : "upsert_task";
+        let notifMsg = `⚡ *SOVEREIGN CODEX // UPDATE*\nAction: \`${action}\``;
+        if (result.task) {
+          notifMsg += `\nTask: *${result.task.title}*\nDomain: \`${result.task.domain}\` | Status: \`${result.task.status.toUpperCase()}\` (${result.task.progressPct}%)`;
+        } else if (result.milestone) {
+          notifMsg += `\nMilestone: *${result.milestone.title}* (${result.milestone.version})\nStatus: \`${result.milestone.status}\` (${result.milestone.progressPct}%)`;
+        } else if (result.comment) {
+          notifMsg += `\nNew Comment by *${result.comment.author}* [${result.comment.sentiment}]:\n"${result.comment.body}"\nAuto-Triage: \`${result.comment.triageStatus}\``;
+        }
+        await sendTelegramNotification(env, notifMsg);
+
         return jsonResponse(result, 201);
       } catch (err) {
         return jsonResponse(

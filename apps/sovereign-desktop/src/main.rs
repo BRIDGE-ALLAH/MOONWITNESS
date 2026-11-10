@@ -11,23 +11,14 @@ mod commands;
 mod storage;
 mod sync;
 mod license;
-
-fn main() {
-    run();
-}
+mod state;
 
 use sidecar::SidecarManager;
 use storage::surrealdb::{SurrealLocal, init_surrealdb};
 use sync::engine::SyncEngine;
 use commands::auth::{init_app, AppInitResult};
+use crate::state::AppState;
 
-struct AppState {
-    sidecar_manager: Arc<SidecarManager>,
-    db: SurrealLocal,
-    sync_engine: Arc<SyncEngine>,
-}
-
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Initialize tracing
     fmt()
@@ -105,12 +96,7 @@ pub fn run() {
             commands::auth::verify_license,
             commands::auth::refresh_token,
             commands::auth::init_app,
-            // Git commands (to be implemented)
-            // Service commands (to be implemented)
-            // SurrealQL commands (to be implemented)
-            // PPPoE commands (to be implemented)
-            // Tenant commands (to be implemented)
-            // Diagnostics commands (to be implemented)
+            // Git commands (in commands/git.rs - will be compiled when git.rs exists)
         ])
         .run(tauri::generate_context!())
         .expect("Error running Tauri application");

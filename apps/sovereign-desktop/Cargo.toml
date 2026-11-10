@@ -10,11 +10,11 @@ license = "MIT"
 members = []
 
 [dependencies]
-# Tauri v2
-tauri = { version = "2", features = ["tray-icon", "protocol-asset"] }
+# Tauri v2 - using default features
+tauri = { version = "2" }
 
-# Database - Embedded SurrealDB
-surrealdb = { version = "2.1", features = ["kv-mem", "kv-surrealkv"] }
+# Database - Embedded SurrealDB (using surrealdb 1.x with sled/kv)
+surrealdb = { version = "1.5.6", features = ["kv-mem"] }
 
 # Async runtime
 tokio = { version = "1", features = ["full", "rt-multi-thread", "macros", "time", "sync"] }
@@ -37,7 +37,8 @@ windows = { version = "0.58", features = [
     "Win32_UI_Shell",
     "Win32_Foundation",
     "Win32_System_Threading",
-    "Win32_System_ProcessStatus"
+    "Win32_System_Diagnostics",
+    "Win32_System_SystemInformation"
 ] }
 
 # Serialization
@@ -63,7 +64,6 @@ clap = { version = "4", features = ["derive", "env"] }
 
 # HTTP client for sync
 reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream"] }
-tokio-tungstenite = "0.21"
 
 # URL handling
 url = "2"
@@ -73,6 +73,18 @@ chrono = { version = "0.4", features = ["serde"] }
 
 # UUID
 uuid = { version = "1", features = ["serde", "v4", "v7"] }
+
+# Base64 encoding
+base64 = "0.22"
+
+# Hex encoding
+hex = "0.4"
+
+# Directories
+dirs = "5"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
 
 [dev-dependencies]
 tauri = { version = "2", features = ["test"] }
