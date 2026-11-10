@@ -88,7 +88,7 @@ pub async fn pppoe_disconnect_session(
     }
     
     // Update local DB
-    let mut resp = db.query("UPDATE pppoe_sessions SET status = 'disconnected' WHERE id = $id").bind(("id", session_id)).await.map_err(|e| e.to_string())?;
+    let _resp = db.query("UPDATE pppoe_sessions SET status = 'disconnected' WHERE id = $id").bind(("id", session_id)).await.map_err(|e| e.to_string())?;
     Ok(true)
 }
 
@@ -138,7 +138,7 @@ pub async fn pppoe_nas_update(
     state: State<'_, AppState>,
 ) -> Result<bool, String> {
     let db = &state.db;
-    let mut resp = db.query(r#"
+    let _resp = db.query(r#"
         UPDATE nas_devices SET 
             name = $name,
             ip = $ip,

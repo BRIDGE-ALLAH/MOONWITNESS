@@ -71,6 +71,10 @@ impl SyncEngine {
         *self.config.write().await = Some(config);
     }
 
+    pub async fn is_running(&self) -> bool {
+        *self.running.read().await
+    }
+
     pub async fn start(&self) {
         *self.running.write().await = true;
         info!("Sync engine started");

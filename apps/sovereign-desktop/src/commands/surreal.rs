@@ -74,7 +74,7 @@ pub async fn surreal_live_query(
     let subscription_id = format!("live_{}", uuid::Uuid::new_v4().to_string().replace("-", ""));
     
     // Store the live query for the subscription
-    let mut resp = db.query(r#"
+    let _resp = db.query(r#"
         CREATE live_queries CONTENT {
             id: $id,
             sql: $sql,
