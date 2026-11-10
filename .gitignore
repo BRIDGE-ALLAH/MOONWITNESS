@@ -26,6 +26,7 @@ Thumbs.db
 coverage/
 
 # Scratch / Temp Folders
+.agents/teamwork/
 /arsy/
 /arsy2/
 /arsy_new2/

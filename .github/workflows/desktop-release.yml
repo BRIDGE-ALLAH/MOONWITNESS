@@ -64,8 +64,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          fail_on_unmatched_files: false
           files: |
             apps/sovereign-desktop/target/release/sovereign-desktop.exe
             apps/sovereign-desktop/target/release/sovereign-desktop
+            target/release/sovereign-desktop.exe
+            target/release/sovereign-desktop
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

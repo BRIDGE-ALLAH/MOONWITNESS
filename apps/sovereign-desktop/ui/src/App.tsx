@@ -10,6 +10,7 @@ import { PPPoEPage } from "@/features/pppoe/PPPoEPage"
 import { TenantPage } from "@/features/tenant/TenantPage"
 import { DiagnosticsPage } from "@/features/diagnostics/DiagnosticsPage"
 import { SettingsPage } from "@/features/settings/SettingsPage"
+import { ReleasesPage } from "@/features/releases/ReleasesPage"
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -92,6 +93,12 @@ const settingsRoute = createRoute({
   component: SettingsPage,
 })
 
+const releasesRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: "releases",
+  component: ReleasesPage,
+})
+
 const routeTree = rootRoute.addChildren([
   authRoute,
   appRoute.addChildren([
@@ -102,6 +109,7 @@ const routeTree = rootRoute.addChildren([
     pppoeRoute,
     tenantRoute,
     diagnosticsRoute,
+    releasesRoute,
     settingsRoute,
   ]),
 ])

@@ -18,6 +18,7 @@ import {
   Sun,
   Moon,
   Monitor,
+  Radio,
 } from "lucide-react"
 import { useTheme } from "@/hooks/useTheme"
 import { useAuthStore } from "@/hooks/useAuthStore"
@@ -31,6 +32,7 @@ const navigation = [
   { name: "PPPoE/RADIUS", href: "/app/pppoe", icon: Wifi, roles: ["network"] },
   { name: "Tenants", href: "/app/tenant", icon: Users, roles: ["support", "customer"] },
   { name: "Diagnostics", href: "/app/diagnostics", icon: Stethoscope, roles: ["support"] },
+  { name: "Releases & ChatOps", href: "/app/releases", icon: Radio, roles: ["developer", "platform", "network", "support", "customer"] },
   { name: "Settings", href: "/app/settings", icon: Settings, roles: ["developer", "platform", "network", "support", "customer"] },
 ]
 

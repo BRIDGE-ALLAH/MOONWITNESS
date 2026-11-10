@@ -324,12 +324,12 @@ pub async fn git_remote_list(
 
     for remote_name in repo.remotes().map_err(|e| e.to_string())?.iter().flatten() {
         let remote = repo.find_remote(remote_name).map_err(|e| e.to_string())?;
-        let fetch_refspec = remote.fetch_refspecs()
-            .iter()
-            .flatten()
-            .next()
-            .map(|s| s.to_string())
-            .unwrap_or_default();
+        let refspecs = remote.fetch_refspecs().map_err(|e| e.to_string())?;
+        let fetch_refspec: String = if refspecs.len() > 0 {
+            refspecs.get(0).unwrap_or("").to_string()
+        } else {
+            String::new()
+        };
         remotes.push(GitRemote {
             name: remote_name.to_string(),
             url: remote.url().unwrap_or("").to_string(),
@@ -432,7 +432,7 @@ pub async fn git_stash_create(
     repo_path: String,
     message: String,
 ) -> Result<bool, String> {
-    let repo = Repository::open(&repo_path).map_err(|e| e.to_string())?;
+    let mut repo = Repository::open(&repo_path).map_err(|e| e.to_string())?;
     let signature = Signature::now("Sovereign User", "user@sovereign.local").map_err(|e| e.to_string())?;
     repo.stash_save(&signature, &message, Some(git2::StashFlags::DEFAULT)).map_err(|e| e.to_string())?;
     Ok(true)
