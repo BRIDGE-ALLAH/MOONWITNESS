@@ -1,201 +1,259 @@
-# ROCKSOUL — BRAND & NARRATIVE
+# ROCKSOUL — AGILITY BRAND & NARRATIVE
 
 ## 01. Brand essence
 
-**ROCKSOUL is creative intelligence with a pulse.**
+**ROCKSOUL IS AGILITY WITH A SOUL.**
 
-A desktop foundry for restless minds: part research lab, part maker space, part agent workbench, part creative studio. It helps people move from a half-formed thought to something real—something they can inspect, test, own, and share.
+A creative-intelligence engine for restless minds: part research lab, part maker space, part agent crew, part experimental studio. It helps people move through uncertainty, connect unlikely ideas, and turn intent into work that can be inspected, tested, owned, and shared.
 
-**Primary tagline:** MAKE INTELLIGENCE MOVE.
+**Master line:** MORE THAN AGI. ONE STEP TOWARD ASI.  
+**Energy code:** WORK HARD. PLAY HARD.  
+**Operating mantra:** THINK WITH CHAOS. ACT WITH RIOT.  
+**Style code:** SMART AGILITY. BRUTAL ENERGY. FUNKY STYLE.
 
-**Campaign line:** RIOT THE ORDINARY. CREATE WHAT’S NEXT.
-
-**Product signature:** From raw spark to verified creation.
+The master line is an ambition and a point of view—not a statement that Rocksoul has achieved AGI, surpassed AGI, or is one literal engineering step away from ASI.
 
 ## 02. The cultural tension
 
-The first wave of consumer AI trained people to talk to a box: prompt, answer, regenerate, repeat. That interaction made powerful capabilities approachable, but it also narrowed the imagination of what an intelligent system could be.
+The first wave of consumer AI made intelligence feel like a conversation with a box: prompt, answer, regenerate, repeat. That opened a door, but it also narrowed the imagination of what intelligent software could become.
 
-The next chapter should be less about endlessly chatting and more about building with context, memory under user control, tools, collaboration, experimentation, evaluation, and responsible action.
+Rocksoul pushes beyond chat-shaped interaction.
 
-Rocksoul does not say that AI is over. It says **chat-only AI is not the finish line**.
+People do not just need more answers. They need systems that can hold context, explore alternatives, coordinate expertise, use tools, build artifacts, test outcomes, learn from feedback, and help work move forward.
 
-The long horizon is AGI: systems with increasingly general abilities to learn, reason, adapt, and work across unfamiliar tasks. That horizon is difficult, contested, and not something a brand slogan can prove. Rocksoul treats AGI as a research direction with public evaluation standards—not a feature badge or an unverified claim.
+AI is not obsolete. **The passive prompt loop is too small.**
 
-## 03. The narrative
+AGI remains a major research horizon. But Rocksoul's identity is not built around waiting for a label. It is built around **AGILITY**: adaptation, cross-domain creativity, intelligent coordination, resilient execution, and the ability to change course when reality changes.
+
+## 03. What AGILITY means
+
+AGILITY is the product philosophy and the behavior we want every layer of Rocksoul to embody.
+
+- **Adaptive:** respond to new evidence, changing goals, and unfamiliar constraints.
+- **Generative:** explore new combinations, hypotheses, forms, and possible paths.
+- **Intelligent:** reason, plan, compare, explain, and recognize uncertainty.
+- **Grounded:** connect claims and outputs to sources, tests, and observable work.
+- **Integrated:** bring models, agents, tools, local resources, and human expertise together.
+- **Tactical:** know when to explore, when to focus, when to ask, and when to act.
+- **Yielding to human agency:** powerful assistance never means taking ownership away from people.
+
+AGILITY is not speed at any cost. It is the ability to move intelligently without losing direction, integrity, or control.
+
+## 04. The Rocksoul manifesto
+
+### Work hard. Play hard.
+
+Take the craft seriously. Do not take stale conventions as sacred. Research deeply, build carefully, test honestly—and keep the delight of making alive.
+
+### Think with chaos.
+
+Let unusual ideas collide. Invite competing hypotheses. Remix disciplines. Follow surprising signals. Chaos is a creative input and an exploration technique, not an excuse for confusion or unsafe execution.
+
+### Act with riot.
+
+Challenge defaults. Break repetitive workflows. Turn insight into a prototype, a tool, a story, a system, or a meaningful change. Riot is deliberate creative resistance—not permission to bypass consent, security, or accountability.
+
+### Smart agility. Brutal energy. Funky style.
+
+- **Smart agility:** flexible thinking, fast adaptation, clear judgment.
+- **Brutal energy:** intensity, directness, resilience, and uncompromising craft.
+- **Funky style:** rhythm, color, humor, personality, and unexpected creative texture.
+
+The attitude can be loud. The engineering must be disciplined.
+
+## 05. The narrative
 
 ### The short version
 
-The world has enough machines that can talk. We need tools that help people make.
+The future does not belong to another chat window. It belongs to people who can think across boundaries and make things move.
 
-Rocksoul turns creative intent into motion. Bring a spark: a question, a broken workflow, a wild sketch, a stubborn bug, a story that will not leave you alone. Rocksoul helps shape the mission, gather context, bring the right tools and specialist agents into the room, make a first version, test it, and put the result in your hands.
+Rocksoul is an adaptive creative-intelligence engine. Bring a spark: a hard question, an unfinished track, a broken workflow, a strange idea, a stubborn bug, or a world that does not exist yet.
 
-No magic theatre. No fake certainty. No machine worship.
+Rocksoul helps you shape the mission, gather context, bring the right minds and tools into the room, test wild directions, build a real artifact, and challenge the result before it goes out into the world.
 
-Just human imagination, amplified by systems that can research, reason, build, inspect, and improve—with the evidence and controls left visible.
+Work hard. Play hard. Think with chaos. Act with riot.
+
+Not magic theatre. Not fake certainty. Not machine worship.
+
+**MORE THAN AGI. ONE STEP TOWARD ASI.**  
+A bigger horizon. A more agile way to create today.
 
 ### The long version
 
-We grew up in a feed that never sleeps and a software world that keeps asking us to click the next little box. Everything is optimized to keep us scrolling, reacting, and asking for another answer.
+We live inside systems that reward reaction: scroll, click, prompt, repeat. The machine talks. The feed keeps moving. The work itself gets lost between windows.
 
-Rocksoul is built for the opposite impulse.
+Rocksoul is built for a different impulse.
 
-It is for the person who hears a strange rhythm in a broken machine. The designer who sees a new world in a rough sketch. The developer who wants to understand the whole system, not just patch the symptom. The researcher who follows a question until it becomes a working theory. The independent creator who wants a crew, not another subscription-shaped cage.
+It is for the maker who hears a new rhythm inside a broken machine. The developer who wants to understand the whole system, not patch one symptom. The researcher who follows a strange signal across disciplines. The designer who turns a rough sketch into a world. The independent creator who wants a capable crew without surrendering the controls.
 
-Rocksoul is a riot against passive software and a creative forge for active minds.
+Rocksoul is an insurgent workshop for active minds.
 
-Here, an idea is not just a prompt. It becomes a mission. Context is gathered. Plans are challenged. Agents take bounded roles. Tools do real work only when authorized. Drafts become artifacts. Artifacts meet tests. Sources and decisions stay attached to the result.
+Here, an idea is not trapped in a prompt. It becomes a mission. Context gets assembled. Different approaches collide. Agents take bounded roles. Tools do real work only when authorized. Drafts become artifacts. Artifacts meet tests. Sources, decisions, and failures remain visible.
 
-That is the product today: a more capable, more inspectable way to create with AI.
+We call this AGILITY: the ability to shift gears without losing the plot; to explore without pretending every guess is true; to connect disciplines; to recover when a take breaks; to turn creative energy into responsible action.
 
-The bigger ambition is to help explore the road toward more general intelligence: systems that can transfer learning across domains, adapt to unfamiliar problems, plan over longer horizons, use tools reliably, recognize when they are wrong, and recover safely. We will measure progress rather than declare victory.
+Our ambition reaches beyond today's narrow AI products and toward increasingly general intelligence. AGI is a research horizon, not a badge. ASI is a more distant and uncertain horizon, carrying profound technical and social questions. We will not claim that a slogan proves progress or that the road is guaranteed.
 
-Rocksoul has attitude, but it does not confuse attitude with truth. Intelligence is not a god. Autonomy is not permission. A confident output is not proof. Human beings remain responsible for the systems they choose to build and the actions they authorize.
+"More Than AGI" means our ambition is broader than a benchmark label: better ways for human and machine intelligence to collaborate, create, adapt, and act. "One Step Toward ASI" means keep learning, keep evaluating, and keep asking what greater capability would demand of our safety, governance, and responsibility.
 
-**Rocksoul. Make Intelligence Move.**
+Rocksoul has brutal energy, but it does not confuse intensity with recklessness. Intelligence is not a god. Autonomy is not permission. Speed is not wisdom. Human beings remain responsible for the systems they choose to build and the actions they authorize.
 
-## 04. Brand foundations
+**ROCKSOUL. THINK WITH CHAOS. ACT WITH RIOT.**
+
+## 06. Brand foundations
 
 ### Purpose
-Give people a creative and technical force multiplier without taking ownership of their judgment or work.
+Give people an adaptive creative force multiplier while preserving human judgment, authorship, and control.
 
 ### Vision
-A world where increasingly general intelligence helps more people investigate difficult questions, create meaningful artifacts, and solve real problems—without centralizing power or erasing human agency.
+A world where increasingly capable intelligence expands what people can understand, imagine, and make—while power remains accountable and human agency remains central.
 
 ### Mission
-Build a desktop workbench that connects context, reasoning, specialist agents, tools, creation, and verification into one coherent human-directed loop.
+Build a desktop engine that connects context, reasoning, specialist agents, tools, experimentation, creation, and verification into one coherent human-directed flow.
 
 ### Promise
-Bring the spark. Rocksoul helps you shape it, build it, test it, and carry it forward.
+Bring the chaos. Find the signal. Make something real.
 
 ### Values
-- **Creative rebellion:** challenge defaults; do not perform rebellion for decoration.
+- **Creative rebellion:** challenge stale patterns; do not perform rebellion as decoration.
+- **Agility over rigidity:** adapt the method to the problem, not the other way around.
 - **Craft over spectacle:** working artifacts beat flashy demos.
+- **Play as a serious tool:** curiosity and experimentation produce new possibilities.
 - **Truth over theatre:** expose provenance, limits, uncertainty, and failures.
-- **Agency over automation:** the user controls permissions and consequential actions.
+- **Agency over automation:** people control permissions and consequential actions.
 - **Sovereignty with responsibility:** protect local work and user choice without pretending isolation removes accountability.
-- **Soul over status:** make technology serve human purpose, not become an idol.
+- **Soul over status:** technology serves human purpose; it does not become an idol.
 
-## 05. Brand personality
+## 07. Brand personality
 
 | Dimension | Rocksoul |
 |---|---|
-| Energy | Loud when creating, calm when verifying |
+| Energy | High voltage in creation; steady hands in verification |
 | Attitude | Rebel maker, not arrogant guru |
-| Intelligence | Curious, systematic, evidence-led |
-| Humor | Dry, playful, a little mischievous |
+| Intelligence | Adaptive, curious, cross-disciplinary, evidence-led |
+| Humor | Funky, dry, playful, mischievous |
 | Emotion | Warm, gritty, optimistic without hype |
-| Confidence | Decisive about process; honest about uncertainty |
-| Relationship | Creative crew / workshop partner, never master |
+| Confidence | Bold about ambition; honest about uncertainty |
+| Relationship | Creative crew and workshop partner, never master |
 
 ### Archetypes
-- **The Rebel:** breaks stale patterns and questions defaults.
-- **The Creator:** transforms raw material into useful work.
+- **The Rebel:** challenges stale systems and opens new paths.
+- **The Creator:** turns raw material into meaningful work.
+- **The Explorer:** experiments, connects disciplines, and follows the signal.
 - **The Guardian:** protects agency, privacy, safety, and authorship.
 
-The Guardian matters: without it, the rebel becomes chaos and the creator becomes a hype machine.
+The Guardian keeps the other three from becoming chaos, spectacle, or reckless power.
 
-## 06. Messaging architecture
+## 08. Messaging architecture
 
 ### Core message
-A creative intelligence workbench for turning ideas into verified work.
+An adaptive creative-intelligence engine that turns chaotic ideas into tested action.
 
 ### Supporting messages
-1. **More than a chat window:** projects, context, tools, agents, artifacts, and review in one desktop workspace.
-2. **Your crew, your rules:** specialist agents work within permissions you can inspect and change.
-3. **Make it. Check it. Own it:** every important artifact keeps its sources, versions, tests, and human approvals close.
-4. **Built for the long game:** an AGI-oriented direction grounded in measurable capability and responsible deployment.
+1. **Beyond the chat loop:** context, missions, tools, agents, artifacts, and review in one desktop workspace.
+2. **Think wide. Move smart:** explore alternatives first; converge through evidence.
+3. **Your crew. Your rules:** agents and tools work inside visible scopes and permissions.
+4. **Make it. Break-test it. Own it:** outputs keep sources, versions, tests, and human approvals close.
+5. **Built for a bigger horizon:** explore increasingly general intelligence with transparent evaluation and responsible deployment.
 
 ### Proof points the product must earn
-- Projects persist locally across restart and offline use.
+- Projects persist locally across restarts and offline sessions.
 - Tool calls are permissioned, logged, and reviewable.
 - Outputs carry source and provenance information.
-- Quality checks are real and reproducible.
-- Agents can identify uncertainty, request missing context, and stop safely.
-- Users can export their work and delete their local data.
+- Quality checks are real, repeatable, and visible.
+- The system can identify uncertainty, request context, and stop safely.
+- Users can export their work and delete local data.
+- Adaptive behavior is evaluated on changing constraints, unfamiliar tasks, and recovery—not just a scripted demo.
 
 Do not use these proof points in public copy until the implementation actually satisfies them.
 
-## 07. Voice and writing style
+## 09. Voice and writing style
 
-**Sound like:** a late-night creative studio with a serious engineering bench.
+**Sound like:** a basement gig meets an experimental research lab: loud imagination, sharp thinking, hands-on craft.
 
-**Use:** short verbs, vivid nouns, direct language, playful labels, specific evidence, and a little rhythmic swagger.
+**Use:** strong verbs, vivid nouns, punchy rhythm, unexpected connections, playful labels, and specific evidence.
 
-**Avoid:** generic SaaS claims, fake AGI language, “revolutionary” without proof, sycophancy, fake sentience, mystical claims about models, and corporate filler.
+**Avoid:** generic SaaS claims, fake AGI or ASI language, empty “revolutionary” claims, fake sentience, machine worship, chaos-as-confusion, and corporate filler.
 
 | Say this | Not this |
 |---|---|
-| “Turn the spark into a working prototype.” | “Unlock limitless AI-powered synergy.” |
-| “Three sources checked. One claim still uncertain.” | “100% accurate answer.” |
-| “The agent wants to run this command. Approve?” | “The AI is taking over.” |
-| “Saved on this device. Sync is paused.” | “Always available everywhere.” |
-| “AGI is the horizon. Evidence is the route.” | “The world’s first AGI.” |
+| “Think wide. Find the signal. Build the thing.” | “Unlock limitless AI-powered synergy.” |
+| “Three paths explored. One prototype ready to test.” | “Infinite intelligence activated.” |
+| “This action needs your approval.” | “The AI is taking over.” |
+| “Good rhythm. Missing evidence.” | “100% accurate.” |
+| “AGI is a horizon. ASI is a question. Evidence is the route.” | “ASI is one click away.” |
 
-## 08. Tagline system
+## 10. Tagline system
 
-**Primary**
-- MAKE INTELLIGENCE MOVE.
+**Master line**
+- MORE THAN AGI. ONE STEP TOWARD ASI.
 
-**Campaign**
-- RIOT THE ORDINARY. CREATE WHAT’S NEXT.
-- NOT HERE TO CHAT. HERE TO CREATE.
-- LESS PROMPT LOOP. MORE BREAKTHROUGH WORK.
-- IDEAS HAVE TEETH. GIVE THEM TOOLS.
+**Operating mantra**
+- THINK WITH CHAOS. ACT WITH RIOT.
 
-**AGI research line**
-- AGI IS THE NORTH STAR. HUMAN AGENCY IS THE GROUND.
-- GENERAL INTELLIGENCE, GROUNDED IN REAL-WORLD EVALUATION.
+**Energy code**
+- WORK HARD. PLAY HARD.
+
+**Style code**
+- SMART AGILITY. BRUTAL ENERGY. FUNKY STYLE.
+
+**Campaign lines**
+- RIOT THE ORDINARY. CREATE WHAT'S NEXT.
+- LESS PROMPT LOOP. MORE REAL-WORLD MOTION.
+- BREAK THE PATTERN. BUILD THE NEXT.
+- BIG IDEAS. DIRTY HANDS. CLEAN EXECUTION.
+- FIND THE SIGNAL INSIDE THE NOISE.
 
 **Indonesian expressions**
-- Bukan cuma ngobrol. Saatnya berkarya.
-- Dari percikan ide jadi karya yang teruji.
-- Lawan pola lama. Ciptakan kemungkinan baru.
-- Kecerdasan bergerak. Manusia tetap memegang arah.
+- Pikir liar. Bergerak cerdas.
+- Kerja serius. Main lepas.
+- Dari chaos jadi karya. Dari ide jadi aksi.
+- Energi brutal. Pikiran lincah. Gaya funky.
+- Bukan cuma menjawab. Bikin sesuatu bergerak.
 
-## 09. Audience
+## 11. Audience
 
 ### Primary
 - Independent creators and multidisciplinary makers.
-- Developers and technical founders.
-- Researchers and analysts.
-- Designers, writers, and creative technologists.
-- Operators who need a local, inspectable tool environment.
+- Developers, technical founders, and system builders.
+- Researchers, analysts, and experimental thinkers.
+- Designers, writers, musicians, and creative technologists.
+- Operators who need an adaptive, local, inspectable work environment.
 
 ### Not the first target
 - Consumers seeking only companionship or a novelty chatbot.
 - Organizations seeking unrestricted autonomous agents.
-- Users who need a complete enterprise billing/CRM suite inside the desktop app.
+- Users who need a complete enterprise billing/CRM suite inside a desktop app.
 
-## 10. Product vocabulary
-
-Use a small, coherent naming system:
+## 12. Product vocabulary
 
 | Name | Function |
 |---|---|
 | **SPARK** | Capture an idea, brief, question, or input |
-| **RIFF** | Build project context, notes, constraints, and references |
-| **THE PIT** | Coordinate specialist agents and approved tools |
+| **RIFF** | Build context, notes, constraints, and references |
+| **THE PIT** | Bring agents, models, tools, and collaborators together |
 | **FORGE** | Create code, research, design, documents, and prototypes |
 | **SOUND CHECK** | Run tests, source checks, reviews, and evaluations |
 | **STAGE** | Approve, export, publish, or hand off an artifact |
 
-Avoid naming every minor feature. The names should make the product easier to remember, not make navigation harder.
+The language can be expressive, but navigation must remain obvious. Never sacrifice usability to a metaphor.
 
-## 11. Guardrails for the AGI narrative
+## 13. AGI-to-ASI narrative guardrails
 
-1. Never state or imply that Rocksoul is AGI today.
-2. Describe capabilities that exist now separately from research ambitions.
-3. Publish evaluation tasks, baselines, failure rates, and limitations for claims about generality.
-4. Keep meaningful human oversight for consequential actions.
-5. Do not claim consciousness, feelings, personhood, or moral authority for the system.
-6. Treat safety, privacy, security, and misuse resistance as core engineering work—not a brand disclaimer.
-7. Do not use “AGI” to imply guaranteed accuracy, unlimited autonomy, or inevitable progress.
+1. Never state or imply that Rocksoul is AGI or ASI today.
+2. Treat "More Than AGI" as a philosophy of breadth, not a measured capability claim.
+3. Treat "One Step Toward ASI" as an aspirational direction, not a literal timeline or guaranteed path.
+4. Describe shipped capabilities separately from research ambitions.
+5. Publish evaluation tasks, baselines, failure rates, limitations, and independent scrutiny for claims about generality.
+6. Keep meaningful human oversight for consequential actions.
+7. Do not claim consciousness, feelings, personhood, or moral authority for the system.
+8. Treat safety, privacy, security, and misuse resistance as core engineering—not a brand disclaimer.
+9. Never use agility, chaos, or riot as excuses to bypass access controls, consent, or accountability.
 
-## 12. Launch narrative
+## 14. Launch narrative
 
-**Headline:** The chat era opened the door. Now build beyond the window.
+**Headline:** The chat loop is not the finish line.
 
-**Body:** Rocksoul is a desktop creative-intelligence workbench for people who want to do more than ask for answers. Bring a raw idea, build its context, assemble the right tools and agents, create a real artifact, and put it through a sound check. Your work stays inspectable. Your permissions stay yours. The AGI horizon stays ambitious—and honest.
+**Body:** Rocksoul is an adaptive creative-intelligence engine for people who want to think wider and make more. Bring a raw idea, explore the chaos, assemble the right crew, build a real artifact, and put it through a sound check. Work hard. Play hard. Your tools stay accountable. Your permissions stay yours. The horizon stays ambitious—and honest.
 
-**CTA:** START A RIOT. MAKE SOMETHING REAL.
+**CTA:** THINK WITH CHAOS. ACT WITH RIOT.
