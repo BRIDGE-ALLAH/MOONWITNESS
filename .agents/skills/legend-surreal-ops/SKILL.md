@@ -28,3 +28,4 @@ Legend (`services/legend/src/main.rs`) is the high-operational Rust BaaS backed 
 ## 3. ARSY Read-Through & Hydration
 - `services/arsy/src/legend.ts` hydrates `pppoe_sessions` from Legend on boot (`hydrateSessions`) and persists every session create/accounting/terminate via `PUT /api/v1/records/pppoe_sessions/:id`.
 - When adding a new operational entity in ARSY, reuse `persistRecord(table, id, payload)` from `services/arsy/src/legend.ts`.
+

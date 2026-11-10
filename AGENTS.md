@@ -41,3 +41,4 @@ Load progressive skills from `.agents/skills/<skill>/SKILL.md` (mirrored in `.cl
 - `legend-surreal-ops`: Rust + SurrealDB 2.x schema, idempotent UPSERT, and ARSY hydration patterns.
 - `mesh-doctor-heal`: Fast diagnostics, port conflict resolution, and Cargo lock recovery.
 - `release-governor`: SemVer bump, CycloneDX SBOM, and SLSA provenance release pipeline.
+

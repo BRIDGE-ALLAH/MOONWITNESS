@@ -26,3 +26,4 @@ Pushing `master` and tags (`git push origin master --follow-tags`) triggers:
 - `.github/workflows/ci.yml`: TS check/test/build, Rust fmt/clippy/test matrix, Gitleaks secret scan, Docker Compose validation.
 - `.github/workflows/security.yml`: CodeQL SAST + RustSec `cargo audit`.
 - `.github/workflows/release.yml`: Release Please PRs on branch push; Gate + CycloneDX SBOM + SLSA provenance + GHCR multi-service container push (`legend`, `arsy`, `radius`, `pocketbase`) on `v*.*.*` tags.
+

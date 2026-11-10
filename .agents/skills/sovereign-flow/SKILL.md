@@ -29,3 +29,4 @@ Route every state mutation to its authoritative plane:
 1. Run targeted check first: `bun --filter <pkg> check` or `cargo check --manifest-path services/<crate>/Cargo.toml`.
 2. Run full 5-stage gate: `bun run gate`.
 3. Commit with Conventional Commits (`feat(scope): ...`, `fix(scope): ...`) and push to `origin/master`.
+

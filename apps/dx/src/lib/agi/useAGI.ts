@@ -1,8 +1,7 @@
 /** React hooks for AGI integration */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
-  AGIClient,
   Task,
   TaskCreate,
   TaskUpdate,
@@ -187,49 +186,36 @@ export function useAGIWebSocket() {
   const [connected, setConnected] = useState(false);
   const [messages, setMessages] = useState<WebSocketMessage[]>([]);
   const [error, setError] = useState<Error | null>(null);
-  const clientRef = useRef<AGIClient | null>(null);
 
   const connect = useCallback(async () => {
-    if (clientRef.current) return;
-
-    const client = new AGIClient(
-      process.env.NEXT_PUBLIC_AGI_ENDPOINT || 'http://localhost:8000'
-    );
-    clientRef.current = client;
-
     try {
-      await client.connectWebSocket();
+      await agiClient.connectWebSocket();
       setConnected(true);
       setError(null);
 
       // Set up default handlers
-      client.onMessage('task_created', (payload) => {
+      agiClient.onMessage('task_created', (payload) => {
         setMessages(prev => [...prev, { type: 'task_created', payload, timestamp: new Date().toISOString() }]);
       });
-      client.onMessage('task_result', (payload) => {
+      agiClient.onMessage('task_result', (payload) => {
         setMessages(prev => [...prev, { type: 'task_result', payload, timestamp: new Date().toISOString() }]);
       });
-      client.onMessage('inference_result', (payload) => {
+      agiClient.onMessage('inference_result', (payload) => {
         setMessages(prev => [...prev, { type: 'inference_result', payload, timestamp: new Date().toISOString() }]);
       });
     } catch (e) {
       setError(e as Error);
       setConnected(false);
-      clientRef.current = null;
     }
   }, []);
 
   const disconnect = useCallback(() => {
-    if (clientRef.current) {
-      clientRef.current.disconnectWebSocket();
-      clientRef.current = null;
-      setConnected(false);
-    }
+    agiClient.disconnectWebSocket();
+    setConnected(false);
   }, []);
 
   const sendMessage = useCallback(async (type: string, payload: Record<string, any>) => {
-    if (!clientRef.current) throw new Error('Not connected');
-    return clientRef.current.sendMessage(type, payload);
+    return agiClient.sendMessage(type, payload);
   }, []);
 
   useEffect(() => {

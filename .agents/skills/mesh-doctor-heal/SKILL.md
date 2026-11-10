@@ -25,3 +25,4 @@ Heal sequence:
 - **ARSY (`:4000`)**: `bun run --filter @local-git/arsy dev` (loads root `.env` automatically).
 - **Legend (`:8092`)**: `cargo run --manifest-path services/legend/Cargo.toml` (loads root `.env` via `dotenvy`).
 - **Docker Compose Mesh**: `bun run infra:up` (validates `ARSY_SERVICE_TOKEN`, `LEGEND_SERVICE_TOKEN`, `LEGEND_ADMIN_TOKEN`).
+

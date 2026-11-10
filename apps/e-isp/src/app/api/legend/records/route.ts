@@ -26,3 +26,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Legend BaaS unreachable" }, { status: 502 });
   }
 }
+
