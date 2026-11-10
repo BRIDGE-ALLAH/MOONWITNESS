@@ -3,7 +3,8 @@ use serde::{Deserialize, Serialize};
 use tauri::command;
 use crate::state::AppState;
 use tauri::State;
-use surrealdb::sql::{Value, Object, Thing};
+use surrealdb::sql::{Value, Thing};
+use std::collections::BTreeMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SurrealQueryResult {
