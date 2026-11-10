@@ -1,8 +1,8 @@
-# Sovereign Desktop - Master TODO
+﻿# Sovereign Desktop - Master TODO
 
 **Status**: Active Development
 **Target**: Production-ready offline-first Windows desktop app
-**Quality Gate**: `bun run gate` must pass (zero-slop, types, tests, secrets, rust)
+**Quality Gate**: un run gate must pass (zero-slop, types, tests, secrets, rust)
 
 ---
 
@@ -46,6 +46,33 @@
 - [ ] git_stash_push/pop/drop(repo_path, message?) - Stash operations
 - [ ] git_blame(repo_path, file, start_line, end_line) - Line annotations
 - [ ] git_show(repo_path, commit_sha) - Commit details + diff
+- [x] git_repo_init(path, name) - Initialize new git repository
+- [x] git_repo_open(path) - Open existing repository
+- [x] git_repo_list() - List registered repos (placeholder)
+- [x] git_repo_remove(id) - Remove repo from registry (placeholder)
+- [x] git_commit_create(repo_path, message, files[]) - Create commit with staged files
+- [x] git_branch_list(repo_path) - List local + remote branches
+- [x] git_branch_create(repo_path, branch_name, from_commit?) - Create branch
+- [x] git_branch_delete(repo_path, branch_name) - Delete branch
+- [x] git_status(repo_path) - Working tree status
+- [x] git_diff(repo_path, file, staged) - Diff vs HEAD or index
+- [x] git_log(repo_path, limit) - Paginated commit history
+- [x] git_remote_list(repo_path) - List remotes with URLs
+- [x] git_remote_add(repo_path, name, url) - Add remote
+- [x] git_remote_remove(repo_path, name) - Remove remote
+- [x] git_fetch(repo_path, remote) - Fetch remotes
+- [x] git_pull(repo_path, remote, branch) - Pull from remote
+- [x] git_push(repo_path, remote, branch) - Push to remote
+- [x] git_stash_list(repo_path) - List stashes
+- [x] git_stash_create(repo_path, message) - Create stash
+- [x] git_stash_pop(repo_path, index) - Pop stash
+- [x] git_stash_drop(repo_path, index) - Drop stash
+- [ ] git_checkout(repo_path, target) - Switch branch/commit
+- [ ] git_add(repo_path, paths[]) - Stage files
+- [ ] git_blame(repo_path, file, start_line, end_line) - Line annotations
+- [ ] git_show(repo_path, commit_sha) - Commit details + diff
+- [ ] git_register_repo(path, name, remote_url?) - Register repo in SurrealDB
+- [ ] git_list_repos() - List registered repos from SurrealDB
 
 ### 1.2 Service/Mesh Commands (src/commands/mesh.rs)
 - [ ] mesh_get_all_health() - HealthStatus[] for all 5 sidecars
@@ -53,6 +80,16 @@
 - [ ] mesh_stop_service(name) - Graceful shutdown
 - [ ] mesh_restart_service(name) - Restart with circuit breaker
 - [ ] mesh_get_logs(name, lines?, follow?) - Tail stdout/stderr
+- [ ] mesh_get_config(name) - Current runtime config from service_config table
+- [ ] mesh_update_config(name, config_obj) - Update + restart sidecar
+- [ ] mesh_get_port_map() - All reserved ports + actual bindings
+- [ ] mesh_export_diagnostics() - ZIP bundle: logs, config, health, system info
+- [x] mesh_status() - HealthStatus[] for all sidecars
+- [x] mesh_start(name) - Spawn sidecar with config
+- [x] mesh_stop(name) - Graceful shutdown
+- [x] mesh_restart(name) - Restart with circuit breaker
+- [x] mesh_logs(name, lines?, follow?) - Tail stdout/stderr
+- [x] mesh_health(name) - Single service health check
 - [ ] mesh_get_config(name) - Current runtime config from service_config table
 - [ ] mesh_update_config(name, config_obj) - Update + restart sidecar
 - [ ] mesh_get_port_map() - All reserved ports + actual bindings
@@ -65,8 +102,30 @@
 - [ ] surreal_live_query(sql) - Subscribe to live results (WebSocket)
 - [ ] surreal_export_table(table, format?) - JSON/CSV export
 - [ ] surreal_import_table(table, data, format?) - Import with conflict resolution
+- [x] surreal_query(sql, params?) - Execute query
+- [x] surreal_create(table, data) - Create record
+- [x] surreal_read(table, id) - Read record
+- [x] surreal_update(table, id, data) - Update record
+- [x] surreal_delete(table, id) - Delete record
+- [x] surreal_health() - Health check
+- [ ] surreal_explain(sql) - Query plan
+- [ ] surreal_schema(table?) - Table definitions, indexes, fields
+- [ ] surreal_live_query(sql) - Subscribe to live results (WebSocket)
+- [ ] surreal_export_table(table, format?) - JSON/CSV export
+- [ ] surreal_import_table(table, data, format?) - Import with conflict resolution
 
 ### 1.4 PPPoE/RADIUS Commands (src/commands/pppoe.rs)
+- [ ] pppoe_list_sessions(filter?) - Active sessions from legend/pocketbase
+- [ ] pppoe_get_session(session_id) - Session details + traffic counters
+- [ ] pppoe_disconnect_session(session_id) - Terminate via arsy
+- [ ] pppoe_radius_logs(filter?) - Paginated RADIUS packet log
+- [ ] pppoe_nas_list() - NAS devices from arsy
+- [ ] pppoe_nas_config(nas_id) - NAS config (IP, secret, ports)
+- [ ] pppoe_nas_update(nas_id, config) - Update NAS config
+- [x] pppoe_list(filter?) - List PPPoE sessions (placeholder)
+- [x] pppoe_create(data) - Create session (placeholder)
+- [x] pppoe_delete(id) - Delete session (placeholder)
+- [x] pppoe_stats() - Stats (placeholder)
 - [ ] pppoe_list_sessions(filter?) - Active sessions from legend/pocketbase
 - [ ] pppoe_get_session(session_id) - Session details + traffic counters
 - [ ] pppoe_disconnect_session(session_id) - Terminate via arsy
@@ -86,8 +145,34 @@
 - [ ] tenant_api_key_revoke(id, key_id) - Revoke key
 - [ ] tenant_usage(id, period?) - Usage metrics (API calls, bandwidth, sessions)
 - [ ] tenant_billing_sync(id) - Trigger billing sync to remote
+- [x] tenant_list() - List tenants (placeholder)
+- [x] tenant_create(data) - Create tenant (placeholder)
+- [x] tenant_update(id, data) - Update tenant (placeholder)
+- [x] tenant_delete(id) - Delete tenant (placeholder)
+- [x] tenant_usage(id) - Usage metrics (placeholder)
+- [x] api_key_create(tenant_id, data) - Create API key (placeholder)
+- [x] api_key_list(tenant_id) - List API keys (placeholder)
+- [x] api_key_revoke(tenant_id, key_id) - Revoke key (placeholder)
+- [ ] tenant_list(filter?) - Paginated tenant list
+- [ ] tenant_get(id) - Tenant details + usage + API keys
+- [ ] tenant_create(name, slug, plan) - Create tenant with SurrealDB
+- [ ] tenant_update(id, patch) - Update tenant (plan, limits)
+- [ ] tenant_delete(id) - Soft delete (mark inactive)
+- [ ] tenant_api_keys(id) - List API keys for tenant
+- [ ] tenant_api_key_create(id, name, permissions, expires_at?) - Generate key
+- [ ] tenant_api_key_revoke(id, key_id) - Revoke key
+- [ ] tenant_usage(id, period?) - Usage metrics (API calls, bandwidth, sessions)
+- [ ] tenant_billing_sync(id) - Trigger billing sync to remote
 
 ### 1.6 Diagnostics Commands (src/commands/diagnostics.rs)
+- [ ] diag_system_info() - OS, CPU, RAM, disk, network interfaces
+- [ ] diag_network_trace(target, type?) - Ping, traceroute, DNS, TCP connect
+- [ ] diag_sidecar_logs(name, since?) - Structured logs from sidecar
+- [ ] diag_db_stats() - SurrealDB size, table counts, index stats
+- [ ] diag_sync_status() - Pending ops, last sync, conflicts, queue depth
+- [ ] diag_export_bundle() - Comprehensive diagnostic ZIP
+- [x] diagnostics_run() - Run diagnostics (placeholder)
+- [x] diagnostics_history() - History (placeholder)
 - [ ] diag_system_info() - OS, CPU, RAM, disk, network interfaces
 - [ ] diag_network_trace(target, type?) - Ping, traceroute, DNS, TCP connect
 - [ ] diag_sidecar_logs(name, since?) - Structured logs from sidecar
@@ -105,6 +190,16 @@
 - [ ] settings_sync_status() - SyncEngine status + last sync times
 - [ ] settings_sync_trigger() - Manual reconciliation
 - [ ] settings_sidecar_paths() - Custom binary paths (override bundled)
+- [x] settings_get(key) - Get single setting
+- [x] settings_set(key, value) - Set single setting
+- [x] settings_list() - List all settings
+- [ ] settings_get_all() - All key-value settings
+- [ ] settings_license_enter(pem) - Validate + store license
+- [ ] settings_license_current() - Current license info
+- [ ] settings_sync_configure(config) - SyncEngine config (remote_url, token, tables, direction)
+- [ ] settings_sync_status() - SyncEngine status + last sync times
+- [ ] settings_sync_trigger() - Manual reconciliation
+- [ ] settings_sidecar_paths() - Custom binary paths (override bundled)
 
 ---
 
@@ -114,9 +209,21 @@
 - [ ] WorkspacePage.tsx - Dashboard with quick stats, recent repos, service health
 - [ ] RepoCard.tsx - Repo summary with status, branch, sync state
 - [ ] QuickActions.tsx - New repo, clone, open folder, sync all
+- [x] WorkspacePage.tsx - Dashboard with repo cards, quick actions
+- [ ] RepoCard.tsx - Repo summary with status, branch, sync state
+- [ ] QuickActions.tsx - New repo, clone, open folder, sync all
 
 ### 2.2 Git Inspector (ui/src/features/git/)
 - [ ] GitInspectorPage.tsx - Main layout: repo selector + tabbed views
+- [ ] RepoSelector.tsx - Dropdown with search, register new repo modal
+- [ ] CommitLog.tsx - Virtualized list (TanStack Virtual), infinite scroll
+- [ ] CommitDetail.tsx - Monaco diff view, file tree, commit metadata
+- [ ] BranchManager.tsx - Visual branch graph, create/delete/checkout
+- [ ] WorkingTree.tsx - Staged/unstaged files, diff, stage/unstage/discard
+- [ ] RemotePanel.tsx - Remotes, fetch/push/pull, PR integration (future)
+- [ ] StashPanel.tsx - Stash list, apply/drop, preview
+- [ ] BlameView.tsx - Line-by-line blame with commit navigation
+- [x] GitInspectorPage.tsx - Main layout with commit log, branches, diff viewer
 - [ ] RepoSelector.tsx - Dropdown with search, register new repo modal
 - [ ] CommitLog.tsx - Virtualized list (TanStack Virtual), infinite scroll
 - [ ] CommitDetail.tsx - Monaco diff view, file tree, commit metadata
@@ -133,9 +240,21 @@
 - [ ] LogViewer.tsx - Real-time tail with search, filter, pause, download
 - [ ] PortMap.tsx - Visual port allocation, conflicts, reserved ranges
 - [ ] DiagnosticsExport.tsx - One-click diagnostic bundle generation
+- [x] MeshPage.tsx - Topology graph, service details, deploy pipeline
+- [ ] ServiceCard.tsx - Health badge, start/stop/restart, config button
+- [ ] ServiceConfigModal.tsx - JSON editor for service_config, validate + apply
+- [ ] LogViewer.tsx - Real-time tail with search, filter, pause, download
+- [ ] PortMap.tsx - Visual port allocation, conflicts, reserved ranges
+- [ ] DiagnosticsExport.tsx - One-click diagnostic bundle generation
 
 ### 2.4 SurrealQL (ui/src/features/surreal/)
 - [ ] SurrealQLPage.tsx - Split pane: editor + results
+- [ ] QueryEditor.tsx - Monaco with SurrealQL syntax highlighting, autocomplete
+- [ ] QueryHistory.tsx - Persisted history (IndexedDB), rerun, favorite
+- [ ] ResultsTable.tsx - Sortable, filterable, paginated, export CSV/JSON
+- [ ] SchemaExplorer.tsx - Tree view of tables, fields, indexes, sample data
+- [ ] LiveQueryPanel.tsx - WebSocket subscription UI, real-time updates
+- [x] SurrealQLPage.tsx - Editor + results + history + schema browser
 - [ ] QueryEditor.tsx - Monaco with SurrealQL syntax highlighting, autocomplete
 - [ ] QueryHistory.tsx - Persisted history (IndexedDB), rerun, favorite
 - [ ] ResultsTable.tsx - Sortable, filterable, paginated, export CSV/JSON
@@ -148,9 +267,20 @@
 - [ ] SessionDetail.tsx - Traffic charts (Recharts), timeline, disconnect action
 - [ ] RadiusLogStream.tsx - Real-time log tail, packet decode, filter
 - [ ] NASManager.tsx - CRUD NAS configs, test connectivity
+- [x] PPPoEPage.tsx - Session table, RADIUS trace, NAS map
+- [ ] SessionTable.tsx - Virtualized, filterable (user, NAS, status, IP)
+- [ ] SessionDetail.tsx - Traffic charts (Recharts), timeline, disconnect action
+- [ ] RadiusLogStream.tsx - Real-time log tail, packet decode, filter
+- [ ] NASManager.tsx - CRUD NAS configs, test connectivity
 
 ### 2.6 Tenants (ui/src/features/tenant/)
 - [ ] TenantPage.tsx - Table with search, filter (plan, status), pagination
+- [ ] TenantDetail.tsx - Tabs: Overview | API Keys | Usage | Billing
+- [ ] TenantForm.tsx - Create/edit modal with validation
+- [ ] APIKeyManager.tsx - List, create (with permissions picker), revoke
+- [ ] UsageCharts.tsx - Recharts: API calls, bandwidth, sessions over time
+- [ ] BillingSync.tsx - Manual sync button, last sync status, webhook config
+- [x] TenantPage.tsx - List + detail view with tabs
 - [ ] TenantDetail.tsx - Tabs: Overview | API Keys | Usage | Billing
 - [ ] TenantForm.tsx - Create/edit modal with validation
 - [ ] APIKeyManager.tsx - List, create (with permissions picker), revoke
@@ -164,9 +294,21 @@
 - [ ] DatabaseStats.tsx - DB size, table rows, index usage, vacuum status
 - [ ] SyncDashboard.tsx - Pending queue, conflicts, last sync, throughput
 - [ ] ExportBundle.tsx - One-click ZIP download with all diagnostics
+- [x] DiagnosticsPage.tsx - Support bundle generation, flamegraph, session replay
+- [ ] SystemInfoPanel.tsx - Hardware, OS, runtime versions
+- [ ] NetworkTools.tsx - Ping, traceroute, DNS, port check with results
+- [ ] DatabaseStats.tsx - DB size, table rows, index usage, vacuum status
+- [ ] SyncDashboard.tsx - Pending queue, conflicts, last sync, throughput
+- [ ] ExportBundle.tsx - One-click ZIP download with all diagnostics
 
 ### 2.8 Settings (ui/src/features/settings/)
 - [ ] SettingsPage.tsx - Tabs: General | License | Sync | Sidecars | Advanced
+- [ ] LicensePanel.tsx - Paste PEM, validate, show features/expiry, hw fingerprint
+- [ ] SyncConfigPanel.tsx - Remote URL, token, tables, direction, bandwidth limit
+- [ ] SidecarConfigPanel.tsx - Custom binary paths, auto-start, log level
+- [ ] ThemeSettings.tsx - Light/dark/system, accent color
+- [ ] AboutPanel.tsx - Version, build info, license, third-party notices
+- [x] SettingsPage.tsx - Tabs: Appearance, Sync, Updates, License, Account, Danger Zone
 - [ ] LicensePanel.tsx - Paste PEM, validate, show features/expiry, hw fingerprint
 - [ ] SyncConfigPanel.tsx - Remote URL, token, tables, direction, bandwidth limit
 - [ ] SidecarConfigPanel.tsx - Custom binary paths, auto-start, log level

@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "paths": {
+      "@local-git/ui": ["./packages/ui/src/index.ts"],
+      "@local-git/ui/*": ["./packages/ui/src/*"],
+      "@local-git/contracts": ["./packages/contracts/src/index.ts"],
+      "react": ["./packages/ui/node_modules/react"],
+      "react/*": ["./packages/ui/node_modules/react/*"],
+      "react-dom": ["./packages/ui/node_modules/react-dom"],
+      "react-dom/*": ["./packages/ui/node_modules/react-dom/*"],
+      "react/jsx-runtime": ["./packages/ui/node_modules/react/jsx-runtime"],
+      "react/jsx-dev-runtime": ["./packages/ui/node_modules/react/jsx-dev-runtime"],
+      "react-dom/client": ["./packages/ui/node_modules/react-dom/client"],
+      "react-dom/server": ["./packages/ui/node_modules/react-dom/server"]
+    }
+  },
+  "include": ["tests/**/*", "scripts/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

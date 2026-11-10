@@ -119,6 +119,12 @@ pub fn run() {
             commands::git::git_stash_create,
             commands::git::git_stash_pop,
             commands::git::git_stash_drop,
+            commands::git::git_checkout,
+            commands::git::git_add,
+            commands::git::git_blame,
+            commands::git::git_show,
+            commands::git::git_register_repo,
+            commands::git::git_list_repos,
             // Mesh commands
             commands::mesh::mesh_status,
             commands::mesh::mesh_start,

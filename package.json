@@ -26,6 +26,7 @@
     "build:all": "bun --filter @local-git/dx build && bun --filter @local-git/empire build && bun --filter @local-git/moonwitness build && bun --filter @local-git/e-isp build && bun --filter @local-git/rid build && bun --filter @local-git/arsy build",
     "check": "bun --filter @local-git/ui check && bun --filter @local-git/dx check && bun --filter @local-git/empire check && bun --filter @local-git/moonwitness check && bun --filter @local-git/e-isp check && bun --filter @local-git/rid check && bun --filter @local-git/engine check && bun --filter @local-git/arsy check",
     "test": "bun --filter @local-git/contracts test && bun --filter @local-git/ui test && bun --filter @local-git/engine test && bun --filter @local-git/arsy test",
+    "test:e2e-ui": "bun test tests/e2e-ui",
     "test:rust": "cargo test --manifest-path services/legend/Cargo.toml && cargo test --manifest-path services/radius/Cargo.toml",
     "lint:rust": "cargo fmt --manifest-path services/legend/Cargo.toml --check && cargo fmt --manifest-path services/radius/Cargo.toml --check && cargo clippy --manifest-path services/legend/Cargo.toml --all-targets -- -D warnings && cargo clippy --manifest-path services/radius/Cargo.toml --all-targets -- -D warnings",
     "autofix": "bun run scripts/autofix.ts",
@@ -47,6 +48,7 @@
     "backup": "bash ./scripts/backup.sh"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "happy-dom": "^21.0.4"
   }
 }

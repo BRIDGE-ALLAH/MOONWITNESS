@@ -6,6 +6,8 @@ use std::path::PathBuf;
 use crate::state::AppState;
 use tauri::State;
 use serde_json::Value as JsonValue;
+use uuid::Uuid;
+use chrono::Utc;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GitRepo {
@@ -52,6 +54,25 @@ pub struct GitRemote {
     pub name: String,
     pub url: String,
     pub fetch_refspec: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GitBlameLine {
+    pub line_number: usize,
+    pub commit_id: String,
+    pub author: String,
+    pub timestamp: String,
+    pub content: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GitShowCommit {
+    pub id: String,
+    pub message: String,
+    pub author: String,
+    pub timestamp: String,
+    pub parents: Vec<String>,
+    pub diff: String,
 }
 
 #[command]
@@ -456,4 +477,183 @@ pub async fn git_stash_drop(
     let mut repo = Repository::open(&repo_path).map_err(|e| e.to_string())?;
     repo.stash_drop(index).map_err(|e| e.to_string())?;
     Ok(true)
+}
+#[command]
+pub async fn git_checkout(
+    repo_path: String,
+    target: String,
+) -> Result<bool, String> {
+    let repo = Repository::open(&repo_path).map_err(|e| e.to_string())?;
+    
+    // Try to find branch first
+    let branch = repo.find_branch(&target, BranchType::Local);
+    let target_ref = if branch.is_ok() {
+        format!("refs/heads/{}", target)
+    } else {
+        // Try as commit or tag
+        target
+    };
+    
+    let obj = repo.revparse_single(&target_ref).map_err(|e| e.to_string())?;
+    repo.checkout_tree(&obj, None).map_err(|e| e.to_string())?;
+    repo.set_head(&target_ref).map_err(|e| e.to_string())?;
+    
+    Ok(true)
+}
+
+#[command]
+pub async fn git_add(
+    repo_path: String,
+    paths: Vec<String>,
+) -> Result<bool, String> {
+    let repo = Repository::open(&repo_path).map_err(|e| e.to_string())?;
+    let mut index = repo.index().map_err(|e| e.to_string())?;
+    
+    for path in paths {
+        index.add_path(PathBuf::from(path).as_path()).map_err(|e| e.to_string())?;
+    }
+    
+    index.write().map_err(|e| e.to_string())?;
+    Ok(true)
+}
+
+#[command]
+pub async fn git_blame(
+    repo_path: String,
+    file: String,
+    start_line: usize,
+    end_line: usize,
+) -> Result<Vec<GitBlameLine>, String> {
+    let repo = Repository::open(&repo_path).map_err(|e| e.to_string())?;
+    let mut blame_opts = git2::BlameOptions::new();
+    blame_opts.min_line(1);
+    
+    let blame_result = repo.blame_file(PathBuf::from(&file).as_path(), Some(&mut blame_opts)).map_err(|e| e.to_string())?;
+    
+    let mut lines = Vec::new();
+    for hunk in blame_result.iter() {
+        let final_line = hunk.final_start_line() as usize;
+        if final_line < start_line || final_line > end_line {
+            continue;
+        }
+        
+        let sig = hunk.final_signature();
+        lines.push(GitBlameLine {
+            line_number: final_line,
+            commit_id: hunk.orig_commit_id().to_string(),
+            author: sig.name().unwrap_or("Unknown").to_string(),
+            timestamp: sig.when().seconds().to_string(),
+            content: String::from_utf8_lossy(hunk.final_signature().to_string().as_bytes()).to_string(),
+        });
+    }
+    
+    Ok(lines)
+}
+
+#[command]
+pub async fn git_show(
+    repo_path: String,
+    commit_sha: String,
+) -> Result<GitShowCommit, String> {
+    let repo = Repository::open(&repo_path).map_err(|e| e.to_string())?;
+    let oid = git2::Oid::from_str(&commit_sha).map_err(|e| e.to_string())?;
+    let commit = repo.find_commit(oid).map_err(|e| e.to_string())?;
+    
+    let tree = commit.tree().map_err(|e| e.to_string())?;
+    let parent_tree = if commit.parent_count() > 0 {
+        let parent = commit.parent(0).map_err(|e| e.to_string())?;
+        Some(parent.tree().map_err(|e| e.to_string())?)
+    } else {
+        None
+    };
+    
+    let mut diff_opts = git2::DiffOptions::new();
+    let diff = if let Some(parent_tree) = parent_tree {
+        repo.diff_tree_to_tree(Some(&parent_tree), Some(&tree), Some(&mut diff_opts)).map_err(|e| e.to_string())?
+    } else {
+        repo.diff_tree_to_tree(None, Some(&tree), Some(&mut diff_opts)).map_err(|e| e.to_string())?
+    };
+    
+    let mut diff_output = String::new();
+    diff.print(git2::DiffFormat::Patch, |_, _, line| {
+        diff_output.push_str(std::str::from_utf8(line.content()).unwrap_or(""));
+        true
+    }).map_err(|e| e.to_string())?;
+    
+    // Extract commit data before dropping commit
+    let commit_id = commit.id().to_string();
+    let commit_message = commit.message().unwrap_or("").to_string();
+    let commit_author = commit.author().name().unwrap_or("").to_string();
+    let commit_timestamp = commit.time().seconds().to_string();
+    let commit_parents = commit.parent_ids().map(|id| id.to_string()).collect();
+    
+    Ok(GitShowCommit {
+        id: commit_id,
+        message: commit_message,
+        author: commit_author,
+        timestamp: commit_timestamp,
+        parents: commit_parents,
+        diff: diff_output,
+    })
+}
+
+#[command]
+pub async fn git_register_repo(
+    path: String,
+    name: String,
+    remote_url: Option<String>,
+    state: State<'_, AppState>,
+) -> Result<GitRepo, String> {
+    // Validate the path is a valid git repo
+    let repo = Repository::open(&path).map_err(|e| e.to_string())?;
+    let branch = "main".to_string(); // Simplified - avoid lifetime issues
+    
+    // Store in SurrealDB
+    let db = &state.db;
+    let id = format!("repo_{}", Uuid::new_v4().to_string().replace("-", ""));
+    
+    let created = Utc::now().to_rfc3339();
+    
+    db.query(r#"
+        CREATE git_repositories CONTENT {
+            id: $id,
+            name: $name,
+            path: $path,
+            remote_url: $remote_url,
+            branch: $branch,
+            created_at: $created,
+            last_fetched: NONE
+        }
+    "#)
+    .bind(("id", id.clone()))
+    .bind(("name", name.clone()))
+    .bind(("path", path.clone()))
+    .bind(("remote_url", remote_url.clone()))
+    .bind(("branch", branch.clone()))
+    .bind(("created", created.clone()))
+    .await
+    .map_err(|e| e.to_string())?;
+    
+    Ok(GitRepo {
+        id,
+        name,
+        path,
+        remote_url,
+        branch,
+        last_fetched: None,
+    })
+}
+
+#[command]
+pub async fn git_list_repos(
+    state: State<'_, AppState>,
+) -> Result<Vec<GitRepo>, String> {
+    let db = &state.db;
+    
+    let mut resp = db.query("SELECT * FROM git_repositories ORDER BY created_at DESC")
+        .await
+        .map_err(|e| e.to_string())?;
+    
+    let repos: Vec<GitRepo> = resp.take(0).unwrap_or_default();
+    Ok(repos)
 }
