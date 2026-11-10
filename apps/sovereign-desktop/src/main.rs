@@ -143,6 +143,11 @@ pub fn run() {
             commands::surreal::surreal_update,
             commands::surreal::surreal_delete,
             commands::surreal::surreal_health,
+            commands::surreal::surreal_explain,
+            commands::surreal::surreal_schema,
+            commands::surreal::surreal_live_query,
+            commands::surreal::surreal_export_table,
+            commands::surreal::surreal_import_table,
             // PPPoE commands
             commands::pppoe::pppoe_list,
             commands::pppoe::pppoe_create,

@@ -57,8 +57,8 @@ Modular, zero-dependency, pure procedural vector and canvas block design system 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | UI Blocks & Procedural Vectors | Implement R1 blocks and R2 vector assets in `packages/ui` | none | IN_PROGRESS |
-| M2 | Interaction Primitives & Audio Engine | Implement R3 gestures, shortcuts, drag/drop, sound-reactive canvas triggers & audio enhancements in `packages/ui` | M1 | PLANNED |
+| M1 | UI Blocks & Procedural Vectors | Implement R1 blocks and R2 vector assets in `packages/ui` | none | DONE |
+| M2 | Interaction Primitives & Audio Engine | Implement R3 gestures, shortcuts, drag/drop, sound-reactive canvas triggers & audio enhancements in `packages/ui` | M1 | IN_PROGRESS |
 | M3 | Web Frontends Integration | Integrate new components across `apps/dx`, `apps/empire`, `apps/moonwitness`, `apps/e-isp`, `apps/rid` | M1, M2 | PLANNED |
 | M4 | Desktop & Edge Integration | Integrate new components across `apps/sovereign-desktop/ui` and `services/codex-edge` | M1, M2 | PLANNED |
 | M5 | Final E2E Verification & Gates | 100% E2E tests pass, full monorepo quality gate (`check`, `gate`, `smoke`) | M3, M4 | PLANNED |

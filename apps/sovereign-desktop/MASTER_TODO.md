@@ -48,25 +48,25 @@
 - [x] git_show(repo_path, commit_sha) - Commit details + diff
 
 ### 1.2 Service/Mesh Commands (src/commands/mesh.rs)
-- [ ] mesh_get_all_health() - HealthStatus[] for all 5 sidecars
-- [ ] mesh_start_service(name) - Spawn sidecar with config
-- [ ] mesh_stop_service(name) - Graceful shutdown
-- [ ] mesh_restart_service(name) - Restart with circuit breaker
-- [ ] mesh_get_logs(name, lines?, follow?) - Tail stdout/stderr
-- [ ] mesh_get_config(name) - Current runtime config from service_config table
-- [ ] mesh_update_config(name, config_obj) - Update + restart sidecar
-- [ ] mesh_get_port_map() - All reserved ports + actual bindings
-- [ ] mesh_export_diagnostics() - ZIP bundle: logs, config, health, system info
+- [x] mesh_get_all_health() - HealthStatus[] for all 5 sidecars
+- [x] mesh_start_service(name) - Spawn sidecar with config
+- [x] mesh_stop_service(name) - Graceful shutdown
+- [x] mesh_restart_service(name) - Restart with circuit breaker
+- [x] mesh_get_logs(name, lines?, follow?) - Tail stdout/stderr
+- [x] mesh_get_config(name) - Current runtime config from service_config table
+- [x] mesh_update_config(name, config_obj) - Update + restart sidecar
+- [x] mesh_get_port_map() - All reserved ports + actual bindings
+- [x] mesh_export_diagnostics() - ZIP bundle: logs, config, health, system info
 - [x] mesh_status() - HealthStatus[] for all sidecars
 - [x] mesh_start(name) - Spawn sidecar with config
 - [x] mesh_stop(name) - Graceful shutdown
 - [x] mesh_restart(name) - Restart with circuit breaker
 - [x] mesh_logs(name, lines?, follow?) - Tail stdout/stderr
 - [x] mesh_health(name) - Single service health check
-- [ ] mesh_get_config(name) - Current runtime config from service_config table
-- [ ] mesh_update_config(name, config_obj) - Update + restart sidecar
-- [ ] mesh_get_port_map() - All reserved ports + actual bindings
-- [ ] mesh_export_diagnostics() - ZIP bundle: logs, config, health, system info
+- [x] mesh_get_config(name) - Current runtime config from service_config table
+- [x] mesh_update_config(name, config_obj) - Update + restart sidecar
+- [x] mesh_get_port_map() - All reserved ports + actual bindings
+- [x] mesh_export_diagnostics() - ZIP bundle: logs, config, health, system info
 
 ### 1.3 SurrealQL Commands (src/commands/surreal.rs)
 - [ ] surreal_query(sql, params?) - Execute query against embedded DB
